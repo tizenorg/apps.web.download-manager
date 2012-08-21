@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Powiadamianie..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Ponów"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Menedżer pobierania"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Nieprawidłowy deskryptor"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Brak pobranych elementów"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Zakończono"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Nie można otworzyć pliku"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Pobrać?"
+

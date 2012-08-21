@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+	<manifest xmlns="http://tizen.org/ns/packages" package="org.tizen.download-manager" version="0.0.1" install-location="internal-only">
+	<label>Download Manager</label>
+	<author email="jungki.kwak@samsung.com" href="www.samsung.com">Jungki Kwak</author>
+	<description>Download UI Application</description>
+	<ui-application appid="org.tizen.download-manager" exec="/opt/apps/org.tizen.download-manager/bin/download-manager" nodisplay="true" multiple="false" type="capp" taskmanage="false">
+		<label>Download Manager</label>
+		<label xml:lang="en-us">Download Manager</label>
+		<application-service>
+			<operation name="http://tizen.org/appsvc/operation/download" />
+				<uri name="http" />
+				<uri name="https" />
+				<uri name="NULL" />
+		</application-service>
+	</ui-application>
+</manifest>

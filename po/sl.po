@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Obveščam ..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Pos.znova"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Upravitelj prenosov"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Neveljaven deskriptor"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ni prenosov"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Končano"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Datoteke ni mogoče odpreti"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Prenesem?"
+

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Varsler..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Prøv igjen"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Nedlastingsbehandling"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Ugyldig deskriptor"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ingen nedlastinger"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Fullført"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Kan ikke åpne fil"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Laste ned?"
+

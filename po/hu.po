@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Értesítés..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Újra"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Letöltéskezelő"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Érvénytelen leíró"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nincsenek letöltések"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Befejeződött"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "A fájl nem nyitható meg"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Letöltés?"
+

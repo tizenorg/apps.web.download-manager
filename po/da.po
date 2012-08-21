@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Giver besked..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Prøv igen"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Downloadstyring"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Ugyldig beskrivelse"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ingen downloads"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "udført"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Kunne ikke åbne fil"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Download?"
+

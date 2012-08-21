@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "सूचित किया जा रहा है..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "पुन: प्रयास"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "डाउनलोड प्रबंधक"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "अमान्य वर्णनकर्ता"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "कोई डाउनलोड नहीं"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "पूर्ण"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "फाईल खोलने में अक्षम"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "डाउनलोड?"
+

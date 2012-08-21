@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "กำลัง​แจ้ง​ข้อมูล..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "ลอง​ใหม่"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "การจัดการการ​ดาวน์​โหลด"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "ตัว​อธิบาย​ไม่​ถูก​ต้อง"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "ไม่​มี​การ​ดาวน์​โหลด"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "ครบ​ถ้วน"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "เปิด​ไฟล์​ไม่​ได้​เข้า​กัน​ไม่​ได้"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "ดาวน์​โหลด?"
+

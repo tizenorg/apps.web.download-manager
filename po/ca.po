@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Notificant..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Reintent"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Administrador de descàrregues"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Descriptor no vàlid"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Sense descàrregues"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Finalitzar"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "No s'ha pogut obrir el fitxer"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Descarregar?"
+

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Сповіщення..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Повтор."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Диспетчер завантажень"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Хибний JAD"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Немає завантажень"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Завершено"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Неможливо відкрити файл"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Завантажити?"
+

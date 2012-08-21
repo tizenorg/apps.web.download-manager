@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Đang báo tin..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Thử lại"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Quản lý tải về"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Miêu tả không hợp lệ"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Không có tải xuống"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Hoàn tất"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Không thể mở file"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Tải xuống?"
+

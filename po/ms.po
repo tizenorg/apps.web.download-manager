@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Memberitahu..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Cuba lg"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Pengurus muat turun"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Pemerihal tidak sah"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Tiada muat turun"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Lengkap"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Tdk dpt buka fail"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Muat turun?"
+

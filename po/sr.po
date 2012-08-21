@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Obaveštavanje..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Pokušaj ponovo"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Menadžer preuzimanja"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Neispravan deskriptor"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nema preuzimanja"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Završeno"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Nemoguće otvoriti fajl"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Preuzmi?"
+

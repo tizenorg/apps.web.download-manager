@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Mengingatkan..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Coba ulang"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Pengelola download"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Deskriptor tidak berlaku"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Tidak ada unduhan"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Selesai"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Tdk dapat utk buka file"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Unduh?"
+
