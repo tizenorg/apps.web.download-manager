@@ -92,6 +92,7 @@ private:
 	static void genlistClickCB(void *data, Evas_Object *obj, void *event_info);
 	static void cancelClickCB(void *data, Evas_Object *obj, void *event_info);
 	static void errPopupResponseCB(void *data, Evas_Object *obj, void *event_info);
+	static Eina_Bool deletedNotifyTimerCB(void *data);
 
 private:
 	DownloadView();
@@ -155,13 +156,13 @@ private:
 	Elm_Object_Item *eoCbItemDelete;
 	Elm_Object_Item *eoCbItemCancel;
 	Elm_Object_Item *eoCbItemEmpty;
+	Ecore_Timer *eoNotifyTimer;
 	Evas_Object *eoBoxLayout;
 	Evas_Object *eoBox;
 	Evas_Object *eoDldList;
 	Evas_Object *eoPopup;
 	Evas_Object *eoSelectAllLayout;
 	Evas_Object *eoAllCheckedBox;
-	Evas_Object *eoNotifyInfo;
 	Evas_Object *eoNotifyInfoLayout;
 	Elm_Genlist_Item_Class dldGenlistGroupStyle;
 	Eina_Bool m_allChecked;

@@ -56,6 +56,8 @@ public:
 	void retry(void);
 	void suspend(void);
 	void resume(void);
+	void createHandle(void);
+	void destroyHandle(void);
 
 	inline void *downloadHandle(void) { return (void *)m_download_handle;}
 	inline void setDownloadHandle(url_download_h handle) { m_download_handle = handle; }
@@ -119,6 +121,7 @@ private:
 	string m_registeredFilePath;
 	string m_mimeType;
 	DL_TYPE::TYPE m_downloadType;
+	int m_download_id;
 };
 
 class DownloadEngine {

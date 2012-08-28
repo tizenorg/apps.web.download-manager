@@ -416,7 +416,7 @@ const char *ViewItem::getHumanFriendlyBytesStr(unsigned long int bytes,
 	unitBytes = 1 << (10*unit);
 	doubleTypeBytes = ((double)bytes / (double)(unitBytes));
 	// FIXME following code should be broken into another function, but leave it now to save function call time.s
-	char str[32] = {0};
+	char str[64] = {0};
 	if (progressOption && fileSize() != 0) {
 		/* using fixed point arithmetic to avoid floating point arithmetic */
 		const int fixed_point = 6;
@@ -437,7 +437,9 @@ const char *ViewItem::getHumanFriendlyBytesStr(unsigned long int bytes,
 		else
 			snprintf(str, sizeof(str), "%.2f %s", doubleTypeBytes, unitStr[unit]);
 	}
-	return string(str).c_str();
+	str[63] = '\0';
+	string temp = string(str);
+	return temp.c_str();
 }
 
 unsigned long int ViewItem::receivedFileSize()

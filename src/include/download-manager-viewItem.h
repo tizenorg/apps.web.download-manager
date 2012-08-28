@@ -35,7 +35,10 @@ public:
 	~ViewItem();
 	static void create(Item *item);
 	void destroy(void);
-	inline void deleteFromDB(void) { m_item->deleteFromDB(); }
+	inline void deleteFromDB(void) {
+		if (m_item)
+			m_item->deleteFromDB();
+	}
 
 	inline void setItem(Item *item) { m_item = item; }
 	static void updateCB(void *);
@@ -69,12 +72,42 @@ public:
 		{ return &dldHistoryGenlistStyle; }
 	inline Elm_Genlist_Item_Class *elmGenlistFailedItemClass(void)
 		{ return &dldGenlistSlideStyle; }
-	inline ITEM::STATE state(void) { return m_item->state(); }
-	inline const char* stateStr(void) { return m_item->stateStr(); }
-	inline bool isFinished(void) { return m_item->isFinished(); }
-	inline bool isFinishedWithErr(void) { return m_item->isFinishedWithErr(); }
-	inline bool isPreparingDownload(void) { return m_item->isPreparingDownload(); }
-	inline bool isCompletedDownload(void) { return m_item->isCompletedDownload(); }
+	inline ITEM::STATE state(void) {
+		if (m_item)
+			return m_item->state();
+		else
+			return ITEM::IDLE;
+	}
+	inline const char* stateStr(void) {
+		if (m_item)
+			return m_item->stateStr();
+		else
+			return NULL;
+	}
+	inline bool isFinished(void) {
+		if (m_item)
+			return m_item->isFinished();
+		else
+			return false;
+	}
+	inline bool isFinishedWithErr(void) {
+		if (m_item)
+			return m_item->isFinishedWithErr();
+		else
+			return false;
+	}
+	inline bool isPreparingDownload(void) {
+		if (m_item)
+			return m_item->isPreparingDownload();
+		else
+			return false;
+	}
+	inline bool isCompletedDownload(void) {
+		if (m_item)
+			return m_item->isCompletedDownload();
+		else
+			return false;
+	}
 
 	unsigned long int receivedFileSize(void);
 	unsigned long int fileSize(void);

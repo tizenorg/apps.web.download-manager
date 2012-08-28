@@ -55,6 +55,7 @@ chmod 660 /opt/apps/org.tizen.download-manager/data/db/.download-history.db-jour
 /opt/apps/org.tizen.download-manager/bin/*
 /opt/apps/org.tizen.download-manager/data
 /opt/apps/org.tizen.download-manager/res/*
+/opt/apps/org.tizen.download-manager/res/edje/*
 /opt/share/packages/org.tizen.download-manager.xml
 
 %changelog

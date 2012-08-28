@@ -24,6 +24,7 @@
 #include <iostream>
 #include "download-manager-downloadItem.h"
 #include "download-manager-common.h"
+#include "app_service.h"
 
 static Ecore_Pipe *ecore_pipe = NULL;
 static void __ecore_cb_pipe_update(void *data, void *buffer, unsigned int nbyte);
@@ -135,6 +136,7 @@ void CbData::updateDownloadItem()
 			DP_LOGD("registeredFilePath[%s]", m_registeredFilePath.c_str());
 			downloadItem->setRegisteredFilePath(m_registeredFilePath);
 		}
+		downloadItem->destroyHandle();
 		break;
 	case DA_CB::STOPPED:
 		if (m_error != URL_DOWNLOAD_ERROR_NONE) {
@@ -143,6 +145,7 @@ void CbData::updateDownloadItem()
 		} else {
 			downloadItem->setState(DL_ITEM::CANCELED);
 		}
+		downloadItem->destroyHandle();
 		break;
 	default:
 		break;
@@ -184,6 +187,10 @@ DownloadItem::DownloadItem(auto_ptr<DownloadRequest> request)
 	, m_fileSize(0)
 	, m_downloadType(DL_TYPE::HTTP_DOWNLOAD)
 {
+}
+
+void DownloadItem::createHandle()
+{
 	int ret = url_download_create(&m_download_handle);
 	if (ret != URL_DOWNLOAD_ERROR_NONE) {
 		DP_LOGE("Fail to create download handle : [%d]", ret);
@@ -219,19 +226,49 @@ DownloadItem::DownloadItem(auto_ptr<DownloadRequest> request)
 		DP_LOGE("Fail to set progress cb : [%d]", ret);
 		return;
 	}
+
+	service_h service_handle;
+	ret = service_create(&service_handle);
+	if (ret < 0) {
+		DP_LOGE("Fail to create service handle");
+		return;
+	}
+
+	ret = service_set_package(service_handle, PACKAGE_NAME);
+	if (ret < 0) {
+		DP_LOGE("Fail to set package name");
+		return;
+	}
+	ret = url_download_set_notification(m_download_handle, service_handle);
+	if (ret != URL_DOWNLOAD_ERROR_NONE) {
+		DP_LOGE("Fail to set notification : [%d]", ret);
+		return;
+	}
+	ret = service_destroy(service_handle);
+	if (ret < 0) {
+		DP_LOGE("Fail to create service handle");
+		return;
+	}
 }
 
 DownloadItem::~DownloadItem()
 {
 	DP_LOGD_FUNC();
+	destroyHandle();
+}
+
+void DownloadItem::destroyHandle()
+{
 	if (!m_download_handle)
 		return;
+	DP_LOGD("download handle[%p]", m_download_handle);
 	url_download_unset_started_cb(m_download_handle);
 	url_download_unset_completed_cb(m_download_handle);
 	url_download_unset_paused_cb(m_download_handle);
 	url_download_unset_stopped_cb(m_download_handle);
 	url_download_unset_progress_cb(m_download_handle);
 	url_download_destroy(m_download_handle);
+	m_download_handle = NULL;
 }
 
 void DownloadItem::started_cb(url_download_h download, const char *name,
@@ -311,40 +348,34 @@ void DownloadItem::progress_cb(url_download_h download, unsigned long long recei
 void DownloadItem::start(bool isRetry)
 {
 	int ret = 0;
-	int id = 0;
 	DP_LOGD_FUNC();
-	if (!m_download_handle) {
-		DP_LOGE("handle is NULL");
+	if (m_download_handle) {
+		destroyHandle();
+	}
+	createHandle();
+
+	ret = url_download_set_url(m_download_handle,
+			m_aptr_request->getUrl().c_str());
+	if (ret != URL_DOWNLOAD_ERROR_NONE) {
+		DP_LOGE("Fail to set url : [%d]", ret);
 		m_state = DL_ITEM::FAILED;
 		m_errorCode = ERROR::ENGINE_FAIL;
 		notify();
 		return;
 	}
-
-	if (!isRetry) {
-		ret = url_download_set_url(m_download_handle,
-				m_aptr_request->getUrl().c_str());
+	if (!m_aptr_request->getCookie().empty()) {
+		ret = url_download_add_http_header_field(m_download_handle,
+				"Cookie", m_aptr_request->getCookie().c_str());
 		if (ret != URL_DOWNLOAD_ERROR_NONE) {
-			DP_LOGE("Fail to set url : [%d]", ret);
+			DP_LOGE("Fail to set cookie : [%d]", ret);
 			m_state = DL_ITEM::FAILED;
 			m_errorCode = ERROR::ENGINE_FAIL;
 			notify();
 			return;
 		}
-		if (!m_aptr_request->getCookie().empty()) {
-			ret = url_download_add_http_header_field(m_download_handle,
-					"Cookie", m_aptr_request->getCookie().c_str());
-			if (ret != URL_DOWNLOAD_ERROR_NONE) {
-				DP_LOGE("Fail to set cookie : [%d]", ret);
-				m_state = DL_ITEM::FAILED;
-				m_errorCode = ERROR::ENGINE_FAIL;
-				notify();
-				return;
-			}
-		}
 	}
-	ret = url_download_start(m_download_handle, &id);
-	DP_LOGD("URL download handle : handle[%p]id[%d]", m_download_handle, id);
+	ret = url_download_start(m_download_handle, &m_download_id);
+	DP_LOGD("URL download handle : handle[%p]id[%d]", m_download_handle, m_download_id);
 
 	if (ret != URL_DOWNLOAD_ERROR_NONE) {
 		m_state = DL_ITEM::FAILED;
@@ -431,8 +462,7 @@ void DownloadItem::suspend()
 
 void DownloadItem::resume()
 {
-	int id = 0;
-	int ret = url_download_start(m_download_handle, &id);
+	int ret = url_download_start(m_download_handle, &m_download_id);
 	if (ret != URL_DOWNLOAD_ERROR_NONE) {
 		DP_LOGE("Fail to resume download : handle[%p] err[%d]",
 			m_download_handle, ret);

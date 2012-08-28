@@ -217,6 +217,10 @@ static void __app_service(service_h s, void *data)
 		return;
 	}
 
+	if (s_url.empty()) {
+		view.activateWindow();
+		return;
+	}
 	DownloadRequest request(s_url, s_cookie);
 	Item::create(request);
 #ifndef _SILENT_LAUNCH

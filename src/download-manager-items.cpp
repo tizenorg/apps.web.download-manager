@@ -29,10 +29,10 @@ void Items::attachItem(Item *item)
 void Items::detachItem(Item *item)
 {
 	vector<Item *>::iterator it;
-	for (it = m_items.begin() ; it < m_items.end() ; it++) {
+	for (it = m_items.begin(); it < m_items.end(); it++) {
 		if (*it == item) {
-			m_items.erase(it);
 			delete item;
+			m_items.erase(it);
 		}
 	}
 }

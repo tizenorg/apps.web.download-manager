@@ -43,13 +43,13 @@ DownloadView::DownloadView(void)
 	, eoCbItemDelete(NULL)
 	, eoCbItemCancel(NULL)
 	, eoCbItemEmpty(NULL)
+	, eoNotifyTimer(NULL)
 	, eoBoxLayout(NULL)
 	, eoBox(NULL)
 	, eoDldList(NULL)
 	, eoPopup(NULL)
 	, eoSelectAllLayout(NULL)
 	, eoAllCheckedBox(NULL)
-	, eoNotifyInfo(NULL)
 	, eoNotifyInfoLayout(NULL)
 	, m_allChecked(EINA_FALSE)
 #ifndef _TIZEN_PUBLIC
@@ -99,6 +99,7 @@ void DownloadView::destroy()
 {
 	DownloadEngine &engine = DownloadEngine::getInstance();
 	engine.deinitEngine();
+	ecore_timer_del(eoNotifyTimer);
 }
 
 void DownloadView::show()
@@ -265,11 +266,15 @@ void DownloadView::createBox()
 {
 	DP_LOGD_FUNC();
 	eoBoxLayout = elm_layout_add(eoNaviBar);
-	elm_layout_theme_set(eoBoxLayout, "layout", "application", "noindicator");
+	elm_layout_file_set(eoBoxLayout,
+		"/opt/apps/com.samsung.download-manager/res/edje/download-manager.edj",
+		"download/selectioninfo");
+
 	evas_object_size_hint_weight_set(eoBoxLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(eoBoxLayout, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
 	eoBox = elm_box_add(eoBoxLayout);
-	elm_object_part_content_set(eoBoxLayout, "elm.swallow.content", eoBox );
+	elm_object_part_content_set(eoBoxLayout, "gen.swallow.contents", eoBox);
 
 	evas_object_show(eoBox);
 	evas_object_show(eoBoxLayout);
@@ -773,47 +778,30 @@ void DownloadView::handleCheckedState()
 void DownloadView::createNotifyInfo()
 {
 	DP_LOGD_FUNC();
-	eoNotifyInfo = elm_notify_add(eoBoxLayout);
-	elm_notify_orient_set(eoNotifyInfo, ELM_NOTIFY_ORIENT_BOTTOM);
-	evas_object_size_hint_weight_set(eoNotifyInfo, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(eoNotifyInfo, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	evas_object_event_callback_add(eoNotifyInfo, EVAS_CALLBACK_SHOW, showNotifyInfoCB, eoLayout);
-	evas_object_event_callback_add(eoNotifyInfo, EVAS_CALLBACK_HIDE, hideNotifyInfoCB, eoLayout);
-	eoNotifyInfoLayout = elm_layout_add(eoNotifyInfo);
-	elm_object_content_set(eoNotifyInfo, eoNotifyInfoLayout);
+	eoNotifyInfoLayout = elm_layout_add(eoBoxLayout);
+	elm_object_part_content_set(eoBoxLayout, "sel.swallow.contents",
+			eoNotifyInfoLayout);
+	evas_object_size_hint_weight_set(eoNotifyInfoLayout,
+			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(eoNotifyInfoLayout,
+			EVAS_HINT_FILL, EVAS_HINT_FILL);
 }
 
 void DownloadView::showNotifyInfo(int type, int selectedCount)
 {
-#ifndef _TIZEN_PUBLIC
-	int angle = 0;
-#endif
 	string buf;
 	DP_LOGD_FUNC();
-
-#ifndef _TIZEN_PUBLIC
-	angle = elm_win_rotation_get(eoWindow);
-#endif
 
 	if (selectedCount == 0) {
 		destroyNotifyInfo();
 		return;
 	}
 
-	if (!eoNotifyInfo)
+	if (!eoNotifyInfoLayout)
 		createNotifyInfo();
 
-#ifndef _TIZEN_PUBLIC
-	if (angle == 0 || angle == 180)
-		elm_layout_theme_set(eoNotifyInfoLayout, "standard", "selectioninfo",
-			"vertical/bottom_12");
-	else
-		elm_layout_theme_set(eoNotifyInfoLayout, "standard", "selectioninfo",
-			"horizontal/bottom_12");
-#else
 	elm_layout_theme_set(eoNotifyInfoLayout, "standard", "selectioninfo",
-		"vertical/bottom_12");
-#endif
+			"default");
 	buf.append(" ");
 	if (type == DOWNLOAD_NOTIFY_SELECTED) {
 		stringstream countStr;
@@ -824,19 +812,29 @@ void DownloadView::showNotifyInfo(int type, int selectedCount)
 		buf.append(")");
 	} else if (type == DOWNLOAD_NOTIFY_DELETED) {
 		buf = S_("IDS_COM_POP_DELETED");
-		elm_notify_timeout_set(eoNotifyInfo, 3);
+		if (eoNotifyTimer) {
+			ecore_timer_del(eoNotifyTimer);
+			eoNotifyTimer = NULL;
+		}
+		eoNotifyTimer = ecore_timer_add(3, deletedNotifyTimerCB, NULL);
 	}
-	edje_object_part_text_set(_EDJ(eoNotifyInfoLayout), "elm.text", buf.c_str());
-	evas_object_show(eoNotifyInfo);
+	elm_object_part_text_set(eoNotifyInfoLayout, "elm.text", buf.c_str());
+	elm_object_signal_emit(eoBoxLayout, "show,selection,info", "elm");
+	evas_object_show(eoNotifyInfoLayout);
+}
+
+Eina_Bool DownloadView::deletedNotifyTimerCB(void *data)
+{
+	DownloadView& view = DownloadView::getInstance();
+	view.destroyNotifyInfo();
+	return ECORE_CALLBACK_RENEW;
 }
 
 void DownloadView::destroyNotifyInfo()
 {
 	DP_LOGD_FUNC();
 	destroyEvasObj(eoNotifyInfoLayout);
-	destroyEvasObj(eoNotifyInfo);
 	eoNotifyInfoLayout = NULL;
-	eoNotifyInfo = NULL;
 }
 
 /* Static callback function */
