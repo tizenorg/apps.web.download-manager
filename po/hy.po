@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Ծանուցում..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Կրկին փորձել"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Ներբեռնման կառավարիչ"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Անվավեր նկարագրող հատկանիշ"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ներբեռնումներ չկան"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Ավարտված է"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Հնարավոր չէ բացել ֆայլը"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Ներբեռնե՞լ"
+

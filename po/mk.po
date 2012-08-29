@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Се известува..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Повторно"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Уредување преземања"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Неправилен JAD"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Нема преземања"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Завршено"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Не може да се отвори фајлот"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Преземи?"
+

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Xabar berilmoqda..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "Urinish"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Yuklab olish menejeri"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "Noto‘g‘ri deskriptor"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Yuklanmalar yo‘q"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Yakunlamoq"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "Faylni ochib bo‘lmaydi"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Yuklab olinsinmi?"
+

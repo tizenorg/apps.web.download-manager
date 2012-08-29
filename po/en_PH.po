@@ -1,24 +1,24 @@
 msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "מדווח..."
+msgstr "Notifying..."
 
 msgid "IDS_BR_SK_RETRY"
-msgstr "נסה שוב"
+msgstr "Retry"
 
 msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "מנהל ההורדות"
+msgstr "Download manager"
 
 msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
-msgstr "מתאר לא חוקי"
+msgstr "Invalid descriptor"
 
 msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "אין הורדות"
+msgstr "No downloads"
 
 msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "השלם"
+msgstr "Complete"
 
 msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
-msgstr "לא ניתן לפתוח קובץ"
+msgstr "Unable to open file"
 
 msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "להוריד?"
+msgstr "Download?"
 

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "შეტყობინება..."
+
+msgid "IDS_BR_SK_RETRY"
+msgstr "კიდევ ცდა"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "ჩამოტვირთვების მმართველი"
+
+msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
+msgstr "აღმწერი არასწორია"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "არაფერია ჩამოტვირთული"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "დასრულება"
+
+msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
+msgstr "ფაილი ვერ იხსნება"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "ჩამოტვირთავთ?"
+

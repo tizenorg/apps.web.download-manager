@@ -1,24 +1,24 @@
 msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Đang báo tin..."
+msgstr "Bildirilir..."
 
 msgid "IDS_BR_SK_RETRY"
-msgstr "Thử lại"
+msgstr "Yenidən cəhd et"
 
 msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Quản lý tải về"
+msgstr "Yükləmə meneceri"
 
 msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
-msgstr "Miêu tả không hợp lệ"
+msgstr "Yanlış deskriptor"
 
 msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Không có tải xuống"
+msgstr "Yüklmə yoxdur"
 
 msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Hoàn tất"
+msgstr "tam"
 
 msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
-msgstr "Không thể mở file"
+msgstr "Faylı açmaq mümkün deyildir"
 
 msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Tải xuống?"
+msgstr "Yüklənsin?"
 

@@ -1,24 +1,24 @@
 msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Mengingatkan..."
+msgstr "Teavitamine..."
 
 msgid "IDS_BR_SK_RETRY"
-msgstr "Coba ulang"
+msgstr "Uuesti"
 
 msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Pengelola download"
+msgstr "Allalaadimishaldur"
 
 msgid "IDS_BR_POP_INVALIDDESCRIPTOR"
-msgstr "Deskriptor tidak berlaku"
+msgstr "Vigane deskriptor"
 
 msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Tidak ada unduhan"
+msgstr "Allalaadimisi pole"
 
 msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Selesai"
+msgstr "Valmis"
 
 msgid "IDS_BR_POP_UNABLE_TO_OPEN_FILE"
-msgstr "Tdk dapat utk buka file"
+msgstr "Faili ei saa avada"
 
 msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Unduh?"
+msgstr "Laadida alla?"
 
