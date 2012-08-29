@@ -2,7 +2,7 @@
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
 Version:	0.0.1
-Release:	8
+Release:	9
 Group:		TO_BE_FILLED_IN
 License:	TO_BE_FILLED_IN
 URL:		N/A
