@@ -267,7 +267,7 @@ void DownloadView::createBox()
 	DP_LOGD_FUNC();
 	eoBoxLayout = elm_layout_add(eoNaviBar);
 	elm_layout_file_set(eoBoxLayout,
-		"/opt/apps/com.samsung.download-manager/res/edje/download-manager.edj",
+		"/opt/apps/org.tizen.download-manager/res/edje/download-manager.edj",
 		"download/selectioninfo");
 
 	evas_object_size_hint_weight_set(eoBoxLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);

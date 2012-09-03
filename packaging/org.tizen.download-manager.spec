@@ -2,7 +2,7 @@
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
 Version:	0.0.1
-Release:	10
+Release:	11
 Group:		TO_BE_FILLED_IN
 License:	TO_BE_FILLED_IN
 URL:		N/A
@@ -59,10 +59,24 @@ chmod 660 /opt/apps/org.tizen.download-manager/data/db/.download-history.db-jour
 /opt/share/packages/org.tizen.download-manager.xml
 
 %changelog
+* Mon Sep 03 2012 Jungki Kwak <jungki.kwak@samsung.com>
+- Add deisplay language set
+- Resolve a bug about the name of edc
+
+* Mon Aug 27 2012 Jungki Kwak <jungki.kwak@samsung.com>
+- Change notify winset to selectioninfo winset
+- Apply changes of capi-web-url-download
+- Resolve a prevent defect
+
+* Wed Aug 22 2012 Jungki Kwak <jungki.kwak@samsung.com>
+- Enable to use notification of download CAPI
+- Show the application in case of default service operation
+
 * Mon Aug 17 2012 Jungki Kwak <jungki.kwak@samsung.com>
 - Add https protocol to service uri field
 
 * Mon Aug 16 2012 Jungki Kwak <jungki.kwak@samsung.com>
+- Apply changes of capi-web-url-download
 - Change boilerplates and licence to flora
 
 * Mon Aug 10 2012 Jungki Kwak <jungki.kwak@samsung.com>
