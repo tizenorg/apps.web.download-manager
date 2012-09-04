@@ -59,6 +59,9 @@ chmod 660 /opt/apps/org.tizen.download-manager/data/db/.download-history.db-jour
 /opt/share/packages/org.tizen.download-manager.xml
 
 %changelog
+* Tue Sep 04 2012 Jungki kwak <jungki.kwak@samsung.com>
+- Change the name of application operation
+
 * Mon Sep 03 2012 Jungki Kwak <jungki.kwak@samsung.com>
 - Add deisplay language set
 - Resolve a bug about the name of edc

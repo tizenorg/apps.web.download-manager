@@ -7,7 +7,7 @@
 		<label>Download Manager</label>
 		<label xml:lang="en-us">Download Manager</label>
 		<application-service>
-			<operation name="http://tizen.org/appsvc/operation/download" />
+			<operation name="http://tizen.org/appcontrol/operation/download" />
 				<uri name="http" />
 				<uri name="https" />
 				<uri name="NULL" />
