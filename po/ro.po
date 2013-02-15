@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Se notifică..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Manager descărcare"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nicio descărcare"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "terminat"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Descărcaţi?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fişierul nu a fost primit. Îl descărcaţi din nou?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fişierul nu există. Îl descărcaţi din nou?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Descărcare finalizată"
+

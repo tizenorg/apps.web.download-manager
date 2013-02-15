@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "A notificar..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Gestor de transferências"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nenhumas transferências"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Concluída"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Transferir?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Ficheiro não recebido. Transferir de novo?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "O ficheiro não existe. Transferir de novo?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Transferência concluída"
+

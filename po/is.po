@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Tilkynni..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Stjórnun niðurhals"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ekkert niðurhal"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Ljúka"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Á að hala niður?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Skráin var ekki móttekin. Viltu sækja hana aftur?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Skráin er ekki til. Viltu sækja hana aftur?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Niðurhali lokið"
+

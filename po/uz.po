@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Xabar berilmoqda..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Yuklab olish menejeri"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Yuklanmalar yo‘q"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Yakunlamoq"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Yuklab olinsinmi?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fayl olinmadi. Qayta yuklab olinsinmi?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fayl mavjud emas. Qayta yuklab olinsinmi?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Yuklab olish yakunlandi"
+

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Obaveštavanje..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Menadžer preuzimanja"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nema preuzimanja"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Završeno"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Preuzmi?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fajl nije primljen. Preuzeti ponovo?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fajl ne postoji. Preuzeti ponovo?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Preuzimanje završeno"
+

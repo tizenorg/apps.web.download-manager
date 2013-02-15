@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Teavitamine..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Allalaadimishaldur"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Allalaadimisi pole"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Valmis"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Laadida alla?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Faili ei võetud vastu. Kas laadida uuesti alla?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Faili pole olemas. Kas laadida uuesti alla?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Allalaadimine on lõpule viidud"
+

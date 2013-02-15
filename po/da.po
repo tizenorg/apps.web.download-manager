@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Giver besked..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Downloadstyring"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ingen downloads"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "udført"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Download?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fil ikke modtaget. Download igen?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fil findes ikke. Download igen?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Overførsel fuldført"
+

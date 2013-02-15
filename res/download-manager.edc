@@ -1,0 +1,48 @@
+collections {
+	group {
+		name: "download/selectioninfo";
+		parts {
+			part {
+				name: "gen.swallow.contents";
+				type: SWALLOW;
+				description {
+					state: "default" 0.0;
+					align: 0.5 0.0;
+				}
+			}
+			part {
+				name: "sel.swallow.contents";
+				type: SWALLOW;
+				description {
+					state: "default" 0.0;
+					fixed: 0 1;
+					align: 0.5 1.0;
+					rel1 {
+						relative: 0.0 1.0;
+						to:"gen.swallow.contents";
+					}
+				}
+				description { state: "hide" 0.0;
+				inherit: "default" 0.0;
+				visible: 0;
+				}
+			}
+		}
+		programs {
+			program {
+				name: "show";
+				signal: "show,selection,info";
+				source: "elm";
+				action: STATE_SET "default" 0.0;
+				target: "sel.swallow.contents";
+			}
+			program {
+				name: "hide";
+				signal: "hide,selection,info";
+				source: "elm";
+				action: STATE_SET "hide" 0.0;
+				target: "sel.swallow.contents";
+			}
+		}
+	}
+}

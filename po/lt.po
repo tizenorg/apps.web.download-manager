@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Informuojama..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Atsisiuntimų tvarkytuvė"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nėra atsisiuntimų"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Užbaigta"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Ar atsisiųsti?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Failas negautas. Atsisiųsti dar kartą?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Failo nėra. Atsisiųsti dar kartą?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Atsisiuntimas baigtas"
+

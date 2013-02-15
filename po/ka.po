@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "შეტყობინება..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "ჩამოტვირთვების მმართველი"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "არაფერია ჩამოტვირთული"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "დასრულება"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "ჩამოტვირთავთ?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "ფაილი არ არის მიღებული. თავიდან ჩამოტვირთავთ?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "ფაილი არ არსებობს. თავიდან ჩამოტვირთავთ?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "ჩამოტვირთვა დასრულდა"
+

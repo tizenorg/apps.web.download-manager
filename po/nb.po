@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Varsler..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Nedlastingsbehandling"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Ingen nedlastinger"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Fullført"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Laste ned?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Filen ble ikke mottatt. Laste ned på nytt?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Filen finnes ikke. Laste ned på nytt?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Nedlasting fullført"
+

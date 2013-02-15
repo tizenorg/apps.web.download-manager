@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Paziņo..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Lejupielāžu pārvaldnieks"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Nav lejupielāžu"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Pabeigta"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Vai lejupielādēt?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fails netika saņemts. Vai lejupielādēt vēlreiz?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Šāda faila nav. Vai lejupielādēt vēlreiz?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Lejupielāde pabeigta"
+
