@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "جاري الإخطار..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "مدير التحميل"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "لا توجد ملفات محملة"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "كامل"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "تنزيل؟"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "لم يتم استلام الملف. هل تريد تنزيله مرة أخرى؟"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "الملف غير موجود. هل تريد تنزيله مرة أخرى؟"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "تم التنزيل"
+

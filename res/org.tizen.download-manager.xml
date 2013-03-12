@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+	<manifest xmlns="http://tizen.org/ns/packages" package="org.tizen.download-manager" version="0.0.1" install-location="internal-only">
+	<author email="jungki.kwak@samsung.com" href="www.samsung.com">Jungki Kwak</author>
+	<description>Download UI Application</description>
+	<ui-application appid="org.tizen.download-manager" exec="/usr/apps/org.tizen.download-manager/bin/download-manager" nodisplay="true" multiple="false" type="capp" taskmanage="false" mainapp="true">
+		<label>Download manager</label>
+		<label xml:lang="ar-ae">مدير التحميل</label>
+		<label xml:lang="hy-am">Upravljanje skidanja</label>
+		<label xml:lang="az-az">Yükləmə meneceri</label>
+		<label xml:lang="eu-es">Deskargen kudeatzailea</label>
+		<label xml:lang="bg-bg">Диспечер на изтеглянето</label>
+		<label xml:lang="ca-es">Administrador de descàrregues</label>
+		<label xml:lang="zh-cn">下载管理器</label>
+		<label xml:lang="zh-hk">下載管理員</label>
+		<label xml:lang="zh-sg">下载管理器</label>
+		<label xml:lang="zh-tw">下載管理員</label>
+		<label xml:lang="hr-hr">Upravljanje skidanja</label>
+		<label xml:lang="cs-cz">Správce stahování</label>
+		<label xml:lang="da-dk">Downloadstyring</label>
+		<label xml:lang="nl-nl">Downloadmanager</label>
+		<label xml:lang="en-ph">Download manager</label>
+		<label xml:lang="en-gb">Download manager</label>
+		<label xml:lang="en-us">Download manager</label>
+		<label xml:lang="et-ee">Allalaadimishaldur</label>
+		<label xml:lang="fi-fi">Latauksen hallinta</label>
+		<label xml:lang="fr-fr">Gestionnaire de téléchargement</label>
+		<label xml:lang="fr-ca">Gestionnaire de téléchargement</label>
+		<label xml:lang="gl-es">Administrador de descargas</label>
+		<label xml:lang="ka-ge">ჩამოტვირთვების მმართველი</label>
+		<label xml:lang="de-de">Download-Manager</label>
+		<label xml:lang="el-gr">Διαχείριση λήψεων</label>
+		<label xml:lang="hi-in">डाउनलोड प्रबंधक</label>
+		<label xml:lang="hu-hu">Letöltéskezelő</label>
+		<label xml:lang="is-is">Stjórnun niðurhals</label>
+		<label xml:lang="ga-ie">Bainisteoir íoslódálacha</label>
+		<label xml:lang="it-it">Gestione download</label>
+		<label xml:lang="ja-jp">ダウンロードマネージャー</label>
+		<label xml:lang="kk-kz">Реттеушіні жүктеу</label>
+		<label xml:lang="ko-kr">다운로드 관리자</label>
+		<label xml:lang="lv-lv">Lejupielāžu pārvaldnieks</label>
+		<label xml:lang="lt-lt">Atsisiuntimų tvarkytuvė</label>
+		<label xml:lang="mk-mk">Уредување преземања</label>
+		<label xml:lang="nb-no">Nedlastingsbehandling</label>
+		<label xml:lang="pl-pl">Menedżer pobierania</label>
+		<label xml:lang="pt-pt">Gerenciador de download</label>
+		<label xml:lang="pt-br">Gestor de transferências</label>
+		<label xml:lang="ro-ro">Manager descărcare</label>
+		<label xml:lang="ru-ru">Диспетчер загрузки</label>
+		<label xml:lang="sr-rs">Menadžer preuzimanja</label>
+		<label xml:lang="sk-sk">Správca sťahovaní</label>
+		<label xml:lang="sl-si">Upravitelj prenosov</label>
+		<label xml:lang="es-es">Administrador de descarga</label>
+		<label xml:lang="es-mx">Administrador de descarga</label>
+		<label xml:lang="sv-se">Hämtningshanterare</label>
+		<label xml:lang="tr-tr">İndirme Yöneticisi</label>
+		<label xml:lang="uk-ua">Диспетчер завантажень</label>
+		<label xml:lang="uz-uz">Yuklab olish menejeri</label>
+		<application-service>
+			<operation name="http://tizen.org/appcontrol/operation/download" />
+				<uri name="http" />
+				<uri name="https" />
+				<uri name="NULL" />
+		</application-service>
+	</ui-application>
+</manifest>

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Notificando..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Administrador de descarga"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Sin descargas"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Completo"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "¿Descargar?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "No se ha recibido el archivo. ¿Volverlo a descargar?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "El archivo no existe. ¿Volverlo a descargar?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Descarga completa"
+

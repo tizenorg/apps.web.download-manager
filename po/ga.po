@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "Ag cur in iúl"
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "Bainisteoir íoslódálacha"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "Níl íoslódálacha ann"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "Cuir i gcrích"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "Íoslódáil?"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Ní bhfuarthas an comhad. Íoslódáil arís?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Ní hann don chomhad. Íoslódáil arís?"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "Íoslódáilte"
+

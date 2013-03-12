@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "通知中..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "ダウンロードマネージャー"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "ダウンロードデータがありません。"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "完了"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "ダウンロードしますか？"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "ファイルを受信できませんでした。再度ダウンロードしますか？"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "ファイルがありません。再度ダウンロードしますか？"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "ダウンロード完了"
+

@@ -1,0 +1,24 @@
+msgid "IDS_BR_BODY_NOTIFYING_ING"
+msgstr "正在通知..."
+
+msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
+msgstr "下載管理員"
+
+msgid "IDS_DL_BODY_NO_DOWNLOADS"
+msgstr "無下載"
+
+msgid "IDS_EMAIL_BODY_COMPLETE"
+msgstr "完成"
+
+msgid "IDS_BR_POP_DOWNLOAD_Q"
+msgstr "要下載嗎？"
+
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "檔案尚未收到。再次下載嗎？"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "檔案不存在。再次下載嗎？"
+
+msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgstr "下載完成"
+
