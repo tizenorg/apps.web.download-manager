@@ -119,7 +119,7 @@ void ViewItem::updateFromItem()
 		}
 		elm_genlist_item_fields_update(m_glItem,"elm.text.2",
 			ELM_GENLIST_ITEM_FIELD_TEXT);
-	} else if (m_isRetryCase && state() == ITEM::RECEIVING_DOWNLOAD_INFO) {
+	} else if (m_isRetryCase && state() == ITEM::PREPARE_TO_RETRY) {
 		elm_genlist_item_item_class_update(m_glItem, &dldGenlistStyle);
 	} else if (!isFinished()) {
 		elm_genlist_item_update(m_glItem);

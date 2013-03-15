@@ -84,6 +84,7 @@ void DownloadRequest::setCookie(string cookie)
 void DownloadRequest::extractSenderName()
 {
 	size_t found;
+	size_t found1;
 	string temp;
 	if (m_url.empty()) {
 		m_sender = string();
@@ -100,5 +101,13 @@ void DownloadRequest::extractSenderName()
 		m_sender = temp.substr(0, found);
 	} else {
 		m_sender = temp;
+	}
+	// For credential URL
+	found = m_sender.find("@");
+	found1 = m_sender.find(":");
+	if (found != string::npos && found1 != string::npos &&
+			found1 < found) {
+		string tmp = m_sender.substr(found + 1, m_sender.length());
+		m_sender.assign(tmp);
 	}
 }

@@ -1,8 +1,8 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.1
-Release:	0
+Version:	0.1.2
+Release:	8
 Group:		misc
 License:	Flora License, Version 1.0
 URL:		N/A
@@ -35,6 +35,8 @@ Application for support of the content download
 %setup -q
 
 %build
+CFLAGS+=" -fvisibility=hidden"; export CFLAGS;
+CXXFLAGS+=" -fvisibility=hidden -fvisibility-inlines-hidden"; export CXXFLAGS;
 cmake . -DCMAKE_INSTALL_PREFIX="/usr/apps/org.tizen.download-manager"
 
 make %{?jobs:-j%jobs}
@@ -62,6 +64,21 @@ fi
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Tue Mar 05 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Add function to handle credential URL
+- Add patch about screen reader function.
+- Enable visibility hidden opetion
+
+
+* Tue Jan 29 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Modify manifest for destkop file
+- Change the point to create db
+- Add dependency about db module
+- Add downloading information to db
+
+* Wed Jan 16 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Resolve a bug about cancel operation
+
 * Tue Jan 08 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Resolve prevent defects
 - Fixed a bug that the icon of txt file can't be recognized and the txt file can't be opend

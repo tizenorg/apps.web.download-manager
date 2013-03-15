@@ -37,6 +37,10 @@
 #include "download-manager-history-db.h"
 #include "download-manager-notification.h"
 
+#ifndef EXPORT_API
+#define EXPORT_API __attribute__((visibility("default")))
+#endif
+
 using namespace std;
 
 struct app_data_t {
@@ -241,7 +245,7 @@ static void __app_service(service_h s, void *data)
 	return;
 }
 
-int main(int argc, char *argv[])
+EXPORT_API int main(int argc, char *argv[])
 {
 	app_event_callback_s evt_cb = {0,};
 	int ret = 0;

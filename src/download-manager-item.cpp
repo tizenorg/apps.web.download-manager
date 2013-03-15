@@ -594,6 +594,7 @@ bool Item::retry()
 		netMgrInstance.subscribe(m_aptr_netEventObserver.get());
 		m_historyId = -1;
 		m_aptr_downloadItem->retry(m_id);
+		notify();
 		return true;
 	} else {
 		m_state = ITEM::FAIL_TO_DOWNLOAD;
