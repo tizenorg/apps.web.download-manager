@@ -24,7 +24,7 @@
 #include "download-manager-view.h"
 #include "download-manager-history-db.h"
 #include "download-manager-downloadItem.h"
-#include "status.h"
+#include "notification.h"
 
 static void destroy_window_cb(void *data, Evas_Object *obj, void *event);
 
@@ -732,7 +732,7 @@ void DownloadView::showNotifyInfo(int type, int selectedCount)
 		buf.append(countStr.str());
 		buf.append(")");
 	} else if (type == DOWNLOAD_NOTIFY_DELETED) {
-		status_message_post(S_("IDS_COM_POP_DELETED"));
+		notification_status_message_post(S_("IDS_COM_POP_DELETED"));
 		destroyNotifyInfo();
 		return;
 	}

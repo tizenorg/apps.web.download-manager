@@ -66,7 +66,6 @@ pkg_check_modules(pkgs REQUIRED
 	xdgmime
 	edje
 	libcurl
-	status
 	appsvc
 	notification
 	db-util
