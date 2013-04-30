@@ -4,7 +4,7 @@ Summary:	Application for support of the content download
 Version:	0.1.2
 Release:	8
 Group:		misc
-License:	Flora License, Version 1.0
+License:	Flora License, Version 1.1
 URL:		N/A
 Source0:	%{name}-%{version}.tar.gz
 BuildRequires: pkgconfig(capi-web-url-download)
