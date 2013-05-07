@@ -60,6 +60,7 @@ fi
 /usr/apps/org.tizen.download-manager/res/edje/*
 /usr/share/packages/org.tizen.download-manager.xml
 /usr/share/license/%{name}
+/etc/smack/accesses.d/org.tizen.download-manager.rule
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
