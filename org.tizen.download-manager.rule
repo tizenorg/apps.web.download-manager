@@ -24,7 +24,7 @@ org.tizen.download-manager net.wifi-qs r-x--
 org.tizen.download-manager system::use_internet rw---
 org.tizen.download-manager stest-service -w---
 org.tizen.download-manager device::sys_logging -w---
-e17 org.tizen.download-manager -w---
+e17 org.tizen.download-manager rwx--
 media-server org.tizen.download-manager -w---
 org.tizen.indicator org.tizen.download-manager rwx--
 org.tizen.quickpanel org.tizen.download-manager r-x--
