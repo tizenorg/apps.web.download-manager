@@ -19,6 +19,7 @@ org.tizen.download-manager xorg rw---
 org.tizen.download-manager isf r-x--
 org.tizen.download-manager cbhm r----
 org.tizen.download-manager data-provider-master rw---
+ext_media.download-manager data-provider-master::notification rw---
 org.tizen.download-manager org.tizen.image-viewer rw---
 org.tizen.download-manager net.wifi-qs r-x--
 org.tizen.download-manager system::use_internet rw---
