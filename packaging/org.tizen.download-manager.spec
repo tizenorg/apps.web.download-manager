@@ -26,6 +26,7 @@ BuildRequires: cmake
 BuildRequires: gettext-devel
 BuildRequires: expat-devel
 BuildRequires: edje-tools
+BuildRequires: hash-signer
 
 %description
 Application for support of the content download
@@ -43,6 +44,12 @@ make %{?jobs:-j%jobs}
 %install
 rm -rf %{buildroot}
 %make_install
+PKG_ID=%{name}
+%define tizen_sign 1
+%define tizen_sign_base /usr/apps/${PKG_ID}
+%define tizen_sign_level public
+%define tizen_author_sign 1
+%define tizen_dist_sign 1
 mkdir -p %{buildroot}/usr/share/license
 mkdir -p %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db
 #### Download History ####
@@ -58,6 +65,7 @@ fi
 /usr/apps/org.tizen.download-manager/bin/*
 /usr/apps/org.tizen.download-manager/res/*
 /usr/apps/org.tizen.download-manager/res/edje/*
+/usr/apps/org.tizen.download-manager/*.xml
 /usr/share/packages/org.tizen.download-manager.xml
 /usr/share/license/%{name}
 /etc/smack/accesses.d/org.tizen.download-manager.rule
