@@ -1,8 +1,8 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.2
-Release:	9
+Version:	0.1.3
+Release:	0
 Group:		misc
 License:	Flora License, Version 1.1
 URL:		N/A
@@ -72,6 +72,10 @@ fi
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Fri Mar 10 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Modify e17 and notification smac rule
+- Apply to sign application packages
+
 * Fri Mar 10 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Add smack rule file.
 
