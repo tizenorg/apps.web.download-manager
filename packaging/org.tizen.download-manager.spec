@@ -27,6 +27,9 @@ BuildRequires: gettext-devel
 BuildRequires: expat-devel
 BuildRequires: edje-tools
 BuildRequires: hash-signer
+BuildRequires: libprivilege-control-conf
+Requires(post): coreutils
+Requires(post): sqlite
 
 %description
 Application for support of the content download
