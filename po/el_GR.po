@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Ειδοποίηση..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Διαχείριση λήψεων"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Δεν υπάρχουν λήψεις"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Ολοκληρώθηκε"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Λήψη;"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Δεν έγινε λήψη του αρχείου. Επανάληψη λήψης;"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Το αρχείο δεν υπάρχει. Επανάληψη λήψης;"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Προετοιμασία για λήψη..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Δεν υπάρχουν λήψεις"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Δεν υπάρχει αρκετή μνήμη. Διαγράψτε ορισμένα στοιχεία"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Η λήψη ολοκληρώθηκε"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Ειδοποίηση διακομιστή..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Διαχείριση λήψεων"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Επιλογή στοιχείων"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

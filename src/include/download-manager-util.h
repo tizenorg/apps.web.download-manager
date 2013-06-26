@@ -36,11 +36,13 @@ public:
 	FileUtility() {}
 	~FileUtility() {}
 
-	bool checkTempDir(void);
+	bool checkTempDir(string userInstallDir);
 	bool openFile(string path, int contentType);
+	void openMyFilesApp(void);
 	bool isExistedFile(string path, bool isDir);
 	bool renameFile(string from, string to);
 	bool copyFile(string from, string to);
+	void cleanTempDir(void);
 };
 
 class DownloadUtil
@@ -53,7 +55,8 @@ public:
 
 	int getContentType(const char *mimem, const char *filePath);
 	bool registerContent(string filePath, string &thumbnailPath);
-	string saveContent(string filePath);
+	string saveContent(string filePath, string userInstallDir);
+	string getUserAgent(void);
 
 private:
 	DownloadUtil(void);

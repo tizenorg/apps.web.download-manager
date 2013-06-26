@@ -35,6 +35,7 @@ public:
 	~ViewItem();
 	static void create(Item *item);
 	void destroy(void);
+	void cancel(void);
 	inline void deleteFromDB(void) {
 		if (m_item)
 			m_item->deleteFromDB();
@@ -51,8 +52,6 @@ public:
 	static Evas_Object *getGenlistIconCB(void *data, Evas_Object *obj,
 		const char *part);
 	Evas_Object *getGenlistIcon(Evas_Object *obj, const char *part);
-
-	static void checkChangedCB(void *data, Evas_Object *obj, void *event_info);
 
 	const char *getMessage(void);
 	const char *getBytesStr(void);
@@ -109,10 +108,10 @@ public:
 
 	inline Elm_Object_Item *genlistItem(void) { return m_glItem; }
 	inline void setGenlistItem(Elm_Object_Item *glItem) { m_glItem = glItem; }
-	inline void setProgressBar(Evas_Object *p) { m_progressBar = p; }
 	inline string senderName(void) { return m_item->sender(); }
 
 	void clickedCancelButton(void);
+	void clickedCanceledRetryButton(void);
 	void clickedRetryButton(void);
 	void clickedGenlistItem(void);
 	void requestCancel(void);
@@ -127,6 +126,9 @@ public:
 	void extractDateGroupType(void);
 
 	inline unsigned int historyId(void) { return m_item->historyId(); }
+
+	void setIsClickedFromNoti(bool b) { m_isClickedFromNoti = b; }
+	bool isClickedFromNoti(void) { return m_isClickedFromNoti; }
 
 #ifdef _ENABLE_OMA_DOWNLOAD
 	void responseUserConfirm(bool res);
@@ -145,13 +147,13 @@ private:
 	auto_ptr<Observer> m_aptr_observer;
 	Item *m_item;
 
-	Elm_Genlist_Item_Class dldGenlistStyle;
-	Elm_Genlist_Item_Class dldHistoryGenlistStyle;
+	static Elm_Genlist_Item_Class dldGenlistStyle;
+	static Elm_Genlist_Item_Class dldHistoryGenlistStyle;
 	Elm_Object_Item *m_glItem;
-	Evas_Object *m_progressBar;
 	Evas_Object *m_checkedBtn;
 	Eina_Bool m_checked;
 	bool m_isRetryCase;
+	bool m_isClickedFromNoti;
 };
 
 #endif /* DOWNLOAD_MANAGER_VIEW_ITEM_H */

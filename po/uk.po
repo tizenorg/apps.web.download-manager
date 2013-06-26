@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Сповіщення..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Диспетчер завантажень"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Немає завантажень"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Завершено"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Завантажити?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Файл не отримано. Завантажити ще раз?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Файл не існує. Завантажити ще раз?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Підготовка до завантаження..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Немає завантажень"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Недостатньо пам’яті. Видаліть деякі об’єкти"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Завантаження завершено"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Сповіщення сервера..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Диспетчер завантажень"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Виберіть об’єкти"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

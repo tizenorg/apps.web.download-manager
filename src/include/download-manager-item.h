@@ -37,6 +37,7 @@ namespace ITEM {
 enum STATE {
 	IDLE = 0,
 	REQUESTING,
+	QUEUED,
 	PREPARE_TO_RETRY,
 	RECEIVING_DOWNLOAD_INFO,
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -69,6 +70,7 @@ public:
 	/* SHOULD call this before destrying an item*/
 	void deleteFromDB(void);
 	void download(void);
+	void downloadFromQueuedState(void);
 	inline void cancel(void)
 	{
 		if (m_aptr_downloadItem.get())
@@ -83,14 +85,14 @@ public:
 	void handleUserConfirm(bool res);
 	void doneNotifyFinished(void);
 #endif
-
+	void deleteCompleteNoti(void);
 	inline void subscribe(Observer *o) { m_subjectForView.attach(o); }
 	inline void deSubscribe(Observer *o) { m_subjectForView.detach(o); }
 
 	static void updateCBForDownloadObserver(void *data);
 	static void netEventCBObserver(void *data);
 	void updateFromDownloadItem(void);
-	inline void suspend(void) { m_aptr_downloadItem->suspend(); }
+	void suspend(void);
 
 	inline int id(void) {
 		if (m_aptr_downloadItem.get())
@@ -137,9 +139,13 @@ public:
 	inline void setTitle(string &title) { m_title = title; }
 	string &registeredFilePath(void);
 	inline void setRegisteredFilePath(string &r) { m_registeredFilePath = r; }
-	string &url(void);
-	string &cookie(void);
-	void setRetryData(string &url, string &cookie);
+	string url(void);
+	string cookie(void);
+	string reqHeaderField(void);
+	string reqHeaderValue(void);
+	string installDir(void);
+	void setRetryData(string url, string cookie,
+			string reqHeaderField, string reqHeaderValue, string installDir);
 	int contentType(void) { return m_contentType; }
 	inline void setContentType(int t) { m_contentType = t; }
 	DL_TYPE::TYPE downloadType(void);
@@ -173,6 +179,15 @@ public:
 			return m_aptr_downloadItem->isNotifyFiinished();
 		return true;
 	}
+	inline string installNotifyUrl(void) { return m_installNotifyUrl; }
+	inline void setInstallNotifyUrl(string url) { m_installNotifyUrl = url; }
+	inline bool isExistedInstallNotifyUri(void)
+	{
+		if (m_aptr_downloadItem.get())
+			return m_aptr_downloadItem->isExistedInstallNotifyUri();
+		return false;
+	}
+	void setNotifyIdler(Ecore_Idler *idler) { m_notifyIdler = idler; }
 #endif
 	/* Test code */
 	const char *stateStr(void);
@@ -192,6 +207,7 @@ private:
 	void createHistoryId(void);
 	bool isExistedHistoryId(unsigned int id);
 	void handleFinishedItem(void);
+	void checkQueuedItem(void);
 
 	auto_ptr<DownloadRequest> m_aptr_request;
 	auto_ptr<DownloadItem> m_aptr_downloadItem;
@@ -219,9 +235,14 @@ private:
 	string m_registeredFilePath;
 	string m_url;
 	string m_cookie;
+	string m_reqHeaderField;
+	string m_reqHeaderValue;
+	string m_installDir;
 	string m_thumbnailPath;
+
 #ifdef _ENABLE_OMA_DOWNLOAD
 	Ecore_Idler *m_notifyIdler;
+	string m_installNotifyUrl;
 #endif
 	bool m_gotFirstData;
 };

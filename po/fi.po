@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Ilmoitetaan..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Latauksen hallinta"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Latauksia ei ole"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Valmis"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Ladataanko?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Tiedostoa ei ole vastaanotettu. Ladataanko uudelleen?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Tiedostoa ei ole. Ladataanko uudelleen?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Valmistellaan lataamista..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Latauksia ei ole"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Muisti ei riitä. Poista joitain kohteita"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Lataus valmis"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Ilmoit. palvelimelle..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Latauksen hallinta"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Valitse kohteet"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

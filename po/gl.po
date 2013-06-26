@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Notificando..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Administrador de descargas"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Ningunha descarga"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Completar"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Descargar?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "O arquivo non se recibiu. Desexas descargalo de novo?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "O arquivo non existe. Desexas descargalo de novo?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Preparando para descargar..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Ningunha descarga"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Non hai suficiente memoria. Elimine algúns elementos"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Descarga completa"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Notifica. ao servidor..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Administrad. descargas"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Seleccionar elementos"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

@@ -75,10 +75,10 @@ int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
 	refYday = finishedDate->tm_yday;
 	refYear = finishedDate->tm_year;
 	diffDays = nowYday - refYday;
-	DP_LOGV("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
+	DM_LOGD("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
 		(finishedDate->tm_year + 1900), (finishedDate->tm_mon + 1),
 		finishedDate->tm_mday, refTime, refYday);
-	DP_LOGV("nowDate[%d/%d/%d]",
+	DM_LOGD("nowDate[%d/%d/%d]",
 			(nowDate->tm_year + 1900), (nowDate->tm_mon + 1),
 			nowDate->tm_mday);
 	if ((nowYear-refYear)>0 && diffDays < 0) {
@@ -88,7 +88,7 @@ int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
 		if ((year%4 == 0 && year%100 != 0) || year%400 == 0)
 			diffDays++;
 	}
-	DP_LOGV("diffDays[%d]",diffDays);
+	DM_LOGD("diffDays[%d]",diffDays);
 	return diffDays;
 }
 
@@ -106,7 +106,7 @@ UDateFormat *DateUtil::getBestPattern(const char *patternStr,
 		patternLen = udatpg_getBestPattern(generator, customSkeleton,
 		u_strlen(customSkeleton), bestPattern, MAX_PATTERN_BUFFER_LEN,
 			&status);
-		DP_LOGV("udatpg_getBestPattern status[%d] bestPattern[%s]", status,
+		DM_LOGD("udatpg_getBestPattern status[%d] bestPattern[%s]", status,
 			bestPattern);
 		if (patternLen < 1) {
 			format = udat_open(UDAT_SHORT, UDAT_NONE, locale, NULL, -1,
@@ -125,16 +125,14 @@ void DateUtil::updateLocale()
 	UErrorCode status = U_ZERO_ERROR;
 	const char *locale = NULL;
 
-	DP_LOGV_FUNC();
-
 	deinitLocaleData();
 
 	uloc_setDefault(getenv("LC_TIME"), &status);
-	DP_LOGV("uloc_setDefault status[%d]",status);
+	DM_LOGD("uloc_setDefault status[%d]",status);
 
 	locale = uloc_getDefault();
 	generator = udatpg_open(locale,&status);
-	DP_LOGV("udatpg_open status[%d]",status);
+	DM_LOGD("udatpg_open status[%d]",status);
 
 	timeFormat12H = getBestPattern("hm", generator, locale);
 	timeFormat24H = getBestPattern("Hm", generator, locale);
@@ -155,7 +153,6 @@ void DateUtil::getDateStr(double finishTime, string &outBuf)
 	bool value = false;
 	int style;
 	int diffDay = 0;
-	//DP_LOGD_FUNC();
 
 	double nowTime = time(NULL);
 	diffDay = getDiffDays((time_t)nowTime, (time_t)finishTime);
@@ -168,7 +165,7 @@ void DateUtil::getDateStr(double finishTime, string &outBuf)
 	case LOCALE_STYLE::TIME:
 		if (runtime_info_get_value_bool(
 				RUNTIME_INFO_KEY_24HOUR_CLOCK_FORMAT_ENABLED,&value) != 0) {
-			DP_LOGE("runtime_info_get_value_bool is failed");
+			DM_LOGE("Fail to get runtime_info_get_value_bool");
 			format = timeFormat12H;
 		} else {
 			if (value)
@@ -184,11 +181,11 @@ void DateUtil::getDateStr(double finishTime, string &outBuf)
 	if (format) {
 		char tempBuf[MAX_BUF_LEN] = {0,};
 		udat_format(format, (finishTime * 1000), str, MAX_BUF_LEN - 1, NULL, &status);
-		DP_LOGV("udat_format : status[%d]", status);
+		DM_LOGD("udat_format:status[%d]", status);
 		u_austrncpy(tempBuf, str, MAX_BUF_LEN-1);
 		outBuf = string(tempBuf);
 	} else {
-		DP_LOGE("Critical: fail to get time value");
+		DM_LOGE("Fail to get time value");
 		outBuf = string(S_("IDS_COM_POP_ERROR"));
 	}
 }

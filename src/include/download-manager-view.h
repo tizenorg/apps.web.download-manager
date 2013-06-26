@@ -30,6 +30,7 @@
 #include "download-manager-common.h"
 #include "download-manager-viewItem.h"
 #include "download-manager-dateTime.h"
+#include "vconf.h"
 
 enum {
 	POPUP_EVENT_EXIT = 0,
@@ -47,17 +48,18 @@ public:
 	void destroy(void);
 	void createView(void);
 	void activateWindow(void);
-#ifdef _ENABLE_ROTATE
-	void rotateWindow(int angle);
-#endif
+	void clickedItemFromNoti(unsigned int historyId);
 	void show(void);
 	void hide(void);
 	void pause(void);
+	void resume(void);
+	static void lockStateChangedCB(keynode_t *node, void *user_data);
 
 	void attachViewItem(ViewItem *viewItem);
 	void detachViewItem(ViewItem *viewItem);
 	void changedRegion(void);
 	void showErrPopup(string &desc);
+	void showMemoryFullPopup(void);
 	void showRetryPopup(ViewItem *viewItem, string msg);
 	void update(void);
 	void update(ViewItem *viewItem);
@@ -74,24 +76,29 @@ public:
 	void showOMAPopup(string msg, ViewItem *viewItem);
 #endif
 	void setSilentMode(bool value) { m_silentMode = value; }
+	void setActivatedLockScreen(bool value) { m_activatedLockScreen = value; }
 
 private:
-	static void showNotifyInfoCB(void *data, Evas *evas, Evas_Object *obj, void *event);
 	static void hideNotifyInfoCB(void *data, Evas *evas, Evas_Object *obj, void *event);
-	static void backBtnCB(void *data, Evas_Object *obj, void *event_info);
-	static void cbDeleteBtnCB(void *data, Evas_Object *obj, void *event_info);
-	static void cbItemCancelCB(void *data, Evas_Object *obj, void *event_info);
-	static void selectAllClickedCB(void *data, Evas *evas, Evas_Object *obj,
-		void *event_info);
 	static void selectAllChangedCB(void *data, Evas_Object *obj,
-		void *event_info);
+			void *event_info);
 	static void genlistClickCB(void *data, Evas_Object *obj, void *event_info);
 	static void cancelClickCB(void *data, Evas_Object *obj, void *event_info);
 	static void errPopupResponseCB(void *data, Evas_Object *obj, void *event_info);
-	static Eina_Bool deletedNotifyTimerCB(void *data);
 	static void retryPopupCancelCB(void *data, Evas_Object *obj, void *event_info);
 	static void retryPopupRetryCB(void *data, Evas_Object *obj, void *event_info);
-
+	static void memoryFullPopupCancelCB(void *data, Evas_Object *obj, void *event_info);
+	static void memoryFullPopupMyFilesCB(void *data, Evas_Object *obj, void *event_info);
+#ifdef _HW_BACK_KEY
+	static void deleteBtnCB(void *data, Evas_Object *obj, void *event_info);
+	static void popupBackCB(void *data, Evas_Object *obj, void *event_info);
+	static void cancelToolBarBtnCB(void *data, Evas_Object *obj, void *event_info);
+	static void deleteToolBarBtnCB(void *data, Evas_Object *obj, void *event_info);
+	static void deletePopupDeleteCB(void *data, Evas_Object *obj, void *event_info);
+#else
+	static void cbDeleteBtnCB(void *data, Evas_Object *obj, void *event_info);
+#endif
+	static Eina_Bool popCB(void *data, Elm_Object_Item *it);
 #ifdef _ENABLE_OMA_DOWNLOAD
 	static void omaPopupResponseOKCB(void *data, Evas_Object *obj, void *event_info);
 	static void omaPopupResponseCancelCB(void *data, Evas_Object *obj, void *event_info);
@@ -101,7 +108,6 @@ private:
 	DownloadView();
 	~DownloadView();
 
-	inline void destroyEvasObj(Evas_Object *e) { if(e) {evas_object_del(e); e = NULL;} }
 	void setTheme(void);
 	void setIndicator(Evas_Object *window);
 	Evas_Object *createWindow(const char *windowName);
@@ -110,8 +116,16 @@ private:
 	Evas_Object *createLayout(Evas_Object *parent);
 	void createTheme(void);
 	void createNaviBar(void);
+#ifdef	_HW_BACK_KEY
+	void createToolBar(void);
+	void destroyToolBar(void);
+	void createDeleteBtn(void);
+	void destroyDeleteBtn(void);
+	void showDeletePopup(void);
+#else
 	void createBackBtn(void);
 	void createControlBar(void);
+#endif
 	void createBox(void);
 	void createList(void);
 
@@ -128,12 +142,10 @@ private:
 #endif
 	void showGenlistEditMode(void);
 	void hideGenlistEditMode(void);
-	void createSelectAllLayout(void);
-	void changeAllCheckedValue(void);
+	void createSelectAll(void);
 	void destroyCheckedItem(void);
-	void showNotifyInfo(int type, int selectedCount);
-	void destroyNotifyInfo(void);
-	void createNotifyInfo(void);
+	void showDeletedNotify(void);
+	void showSelectedNotify(int selectedCount);
 	void cleanGenlistData();
 
 	Evas_Object *eoWindow;
@@ -143,22 +155,24 @@ private:
 	Evas_Object *eoEmptyNoContent;
 	Evas_Object *eoNaviBar;
 	Elm_Object_Item *eoNaviBarItem;
+#ifdef	_HW_BACK_KEY
+	Evas_Object *eoToolBar;
+	Elm_Object_Item *eoToolBarItem;
+#else
 	Evas_Object *eoBackBtn;
-	Evas_Object *eoControlBar;
 	Evas_Object *eoDeleteBtn;
-	Evas_Object *eoBoxLayout;
+#endif
 	Evas_Object *eoBox;
 	Evas_Object *eoDldList;
 	Evas_Object *eoPopup;
-	Evas_Object *eoSelectAllLayout;
 	Evas_Object *eoAllCheckedBox;
-	Evas_Object *eoNotifyInfoLayout;
 	Eina_Bool m_allChecked;
 #ifdef _ENABLE_OMA_DOWNLOAD
 	ViewItem *prevOmaViewItem;
 #endif
 	int m_viewItemCount;
 	bool m_silentMode;
+	bool m_activatedLockScreen;
 };
 
 #endif /* DOWNLOAD_MANAGER_VIEW_H */

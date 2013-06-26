@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Notificant..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Administrador de descàrregues"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Sense descàrregues"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Finalitzar"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Descarregar?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "No s'ha rebut el fitxer. Tornar-lo a descarregar?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "El fitxer no existeix. Tornar-lo a descarregar?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Preparant per descarregar..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Sense descàrregues"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "No hi ha prou memòria. Esborrar-ne alguns elements"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Descàrrega completa"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Notificant servidor..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Administrador descàr"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Seleccionar elements"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

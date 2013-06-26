@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Се известува..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Уредување преземања"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Нема преземања"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Завршено"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Преземи?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Фајлот не е примен. Да се преземе пак?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Фајлот не постои. Да се преземе пак?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Се подготвува за преземање..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Нема преземања"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Нема доволно меморија. Избришете некој запис"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Преземањето заврши"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Се известува серверот..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Уредување преземања"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Изберете записи"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

@@ -56,7 +56,7 @@ int op_parse_dd1_file(XML_Parser parser, dd_oma1_t **dd)
 	dd_oma1_t *dd1 = OP_NULL;
 	op_parser_app_data_t *app_data = OP_NULL;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	app_data = (op_parser_app_data_t *)calloc(1,
 	        sizeof(op_parser_app_data_t));
@@ -96,12 +96,9 @@ int op_parse_dd1_file(XML_Parser parser, dd_oma1_t **dd)
 
 ERR:
 	if (OP_RESULT_OK != ret) {
-		if (cntx)
-			free(cntx);
-
-		if (app_data)
-			free(app_data);
-
+		free(cntx);
+		free(app_data);
+		free(dd1);
 		*dd = OP_NULL;
 	}
 
@@ -113,7 +110,7 @@ void op_free_dd1_info(dd_oma1_t *dd_info)
 	more_type_info_t *temp_ptr = NULL;
 	more_type_info_t *temp_ptr_next = NULL;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	if (dd_info == NULL)
 		return;
@@ -169,7 +166,7 @@ int op_check_dd1_mandatory_tags(XML_Parser parser)
 {
 	int count = 0;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	op_parser_app_data_t *app_data =
 	        (op_parser_app_data_t *)XML_GetUserData(parser);
@@ -177,13 +174,14 @@ int op_check_dd1_mandatory_tags(XML_Parser parser)
 
 	while (count < DD_ELEMENT_MANOPT_COUNT) {
 		if (OP_FALSE == cntx->bMand_element_registrar[count]) {
-			OP_LOGE("One ore more Mandatory Elements Missing : [%s...]", dd_element_table[count].element_str);
+			OP_SLOG("ERR:One ore more Mandatory Elements Missing:[%s]",
+					dd_element_table[count].element_str);
 			return OP_FALSE;
 		}
 		count++;
 	}
 
-	OP_LOGI("DD1 Mandatory Element Check Pass");
+	OP_LOGD("DD1 Mandatory Element Check Pass");
 	return OP_TRUE;
 }
 
@@ -195,11 +193,11 @@ void op_expat_startelement_dd1(
 	op_parser_app_data_t *app_data = OP_NULL;
 	int index = 0;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	app_data = (op_parser_app_data_t*)userData;
 
-	OP_LOGI("Start Element [%s]", name);
+	OP_SLOG("Start Element [%s]", name);
 	app_data->element_index = DD1_ELEMENT_NONE;
 
 	if (OP_RESULT_OK != app_data->parseError) {
@@ -210,7 +208,8 @@ void op_expat_startelement_dd1(
 	for (index = 0; index < DD_ELEMENT_COUNT_MAX; index++) {
 		if (0 == strcmp(name,
 		        (const XML_Char *)(dd_element_table[index].element_str))) {
-			OP_LOGI("Element matches with listed's . Index [%d]", dd_element_table[index].element_index);
+			OP_LOGD("Element matches with listed's. Index[%d]",
+					dd_element_table[index].element_index);
 			app_data->element_index
 			        = dd_element_table[index].element_index;
 			OPEN_ELEMENT(app_data->element_index);
@@ -220,7 +219,7 @@ void op_expat_startelement_dd1(
 
 	if (index == DD_ELEMENT_COUNT_MAX) {
 		app_data->parseError = OP_PARSER_ERR_UNKNOWN_ELEMENT;
-		OP_LOGE("Element [%s] is not listed.", name);
+		OP_SLOG("ERR:Element [%s] is not listed.", name);
 		goto ERR;
 	}
 
@@ -233,11 +232,11 @@ void op_expat_endelement_dd1(void *userData, const XML_Char *name)
 	op_parser_app_data_t *app_data = OP_NULL;
 	int index = 0;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	app_data = (op_parser_app_data_t*)userData;
 
-	OP_LOGI("End Element [%s]", name);
+	OP_SLOG("End Element [%s]", name);
 
 	if (OP_RESULT_OK != app_data->parseError) {
 		OP_LOGE("Inetrnal Error Occured");
@@ -260,7 +259,7 @@ void op_expat_endelement_dd1(void *userData, const XML_Char *name)
 	}
 
 	if (index == DD_ELEMENT_COUNT_MAX) {
-		OP_LOGE("Element  Is not listed");
+		OP_LOGE("Element is not listed");
 		app_data->parseError = OP_PARSER_ERR_UNKNOWN_ELEMENT;
 		goto ERR;
 	}
@@ -276,7 +275,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 	op_parser_app_data_t *app_data = OP_NULL;
 	char *ch_str = OP_NULL;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	app_data = (op_parser_app_data_t *)userData;
 	cntxt = (dd1_cntx *)(app_data->data);
@@ -299,12 +298,12 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 
 	memcpy(ch_str, (char *)s, len);
 	if (app_data->element_index >= 0) {
-		OP_LOGI("app_data->parseError[%d], app_data->element_index[%d], \
+		OP_LOGD("app_data->parseError[%d], app_data->element_index[%d], \
 				dd_element_table[app_data->element_index].isTagOpen[%d]",
 				app_data->parseError,app_data->element_index,
 				IS_ELEMENT_OPEN(app_data->element_index));
 	} else {
-		OP_LOGI("app_data->parseError[%d], app_data->element_index[%d]",
+		OP_LOGD("app_data->parseError[%d], app_data->element_index[%d]",
 				app_data->parseError,app_data->element_index);
 	}
 	if ((OP_RESULT_OK == app_data->parseError) &&
@@ -322,7 +321,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 					cntxt->bMand_element_registrar[app_data->element_index]
 					        = OP_TRUE;
 				} else {
-					OP_LOGE("Element Index [%d] is not in Mandatory List", app_data->element_index);
+					OP_LOGE("Element Index[%d] is not in Mandatory List",
+							app_data->element_index);
 					app_data->parseError
 					        = OP_PARSER_ERR_INTERNAL_PARSING;
 					goto ERR;
@@ -330,7 +330,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 
 				strncpy(dd_info->type, ch_str,
 				        OP_MAX_MIME_STR_LEN - 1);
-				OP_LOGI("dd_info->type : [%s]", dd_info->type);
+				OP_SLOG("dd_info->type:[%s]", dd_info->type);
 			} else {
 				more_type_info_t *temp_type = OP_NULL;
 
@@ -345,7 +345,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				temp_type->next = OP_NULL;
 				strncpy((char*)(temp_type->type), ch_str,
 				        OP_MAX_MIME_STR_LEN - 1);
-				OP_LOGI("dd_infoerror:->type[other] : [%s]", temp_type->type);
+				OP_SLOG("dd_infoerror:->type[other]:[%s]", temp_type->type);
 
 				if (dd_info->other_type_info == OP_NULL) {
 					dd_info->other_type_info = temp_type;
@@ -368,7 +368,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				cntxt->bMand_element_registrar[app_data->element_index]
 				        = OP_TRUE;
 			} else {
-				OP_LOGE("Element Index [%d] is not in Mandatory List", app_data->element_index);
+				OP_LOGE("Element Index[%d] is not in Mandatory List",
+						app_data->element_index);
 				app_data->parseError
 				        = OP_PARSER_ERR_INTERNAL_PARSING;
 				goto ERR;
@@ -378,11 +379,11 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 			if (op_com_utils_is_number((const char*)ch_str)) {
 				dd_info->size = atoi(ch_str);
 				if (dd_info->size <= 0)
-					OP_LOGE("size is invalid ");
+					OP_LOGE("size is invalid");
 
-				OP_LOGI("dd_info->size : [%d]", dd_info->size);
+				OP_SLOG("dd_info->size:[%d]", dd_info->size);
 			} else {
-				OP_LOGE("size is invalid ");
+				OP_LOGE("size is invalid");
 			}
 
 			break;
@@ -392,7 +393,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				cntxt->bMand_element_registrar[app_data->element_index]
 				        = OP_TRUE;
 			} else {
-				OP_LOGE("Element Index [%d] is not in Mandatory List", app_data->element_index);
+				OP_LOGE("Element Index [%d] is not in Mandatory List",
+						app_data->element_index);
 				app_data->parseError
 				        = OP_PARSER_ERR_INTERNAL_PARSING;
 				goto ERR;
@@ -409,7 +411,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				                dd_info->object_uri));
 			}
 
-			OP_LOGI("dd_info->object_uri : [%s]", dd_info->object_uri);
+			OP_SLOG("dd_info->object_uri:[%s]", dd_info->object_uri);
 
 			break;
 
@@ -421,8 +423,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				strncpy(dd_info->name, ch_str, strlen(ch_str));
 			}
 
-			OP_LOGI("ch_str[%s]", ch_str);
-			OP_LOGI("dd_info->name : [%s]", dd_info->name);
+			OP_SLOG("dd_info->name:[%s]", dd_info->name);
 
 			break;
 
@@ -434,7 +435,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 			        != OP_RESULT_OK)
 					OP_LOGE("Version Resolution Error");
 
-			OP_LOGI("dd_info->major_version : [%d], dd_info->minor_version: [%d]", dd_info->major_version, dd_info->minor_version);
+			OP_SLOG("major_version:[%d],minor_version:[%d]",
+					dd_info->major_version, dd_info->minor_version);
 
 			break;
 
@@ -458,7 +460,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				strncpy(dd_info->vendor, ch_str, strlen(ch_str));
 			}
 
-			OP_LOGI("dd_info->vendor : [%s]", dd_info->vendor);
+			OP_SLOG("dd_info->vendor:[%s]", dd_info->vendor);
 
 			break;
 
@@ -484,7 +486,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				strncpy(dd_info->install_notify_uri,
 				        (const char*)ch_str, strlen(ch_str));
 			}
-			OP_LOGI("dd_info->install_notify_uri : [%s]", dd_info->install_notify_uri);
+			OP_SLOG("dd_info->install_notify_uri:[%s]",
+					dd_info->install_notify_uri);
 
 			break;
 
@@ -508,7 +511,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				strncpy(dd_info->description,
 				        (const char*)ch_str, strlen(ch_str));
 			}
-			OP_LOGI("dd_info->description : [%s]", dd_info->description);
+			OP_SLOG("dd_info->description:[%s]",
+					dd_info->description);
 
 			break;
 
@@ -534,7 +538,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				strncpy(dd_info->midlet_info_url,
 				        (const char*)ch_str, strlen(ch_str));
 			}
-			OP_LOGI("dd_info->midlet_info_url : [%s]", dd_info->midlet_info_url);
+			OP_SLOG("dd_info->midlet_info_url:[%s]",
+					dd_info->midlet_info_url);
 
 			break;
 
@@ -559,7 +564,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				}
 				strncpy(dd_info->icon_uri, (const char*)ch_str,
 				        strlen(ch_str));
-				OP_LOGI("dd_info->icon_uri : [%s]", dd_info->icon_uri);
+				OP_SLOG("dd_info->icon_uri:[%s]",
+						dd_info->icon_uri);
 			}
 			break;
 
@@ -586,7 +592,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				        strlen(ch_str));
 			}
 
-			OP_LOGI("dd_info->next_url : [%s]", dd_info->next_url);
+			OP_SLOG("dd_info->next_url:[%s]",
+					dd_info->next_url);
 
 			break;
 
@@ -597,7 +604,8 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 			} else {
 				dd_info->progressive_download_flag = OP_FALSE;
 			}
-			OP_LOGI("dd_info->progressive_download_flag: [%d]", dd_info->progressive_download_flag);
+			OP_LOGD("dd_info->progressive_download_flag:[%d]",
+					dd_info->progressive_download_flag);
 
 			break;
 
@@ -611,7 +619,9 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 		}
 	} else {
 		if (app_data->element_index >= 0)
-			OP_LOGE("Element [%s] Value String [%s]", dd_element_table[app_data->element_index].element_str, ch_str);
+			OP_SLOG("ERR:Element[%s] Value String[%s]",
+					dd_element_table[app_data->element_index].element_str,
+					ch_str);
 	}
 
 ERR:

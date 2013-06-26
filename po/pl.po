@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Powiadamianie..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Menedżer pobierania"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Brak pobranych elementów"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Zakończono"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Pobrać?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Nie otrzymano pliku. Pobrać ponownie?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Plik nie istnieje. Pobrać ponownie?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Przygotowywanie do pobierania..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Brak pobranych elementów"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Brak pamięci. Usuń niektóre elementy"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Pobieranie zakończone"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Powiadamianie serwera..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Menedżer pobierania"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Wybierz elementy"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

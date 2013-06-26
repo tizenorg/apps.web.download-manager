@@ -25,6 +25,7 @@
 #include <iostream>
 #include <memory>
 
+#include "Ecore.h"
 #include "Ecore_X.h"
 #include "aul.h"
 #include "app.h"
@@ -49,30 +50,10 @@ struct app_data_t {
 	int load_count;
 };
 
-#ifdef _ENABLE_ROTATE
-int __get_rotate_angle()
-{
-	app_device_orientation_e rotation_state;
-	rotation_state = app_get_device_orientation();
-
-	DP_LOGD("Rotate angle[%d]",rotation_state);
-	return rotation_state;
-}
-
-static void __rotate_changed_cb(app_device_orientation_e m, void *data)
-{
-	int angle = 0;
-	DownloadView &view = DownloadView::getInstance();
-
-	angle = __get_rotate_angle();
-	view.rotateWindow(angle);
-	return;
-}
-#endif
 
 static void __lang_changed_cb(void *data)
 {
-	DP_LOGD("=== Language changed nofification ===");
+	DM_LOGI("==Language changed notification==");
 	DownloadView &view = DownloadView::getInstance();
 	view.updateLang();
 	return;
@@ -82,13 +63,13 @@ static void __region_changed_cb(void *data)
 {
 	DownloadView &view = DownloadView::getInstance();
 	view.changedRegion();
-	DP_LOGD("=== Region changed nofification ===");
+	DM_LOGI("==Region changed notification==");
 	return;
 }
 
 static void __low_memory_cb(void *data)
 {
-	DP_LOGD("=== Low memory nofification ===");
+	DM_LOGI("=== Low memory nofification ===");
 	return;
 }
 
@@ -100,23 +81,23 @@ static Eina_Bool __load_remained_history(void *data)
 		DownloadHistoryDB::createRemainedItemsFromHistoryDB(
 			LOAD_HISTORY_COUNT, app_data->load_count);
 		return ECORE_CALLBACK_RENEW;
-	} else
+	} else {
+		if(app_data)
+			app_data->idler = NULL;
 		return ECORE_CALLBACK_CANCEL;
+	}
 }
 
 static bool __app_create(void *data)
 {
 	int count = 0;
-#ifdef _ENABLE_ROTATE
-	int angle = 0;
-#endif
 	struct app_data_t *app_data = (struct app_data_t *)data;
-	DP_LOG_START("App Create");
+	DM_LOGI("");
 
 	DownloadView &view = DownloadView::getInstance();
 	Evas_Object *window = view.create();
 	if (!window) {
-		DP_LOGE("Fail to create main window");
+		DM_LOGE("Fail to create main window");
 		return false;
 	}
 
@@ -124,10 +105,6 @@ static bool __app_create(void *data)
 	NetMgr &netObj = NetMgr::getInstance();
 	netObj.initNetwork();
 
-#ifdef _ENABLE_ROTATE
-	angle = __get_rotate_angle();
-	view.rotateWindow(angle);
-#endif
 	/* Make genlist items of history for UI performance */
 	view.update();
 
@@ -138,19 +115,20 @@ static bool __app_create(void *data)
 		if (count > LOAD_HISTORY_COUNT) {
 			if (app_data) {
 				app_data->history_count = count;
-				app_data->idler = ecore_idler_add(__load_remained_history, app_data);
+				app_data->idler = ecore_idler_add(__load_remained_history,
+						app_data);
 			}
 		}
 	}
 
-	DP_LOGD("App Create - DONE");
+	DM_LOGI("DONE");
 
 	return true;
 }
 
 static void __app_terminate(void *data)
 {
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 	struct app_data_t *app_data = (struct app_data_t *)data;
 	NetMgr &netObj = NetMgr::getInstance();
 	netObj.deinitNetwork();
@@ -167,7 +145,7 @@ static void __app_terminate(void *data)
 
 static void __app_pause(void *data)
 {
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 	DownloadView &view = DownloadView::getInstance();
 	view.pause();
 	return;
@@ -175,6 +153,9 @@ static void __app_pause(void *data)
 
 static void __app_resume(void *data)
 {
+	DM_LOGI("");
+	DownloadView &view = DownloadView::getInstance();
+	view.resume();
 	return;
 }
 
@@ -182,55 +163,117 @@ static void __app_service(service_h s, void *data)
 {
 	string s_url = std::string();
 	string s_cookie = std::string();
+	string s_req_header_field = std::string();
+	string s_req_header_value = std::string();
+	string s_install_dir = std::string();
 	char *url = NULL;
 	char *cookie = NULL;
 	char *mode = NULL;
 	char *app_op = NULL;
+	char *historyid_str = NULL;
+	char *req_header_field = NULL;
+	char *req_header_value = NULL;
+	char *install_dir = NULL;
 	DownloadView &view = DownloadView::getInstance();
+	int ret = 0;
 
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 
 	/* The default view mode is normal*/
 	view.setSilentMode(false);
 	if (service_get_operation(s, &app_op) < 0) {
-		DP_LOGE("Fail to get service operation");
+		DM_LOGE("Fail to get service operation");
 		return;
 	}
-	DP_LOGD("operation[%s]", app_op);
+	DM_SLOGI("operation[%s]", app_op);
+	free(app_op);
 
 	if (service_get_uri(s, &url) < 0) {
-		DP_LOGE("Invalid URL");
+		DM_LOGE("Invalid URL");
 	} else {
-		DP_LOGD("url[%s]",url);
+		DM_SLOGI("url[%s]",url);
 		if (url)
 			s_url = url;
+		free(url);
 	}
 
-	if (service_get_extra_data(s, "cookie", &cookie) < 0) {
-		DP_LOGD("No cookie");
-	} else {
-		DP_LOGD("cookie[%s]",cookie);
+	ret = service_get_extra_data(s, KEY_COOKIE, &cookie);
+	if (ret == SERVICE_ERROR_NONE) {
+		DM_SLOGI("cookie[%s]",cookie);
 		if (cookie)
 			s_cookie = cookie;
+		free(cookie);
+	} else {
+		DM_LOGI("Fail to get extra data cookie[%d]", ret);
 	}
 
-	if (service_get_extra_data(s, "mode", &mode) < 0) {
-		DP_LOGD("No mode");
+	ret = service_get_extra_data(s, KEY_INSTALL_DIR, &install_dir);
+	if (ret == SERVICE_ERROR_NONE) {
+		if (install_dir) {
+			s_install_dir = install_dir;
+			if (s_install_dir.compare(s_install_dir.length(), 1, "/") != 0)
+				s_install_dir.append("/");
+			DM_SLOGI("install dir[%s]",s_install_dir.c_str());
+		}
+		free(install_dir);
 	} else {
-		DP_LOGD("mode[%s]",mode);
-		if ( 0 == strncmp(mode, "view", strlen("view"))) {
-			DP_LOGD("View mode");
+		DM_LOGI("Fail to get extra data install path[%d]", ret);
+	}
+
+	ret = service_get_extra_data(s, KEY_REQ_HTTP_HEADER_FILED, &req_header_field);
+	if (ret == SERVICE_ERROR_NONE) {
+		DM_SLOGI("request header filed[%s]",req_header_field);
+		if (req_header_field)
+			s_req_header_field = req_header_field;
+		free(req_header_field);
+		ret = service_get_extra_data(s, KEY_REQ_HTTP_HEADER_VALUE, &req_header_value);
+		if (ret == SERVICE_ERROR_NONE) {
+			DM_SLOGI("request header value[%s]",req_header_value);
+			if (req_header_value)
+				s_req_header_value = req_header_value;
+			free(req_header_value);
+		}
+	}
+
+	ret = service_get_extra_data(s, KEY_MODE, &mode);
+	if (ret == SERVICE_ERROR_NONE) {
+		DM_SLOGI("mode[%s]",mode);
+		if (0 == strncmp(mode, KEY_MODE_VALUE_VIEW,
+				strlen(KEY_MODE_VALUE_VIEW))) {
+			DM_LOGI("View mode");
 			view.activateWindow();
+			free(mode);
 			return;
-		} else if ( 0 == strncmp(mode, "silent", strlen("silent"))) {
-			DP_LOGD("Silent mode");
+		} else if (0 == strncmp(mode, KEY_MODE_VALUE_SILENT,
+				strlen(KEY_MODE_VALUE_SILENT))) {
+			DM_LOGI("Silent mode");
 			view.setSilentMode(true);
 			view.activateWindow();
+			free(mode);
 		} else {
-			DP_LOGE("Invalid mode");
+			DM_LOGE("Invalid mode");
 			view.activateWindow();
+			free(mode);
 			return;
 		}
+	} else {
+		DM_LOGI("Fail to get extra data mode[%d]", ret);
+	}
+
+	ret = service_get_extra_data(s, KEY_FAILED_HISTORYID, &historyid_str);
+	if (ret == SERVICE_ERROR_NONE) {
+		view.activateWindow();
+		if (historyid_str) {
+			unsigned int id = atoi(historyid_str);
+			DM_LOGI("History Id from Failed noti[%s]", historyid_str);
+			view.clickedItemFromNoti(id);
+		} else {
+			DM_LOGE("Invalid history Id string");
+		}
+		free(historyid_str);
+		return;
+	} else {
+		DM_LOGI("Fail to get extra data failed history ID[%d]", ret);
 	}
 
 	if (s_url.empty()) {
@@ -238,7 +281,8 @@ static void __app_service(service_h s, void *data)
 		view.activateWindow();
 		return;
 	}
-	DownloadRequest request(s_url, s_cookie);
+	DownloadRequest request(s_url, s_cookie,
+			s_req_header_field, s_req_header_value, s_install_dir);
 	Item::create(request);
 	view.activateWindow();
 
@@ -253,7 +297,7 @@ EXPORT_API int main(int argc, char *argv[])
 
 	app_data = (struct app_data_t *)calloc(1, sizeof(struct app_data_t));
 	if (!app_data) {
-		DP_LOGE("Fail to calloc of app data");
+		DM_LOGE("Fail to call calloc");
 		return ret;
 	}
 
@@ -264,16 +308,13 @@ EXPORT_API int main(int argc, char *argv[])
 	evt_cb.service = __app_service;
 	evt_cb.low_memory = __low_memory_cb;
 	evt_cb.low_battery = NULL;
-#ifdef _ENABLE_ROTATE
-	evt_cb.device_orientation = __rotate_changed_cb;
-#else
 	evt_cb.device_orientation = NULL;
-#endif
 	evt_cb.language_changed = __lang_changed_cb;
 	evt_cb.region_format_changed = __region_changed_cb;
 
 	ret = app_efl_main(&argc, &argv, &evt_cb, app_data);
-	DP_LOGD("Main return");
+	DM_LOGI("Done");
+	free(app_data);
 
 	return ret;
 }

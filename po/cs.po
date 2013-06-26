@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Probíhá oznamování..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Správce stahování"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Žádné stažené položky"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Dokončeno"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Stáhnout?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Soubor nebyl přijat. Chcete ho stáhnout znovu?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Soubor neexistuje. Chcete ho stáhnout znovu?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Probíhá příprava na stahování..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Žádné stažené položky"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Nedostatek paměti. Odstraňte některé položky"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Stahování dokončeno"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Oznamování serveru..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Správce stahování"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Vyberte položky"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

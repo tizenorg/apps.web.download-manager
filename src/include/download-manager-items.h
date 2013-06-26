@@ -35,9 +35,10 @@ public:
 	void attachItem(Item *item);
 	void detachItem(Item *item);
 	bool isExistedHistoryId(unsigned int id);
+	int checkQueuedItem(void);
 private:
 	Items(){}
-	~Items(){DP_LOGD_FUNC();}
+	~Items(){DM_LOGI("");}
 
 	vector<Item*> m_items;
 };

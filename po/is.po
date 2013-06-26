@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Tilkynni..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Stjórnun niðurhals"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Ekkert niðurhal"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Ljúka"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Á að hala niður?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Skráin var ekki móttekin. Viltu sækja hana aftur?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Skráin er ekki til. Viltu sækja hana aftur?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Undirbý niðurhal..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Ekkert niðurhal"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Ekki er nægt minni. Eyðið nokkrum atriðum"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Niðurhali lokið"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Tilkynni þjóni..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Stjórnun niðurhals"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Velja hluti"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

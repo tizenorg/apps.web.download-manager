@@ -34,34 +34,31 @@
 
 #define LOG_TAG "DOWNLOAD_MANAGER"
 
-#define DP_LOGD(format, ...) LOGI(format, ##__VA_ARGS__)
-#define DP_LOGV(format, ...) LOGD(format, ##__VA_ARGS__)
-#define DP_LOG_START(msg) LOGI("<<Start>>[%s]",msg)
-#define DP_LOGD_FUNC() LOGI("<<Check>>")
-#define DP_LOGV_FUNC() LOGD("<<Check>>")
-#define DP_LOGE(format, ...) LOGE("[ERR] "format, ##__VA_ARGS__)
+
+#define DM_LOGD(format, ...) LOGD(format, ##__VA_ARGS__)
+#define DM_LOGI(format, ...) LOGI(format, ##__VA_ARGS__)
+#define DM_LOGE(format, ...) LOGE(format, ##__VA_ARGS__)
+#define DM_SLOGD(format, ...) LOGD(format, ##__VA_ARGS__)
+#define DM_SLOGI(format, ...) LOGI(format, ##__VA_ARGS__)
+#define DM_SLOGE(format, ...) LOGE(format, ##__VA_ARGS__)
 
 #else
 
 #include <stdio.h>
 #include <pthread.h>
 
-#define DP_LOGD(args...) do {\
-		printf("[DP_D:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
+#define DM_LOGD(args...) do {\
+		printf("[D:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
 		printf(args);printf("\n");}while(0)
-#define DP_LOGE(args...) do {\
-		printf("[DP_ERR:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
+#define DM_LOGI(args...) do {\
+		printf("[I:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
 		printf(args);printf("\n");}while(0)
-#define DP_LOGD_FUNC() do {\
-		printf("<<==[DP:%s][LN:%d][%lu] ==>> \n",__func__,__LINE__,pthread_self());\
-		}while(0)
-#define DP_LOGV_FUNC() do {\
-		printf("<<==[DP_D:%s][LN:%d][%lu] ==>> \n",__func__,__LINE__,pthread_self());\
-		}while(0)
-#define DP_LOG_START(msg) do {\
-		printf("<<==[DP:%s][LN:%d][%lu] Start ==>> \n",\
-		__FUNCTION__,__LINE__,pthread_self());\
-		}while(0)
+#define DM_LOGE(args...) do {\
+		printf("[ERR:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
+		printf(args);printf("\n");}while(0)
+#define DM_SLOGD DM_LOGD
+#define DM_SLOGI DM_LOGI
+#define DM_SLOGE DM_LOGE
 #endif /*_USE_DLOG*/
 
 #endif /* DOWNLOAD_MANAGER_DEBUG_H */

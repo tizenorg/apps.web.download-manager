@@ -20,15 +20,14 @@
  * @brief	download request data class
  */
 #include "download-manager-downloadRequest.h"
-/*DownloadRequest::DownloadRequest()
-	: m_url(NULL)
-	, m_cookie(NULL)
-{
-}*/
 
-DownloadRequest::DownloadRequest(string url, string cookie)
+DownloadRequest::DownloadRequest(string url, string cookie,
+		string reqHeaderField, string reqHeaderValue, string installDir)
 	: m_url(url)
 	, m_cookie(cookie)
+	, m_reqHeaderField(reqHeaderField)
+	, m_reqHeaderValue(reqHeaderValue)
+	, m_installDir(installDir)
 {
 }
 
@@ -36,20 +35,22 @@ DownloadRequest::DownloadRequest(DownloadRequest &rRequest)
 {
 	m_url.assign(rRequest.getUrl());
 	m_cookie.assign(rRequest.getCookie());
+	m_reqHeaderField.assign(rRequest.getReqHeaderField());
+	m_reqHeaderValue.assign(rRequest.getReqHeaderValue());
+	m_installDir.assign(rRequest.getInstallDir());
 	extractSenderName();
 }
 
 DownloadRequest::~DownloadRequest()
 {
-//	DP_LOG_FUNC();
 }
 
-string &DownloadRequest::getUrl()
+string DownloadRequest::getUrl()
 {
 	return m_url;
 }
 
-string &DownloadRequest::getCookie()
+string DownloadRequest::getCookie()
 {
 	return m_cookie;
 }
@@ -59,6 +60,20 @@ string DownloadRequest::getSender()
 	return m_sender;
 }
 
+string DownloadRequest::getReqHeaderField()
+{
+	return m_reqHeaderField;
+}
+
+string DownloadRequest::getReqHeaderValue()
+{
+	return m_reqHeaderValue;
+}
+
+string DownloadRequest::getInstallDir()
+{
+	return m_installDir;
+}
 
 bool DownloadRequest::isUrlEmpty()
 {
@@ -70,6 +85,18 @@ bool DownloadRequest::isCookieEmpty()
 	return m_cookie.empty();
 }
 
+bool DownloadRequest::isReqHeaderEmpty()
+{
+	if (m_reqHeaderField.empty() || m_reqHeaderValue.empty())
+		return true;
+	return false;
+}
+
+bool DownloadRequest::isInstallDir()
+{
+	return m_installDir.empty();
+}
+
 void DownloadRequest::setUrl(string url)
 {
 	m_url.assign(url);
@@ -79,6 +106,21 @@ void DownloadRequest::setUrl(string url)
 void DownloadRequest::setCookie(string cookie)
 {
 	m_cookie.assign(cookie);
+}
+
+void DownloadRequest::setReqHeaderField(string reqHeaderField)
+{
+	m_reqHeaderField.assign(reqHeaderField);
+}
+
+void DownloadRequest::setReqHeaderValue(string reqHeaderValeu)
+{
+	m_reqHeaderValue.assign(reqHeaderValeu);
+}
+
+void DownloadRequest::setInstallDir(string installDir)
+{
+	m_installDir.assign(installDir);
 }
 
 void DownloadRequest::extractSenderName()

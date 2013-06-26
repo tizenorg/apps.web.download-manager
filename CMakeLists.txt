@@ -21,8 +21,6 @@ SET(DBDATADIR "/opt/usr/apps/${PKGNAME}/data/db")
 SET(LOCALEDIR "${RESDIR}/locale")
 SET(ICONDIR "/usr/share/icons/default/small/")
 SET(HISTORYDB ".download-history.db")
-SET(EDJE_DIR "${RESDIR}/edje")
-SET(EDJE_PATH "${EDJE_DIR}/${PROJ_NAME}.edj")
 
 FIND_PROGRAM(UNAME NAMES uname)
 EXEC_PROGRAM("${UNAME}" ARGS "-m" OUTPUT_VARIABLE "ARCH")
@@ -61,15 +59,20 @@ pkg_check_modules(pkgs REQUIRED
 	elementary
 	aul
 	ecore
+	ecore-x
 	edje
 	icu-i18n
 	xdgmime
-	edje
 	libcurl
 	appsvc
 	notification
 	db-util
 	sqlite3
+	vconf
+	utilX
+	xproto
+	x11
+	efl-assist
 )
 
 SET(LIB_DL dl)
@@ -110,27 +113,19 @@ ADD_DEFINITIONS("-DDBDATADIR=\"${DBDATADIR}\"")
 ADD_DEFINITIONS("-DLOCALEDIR=\"${LOCALEDIR}\"")
 ADD_DEFINITIONS("-DICONDIR=\"${ICONDIR}\"")
 ADD_DEFINITIONS("-DHISTORYDB=\"${HISTORYDB}\"")
-ADD_DEFINITIONS("-DEDJE_DIR=\"${EDJE_DIR}\"")
-ADD_DEFINITIONS("-DEDJE_PATH=\"${EDJE_PATH}\"")
 ADD_DEFINITIONS("-D_ENABLE_OMA_DOWNLOAD")
-ADD_DEFINITIONS("-D_ENABLE_ROTATE")
 ADD_DEFINITIONS("-D_BOX_NOTI_TYPE")
+
+ADD_DEFINITIONS("-D_HW_BACK_KEY")
 
 ADD_EXECUTABLE(${PROJ_NAME} ${SRCS})
 TARGET_LINK_LIBRARIES(${PROJ_NAME} ${pkgs_LDFLAGS} ${LIB_DL} ${LIB_OMA_PARSER})
-
-ADD_CUSTOM_TARGET(download-manager.edj
-	COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/images
-	${CMAKE_SOURCE_DIR}/res/download-manager.edc
-	${CMAKE_BINARY_DIR}/res/download-manager.edj
-	DEPENDS ${CMAKE_SOURCE_DIR}/res/download-manager.edc)
-ADD_DEPENDENCIES(${PROJ_NAME} download-manager.edj)
 
 INSTALL(DIRECTORY DESTINATION ${DATADIR})
 INSTALL(DIRECTORY DESTINATION ${DBDATADIR})
 INSTALL(FILES ${CMAKE_BINARY_DIR}/res/${PKGNAME}.xml DESTINATION /usr/share/packages)
 INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/res/images DESTINATION ${RESDIR})
-INSTALL(FILES ${CMAKE_BINARY_DIR}/res/download-manager.edj DESTINATION ${EDJE_DIR})
+INSTALL(FILES ${CMAKE_BINARY_DIR}/res/org.tizen.download-manager.png DESTINATION ${ICONDIR})
 INSTALL(TARGETS ${PROJ_NAME} DESTINATION ${BINDIR})
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.Flora share/license/${PKGNAME})
 INSTALL(FILES share/license/${PKGNAME} DESTINATION /usr/share/license)

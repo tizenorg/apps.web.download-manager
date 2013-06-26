@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Xabar berilmoqda..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Yuklab olish menejeri"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Yuklanmalar yo‘q"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Yakunlamoq"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Yuklab olinsinmi?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Fayl olinmadi. Qayta yuklab olinsinmi?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Fayl mavjud emas. Qayta yuklab olinsinmi?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Yuklab olish uchun tayyorlanmoqda..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Yuklanmalar yo‘q"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Xotira yetarli emas. Ba’zi elementlarni o'chiring"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Yuklab olish yakunlandi"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Serverga xabar berish..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Yuklab olish menejeri"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Elementlarni tanlang"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

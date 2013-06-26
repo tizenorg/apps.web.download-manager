@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Giver besked..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Downloadstyring"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Ingen downloads"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "udført"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Download?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Fil ikke modtaget. Download igen?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Fil findes ikke. Download igen?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Forbereder overførsel ..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Ingen downloads"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Der er ikke tilstrækkelig hukommelse. Slet nogle elementer"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Overførsel fuldført"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Underretter server ..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Downloadstyring"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Vælg elementer"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

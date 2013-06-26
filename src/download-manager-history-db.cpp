@@ -25,9 +25,9 @@
 #include "download-manager-history-db.h"
 
 #define FINALIZE_ON_ERROR( stmt ) { \
-	DP_LOGE("SQL error: %d", ret);\
+	DM_LOGE("SQL error:%d[%s]", ret, sqlite3_errmsg(historyDb));\
 	if (sqlite3_finalize(stmt) != SQLITE_OK)\
-		DP_LOGE("sqlite3_finalize is failed.");\
+		DM_LOGE("sqlite3_finalize is failed");\
 	close();\
 	return false; \
 }
@@ -46,7 +46,7 @@ bool DownloadHistoryDB::open()
 {
 	int ret = 0;
 
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 
 	close();
 
@@ -54,7 +54,7 @@ bool DownloadHistoryDB::open()
 		DB_UTIL_REGISTER_HOOK_METHOD);
 
 	if (ret != SQLITE_OK) {
-		DP_LOGE("open fail");
+		DM_LOGE("open fail:%s", sqlite3_errmsg(historyDb));
 		db_util_close(historyDb);
 		historyDb = NULL;
 		return false;
@@ -65,7 +65,7 @@ bool DownloadHistoryDB::open()
 
 void DownloadHistoryDB::close()
 {
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 	if (historyDb) {
 		db_util_close(historyDb);
 		historyDb = NULL;
@@ -77,26 +77,27 @@ bool DownloadHistoryDB::createItemToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 
 	if (!item) {
-		DP_LOGE("Item is NULL");
+		DM_LOGE("NULL Check:Item");
 		return false;
 	}
 
 	if (item->historyId() < 1) {
-		DP_LOGE("Cannot add to DB. Because historyId is invaild");
+		DM_LOGE("Cannot add to DB. Because historyId is invaild");
 		return false;
 	}
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 
 	const string statement = "insert into history (historyid, \
-		downloadtype, contenttype, state, name, url, cookie, date) \
-		values(?, ?, ?, ?, ?, ?, ?, ?)";
+		downloadtype, contenttype, state, name, url, cookie, \
+		headerfield, headervalue, installdir, date) \
+		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	ret = sqlite3_prepare_v2(historyDb, statement.c_str(), -1, &stmt, NULL);
 
@@ -104,25 +105,38 @@ bool DownloadHistoryDB::createItemToDB(Item *item)
 		FINALIZE_ON_ERROR(stmt);
 	/* binding values */
 	if (sqlite3_bind_int(stmt, 1, item->historyId()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
-	if (sqlite3_bind_int(stmt, 2, item->downloadType()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
+		if (sqlite3_bind_int(stmt, 2, item->downloadType()) != SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 3, item->contentType()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 4, item->state()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
-	if (sqlite3_bind_text(stmt, 5, item->contentName().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 5, item->contentName().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_text(stmt, 6, item->url().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
-	if (sqlite3_bind_text(stmt, 7, item->cookie().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
-	if (sqlite3_bind_double(stmt, 8, time(NULL)) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_double is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 7, item->cookie().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 8, item->reqHeaderField().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 9, item->reqHeaderValue().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 10, item->installDir().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_double(stmt, 11, time(NULL)) != SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_double:%s",
+				sqlite3_errmsg(historyDb));
 
 	ret = sqlite3_step(stmt);
 
-	DP_LOGD("SQL return: %s", (ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
+	DM_LOGI("SQL return:%s",
+			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
 
@@ -135,26 +149,25 @@ bool DownloadHistoryDB::updateHistoryToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 
 	if (!item) {
-		DP_LOGE("Item is NULL");
+		DM_LOGE("NULL Check:Item");
 		return false;
 	}
 
 	if (item->historyId() < 1) {
-		DP_LOGE("Cannot add to DB. Because historyId is invaild");
+		DM_LOGE("Cannot add to DB. Because historyId is invaild");
 		return false;
 	}
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
-
 	const string statement = "update history set downloadtype=?,\
-		contenttype=?, state=?, err=?, name=?, path=?, url=?, cookie=?, date=? \
-		where historyid = ?";
+		contenttype=?, state=?, err=?, name=?, path=?, url=?, cookie=?,\
+		headerfield=?, headervalue=?, installdir=?, date=? where historyid = ?";
 
 	ret = sqlite3_prepare_v2(historyDb, statement.c_str(), -1, &stmt, NULL);
 
@@ -162,30 +175,42 @@ bool DownloadHistoryDB::updateHistoryToDB(Item *item)
 		FINALIZE_ON_ERROR(stmt);
 	/* binding values */
 	if (sqlite3_bind_int(stmt, 1, item->downloadType()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 2, item->contentType()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 3, item->state()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 4, item->errorCode()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
-	if (sqlite3_bind_text(stmt, 5, item->title().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 5, item->title().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_text(
 			stmt, 6, item->registeredFilePath().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_text(stmt, 7, item->url().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
-	if (sqlite3_bind_text(stmt, 8, item->cookie().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
-	if (sqlite3_bind_double(stmt, 9, item->finishedTime()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_double is failed.");
-	if (sqlite3_bind_int(stmt, 10, item->historyId()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
-
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 8, item->cookie().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 9, item->reqHeaderField().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 10, item->reqHeaderValue().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 11, item->installDir().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_double(stmt, 12, item->finishedTime()) != SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_double:%s",
+				sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_int(stmt, 13, item->historyId()) != SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	ret = sqlite3_step(stmt);
 
-	DP_LOGD("SQL return: %s", (ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
+	DM_LOGI("SQL return: %s",
+			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
 
@@ -197,49 +222,65 @@ bool DownloadHistoryDB::updateDownloadInfoToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 
 	if (!item) {
-		DP_LOGE("Item is NULL");
+		DM_LOGE("NULL Check:Item ");
 		return false;
 	}
 
 	if (item->historyId() < 1) {
-		DP_LOGE("Cannot add to DB. Because historyId is invaild");
+		DM_LOGE("Cannot add to DB. Because historyId is invaild");
 		return false;
 	}
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
-
+#ifdef _ENABLE_OMA_DOWNLOAD
+	const string statement = "update history set downloadtype=?,\
+		contenttype=?, state=?, name=?, date=?, installnotifyurl=? \
+		where historyid = ?";
+#else
 	const string statement = "update history set downloadtype=?,\
 		contenttype=?, state=?, name=?, date=? \
 		where historyid = ?";
-
+#endif
 	ret = sqlite3_prepare_v2(historyDb, statement.c_str(), -1, &stmt, NULL);
 
 	if (ret != SQLITE_OK)
 		FINALIZE_ON_ERROR(stmt);
 	/* binding values */
 	if (sqlite3_bind_int(stmt, 1, item->downloadType()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 2, item->contentType()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 3, item->state()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
-	if (sqlite3_bind_text(stmt, 4, item->title().c_str(), -1, NULL) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_text is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_text(stmt, 4, item->title().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+#ifdef _ENABLE_OMA_DOWNLOAD
+	if (sqlite3_bind_text(stmt, 5, item->installNotifyUrl().c_str(), -1, NULL) !=
+			SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_text:%s", sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_double(stmt, 6, time(NULL)) != SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_double:%s",
+				sqlite3_errmsg(historyDb));
+	if (sqlite3_bind_int(stmt, 7, item->historyId()) != SQLITE_OK)
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
+#else
 	if (sqlite3_bind_double(stmt, 5, time(NULL)) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_double is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_double:%s",
+				sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 6, item->historyId()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
-
-
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
+#endif
 	ret = sqlite3_step(stmt);
 
-	DP_LOGD("SQL return: %s", (ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
+	DM_LOGI("SQL return: %s",
+			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
 
@@ -251,20 +292,20 @@ bool DownloadHistoryDB::updateStateToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 
 	if (!item) {
-		DP_LOGE("Item is NULL");
+		DM_LOGE("NULL Check:Item");
 		return false;
 	}
 
 	if (item->historyId() < 1) {
-		DP_LOGE("Cannot add to DB. Because historyId is invaild");
+		DM_LOGE("Cannot add to DB. Because historyId is invaild");
 		return false;
 	}
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 
@@ -277,13 +318,14 @@ bool DownloadHistoryDB::updateStateToDB(Item *item)
 		FINALIZE_ON_ERROR(stmt);
 	/* binding values */
 	if (sqlite3_bind_int(stmt, 1, item->state()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 2, item->historyId()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 
 	ret = sqlite3_step(stmt);
 
-	DP_LOGD("SQL return: %s", (ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
+	DM_LOGI("SQL return: %s",
+			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
 
@@ -296,20 +338,20 @@ bool DownloadHistoryDB::updateDownloadIdToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 
 	if (!item) {
-		DP_LOGE("Item is NULL");
+		DM_LOGE("NULL Check:Item");
 		return false;
 	}
 
 	if (item->historyId() < 1) {
-		DP_LOGE("Cannot add to DB. Because historyId is invaild");
+		DM_LOGE("Cannot add to DB. Because historyId is invaild");
 		return false;
 	}
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 
@@ -322,13 +364,14 @@ bool DownloadHistoryDB::updateDownloadIdToDB(Item *item)
 		FINALIZE_ON_ERROR(stmt);
 	/* binding values */
 	if (sqlite3_bind_int(stmt, 1, item->id()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	if (sqlite3_bind_int(stmt, 2, item->historyId()) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 
 	ret = sqlite3_step(stmt);
 
-	DP_LOGD("SQL return: %s", (ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
+	DM_LOGI("SQL return: %s",
+			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
 
@@ -340,10 +383,10 @@ bool DownloadHistoryDB::getCountOfHistory(int *count)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 	ret = sqlite3_prepare_v2(historyDb, "select COUNT(*) from history", -1, &stmt, NULL);
@@ -351,17 +394,18 @@ bool DownloadHistoryDB::getCountOfHistory(int *count)
 		FINALIZE_ON_ERROR(stmt);
 
 	ret = sqlite3_step(stmt);
-	DP_LOGV("SQL return: %s", (ret == SQLITE_ROW || ret == SQLITE_OK)?"Success":"Fail");
+	DM_LOGD("SQL return: %s",
+			(ret == SQLITE_ROW || ret == SQLITE_OK)?"Success":"Fail");
 	if (ret == SQLITE_ROW) {
 		*count = sqlite3_column_int(stmt,0);
-		DP_LOGD("count[%d]",*count);
+		DM_LOGI("count[%d]",*count);
 	} else {
-		DP_LOGE("SQL query error");
+		DM_LOGE("SQL query error:%s", sqlite3_errmsg(historyDb));
 		*count = 0;
 	}
 
 	if (sqlite3_finalize(stmt) != SQLITE_OK)
-		DP_LOGE("sqlite3_finalize is failed.");
+		DM_LOGE("Fail to call sqlite3_finalize:%s", sqlite3_errmsg(historyDb));
 	close();
 	return true;
 }
@@ -374,17 +418,24 @@ bool DownloadHistoryDB::createRemainedItemsFromHistoryDB(int limit, int offset)
 	sqlite3_stmt *stmt = NULL;
 	string tmp;
 
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 	limitStr << limit;
 	offsetStr << offset;
 
-	tmp.append("select historyid, downloadid, downloadtype, contenttype, state, err, ");
-	tmp.append("name, path, url, cookie, date from history order by ");
+	tmp.append("select historyid, downloadid, downloadtype, contenttype, \
+			state, err, ");
+#ifdef _ENABLE_OMA_DOWNLOAD
+	tmp.append("name, path, url, cookie, headerfield, headervalue, \
+			installdir, installnotifyurl, date from history order by ");
+#else
+	tmp.append("name, path, url, cookie, headerfield, headervalue, \
+			installdir, date from history order by ");
+#endif
 	tmp.append("date DESC limit ");
 	tmp.append(limitStr.str());
 	tmp.append(" offset ");
@@ -400,9 +451,12 @@ bool DownloadHistoryDB::createRemainedItemsFromHistoryDB(int limit, int offset)
 			string arg = string();
 			string url = string();
 			string cookie = string();
+			string reqHeaderField = string();
+			string reqHeaderValue = string();
+			string installDir = string();
 			Item *item = Item::createHistoryItem();
 			if (!item) {
-				DP_LOGE("Fail to create item");
+				DM_LOGE("Fail to create item");
 				break;
 			}
 			item->setHistoryId(sqlite3_column_int(stmt,0));
@@ -433,16 +487,42 @@ bool DownloadHistoryDB::createRemainedItemsFromHistoryDB(int limit, int offset)
 				cookie = tempStr;
 			else
 				cookie = string();
-			item->setFinishedTime(sqlite3_column_double(stmt,10));
+			tempStr = (const char *)(sqlite3_column_text(stmt,10));
+			if (tempStr)
+				reqHeaderField = tempStr;
+			else
+				reqHeaderField = string();
+			tempStr = (const char *)(sqlite3_column_text(stmt,11));
+			if (tempStr)
+				reqHeaderValue = tempStr;
+			else
+				reqHeaderValue = string();
+			tempStr = (const char *)(sqlite3_column_text(stmt,12));
+			if (tempStr)
+				installDir = tempStr;
+			else
+				installDir = string();
+#ifdef _ENABLE_OMA_DOWNLOAD
+			tempStr = (const char *)(sqlite3_column_text(stmt,13));
+			if (tempStr) {
+				string tempStrObj = string(tempStr);
+				item->setInstallNotifyUrl(tempStrObj);
+			}
+			item->setFinishedTime(sqlite3_column_double(stmt,14));
+#else
+			item->setFinishedTime(sqlite3_column_double(stmt,13));
+#endif
 			item->attachHistoryItem();
-			item->setRetryData(url, cookie);
+			item->setRetryData(url, cookie, reqHeaderField, reqHeaderValue,
+					installDir);
 		} else
 			break;
 	}
-	DP_LOGD("SQL error: %d", ret);
+	DM_LOGD("SQL return: %s",
+				(ret == SQLITE_ROW || ret == SQLITE_OK)?"Success":"Fail");
 
 	if (sqlite3_finalize(stmt) != SQLITE_OK)
-		DP_LOGE("sqlite3_finalize is failed.");
+		DM_LOGE("sqlite3_finalize is failed:[%s]", sqlite3_errmsg(historyDb));
 
 	close();
 
@@ -459,15 +539,21 @@ bool DownloadHistoryDB::createItemsFromHistoryDB()
 	string tmp;
 	stringstream limitStr;
 
-	DP_LOGV_FUNC();
+	DM_LOGD();
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL check:historyDB");
 		return false;
 	}
 	limitStr << LOAD_HISTORY_COUNT;
 	tmp.append("select historyid, downloadid, downloadtype, contenttype, state, err, ");
-	tmp.append("name, path, url, cookie, date from history order by ");
+#ifdef _ENABLE_OMA_DOWNLOAD
+	tmp.append("name, path, url, cookie, headerfield, headervalue, installdir, \
+			installnotifyurl, date from history order by ");
+#else
+	tmp.append("name, path, url, cookie, headerfield, headervalue, \
+			installdir, date from history order by ");
+#endif
 	tmp.append("date DESC limit ");
 	tmp.append(limitStr.str());
 	ret = sqlite3_prepare_v2(historyDb, tmp.c_str(), -1, &stmt, NULL);
@@ -481,9 +567,12 @@ bool DownloadHistoryDB::createItemsFromHistoryDB()
 			string arg = string();
 			string url = string();
 			string cookie = string();
+			string reqHeaderField = string();
+			string reqHeaderValue = string();
+			string installDir = string();
 			Item *item = Item::createHistoryItem();
 			if (!item) {
-				DP_LOGE("Fail to create item");
+				DM_LOGE("Fail to create item");
 				break;
 			}
 			item->setHistoryId(sqlite3_column_int(stmt,0));
@@ -507,15 +596,35 @@ bool DownloadHistoryDB::createItemsFromHistoryDB()
 			tempStr = (const char *)(sqlite3_column_text(stmt,9));
 			if (tempStr)
 				cookie = tempStr;
-			item->setFinishedTime(sqlite3_column_double(stmt,10));
+			tempStr = (const char *)(sqlite3_column_text(stmt,10));
+			if (tempStr)
+				reqHeaderField = tempStr;
+			tempStr = (const char *)(sqlite3_column_text(stmt,11));
+			if (tempStr)
+				reqHeaderValue = tempStr;
+			tempStr = (const char *)(sqlite3_column_text(stmt,12));
+			if (tempStr)
+				installDir = tempStr;
+#ifdef _ENABLE_OMA_DOWNLOAD
+			tempStr = (const char *)(sqlite3_column_text(stmt,13));
+			if (tempStr) {
+				string tempStrObj = string(tempStr);
+				item->setInstallNotifyUrl(tempStrObj);
+			}
+			item->setFinishedTime(sqlite3_column_double(stmt,14));
+#else
+			item->setFinishedTime(sqlite3_column_double(stmt,13));
+#endif
 			item->attachHistoryItem();
-			item->setRetryData(url, cookie);
+			item->setRetryData(url, cookie, reqHeaderField, reqHeaderValue,
+					installDir);
 		} else
 			break;
 	}
 
 	if (sqlite3_finalize(stmt) != SQLITE_OK)
-		DP_LOGE("sqlite3_finalize is failed.");
+		DM_LOGE("Fail to call sqlite3_finalize:%s",
+				sqlite3_errmsg(historyDb));
 	close();
 
 	if (ret == SQLITE_DONE || ret == SQLITE_OK)
@@ -529,10 +638,10 @@ bool DownloadHistoryDB::deleteItem(unsigned int historyId)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 
@@ -542,13 +651,15 @@ bool DownloadHistoryDB::deleteItem(unsigned int historyId)
 	if (ret != SQLITE_OK)
 		FINALIZE_ON_ERROR(stmt);
 	if (sqlite3_bind_int(stmt, 1, historyId) != SQLITE_OK)
-		DP_LOGE("sqlite3_bind_int is failed.");
+		DM_LOGE("Fail to call sqlite3_bind_int:%s",
+				sqlite3_errmsg(historyDb));
 	ret = sqlite3_step(stmt);
 	if (ret != SQLITE_OK && ret != SQLITE_DONE)
 		FINALIZE_ON_ERROR(stmt);
 
 	if (sqlite3_finalize(stmt) != SQLITE_OK)
-		DP_LOGE("sqlite3_finalize is failed.");
+		DM_LOGE("Fail to call sqlite3_finalize:%s",
+				sqlite3_errmsg(historyDb));
 	close();
 	return true;
 }
@@ -560,10 +671,10 @@ bool DownloadHistoryDB::deleteMultipleItem(queue <unsigned int> &q)
 	sqlite3_stmt *stmt = NULL;
 	char *errmsg = NULL;
 
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 	ret = sqlite3_exec(historyDb, "PRAGMA synchronous=OFF;\
@@ -575,7 +686,7 @@ bool DownloadHistoryDB::deleteMultipleItem(queue <unsigned int> &q)
 		return false;
 	}
 
-	DP_LOGD("queue size[%d]",q.size());
+	DM_LOGI("queue size[%d]",q.size());
 	while (!q.empty()) {
 		ret = sqlite3_prepare_v2(historyDb, "delete from history where historyid=?",
 			-1, &stmt, NULL);
@@ -584,14 +695,16 @@ bool DownloadHistoryDB::deleteMultipleItem(queue <unsigned int> &q)
 		historyId = q.front();
 		q.pop();
 		if (sqlite3_bind_int(stmt, 1, historyId) != SQLITE_OK)
-			DP_LOGE("sqlite3_bind_int is failed.");
+			DM_LOGE("Fail to call sqlite3_bind_int:%s",
+					sqlite3_errmsg(historyDb));
 		ret = sqlite3_step(stmt);
 		if (ret != SQLITE_OK && ret != SQLITE_DONE)
 			FINALIZE_ON_ERROR(stmt);
 	}
 
 	if (sqlite3_finalize(stmt) != SQLITE_OK)
-		DP_LOGE("sqlite3_finalize is failed.");
+		DM_LOGE("Fail to call sqlite3_finalize:%s",
+				sqlite3_errmsg(historyDb));
 	close();
 	return true;
 }
@@ -601,10 +714,10 @@ bool DownloadHistoryDB::clearData(void)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 
 	if (!open()) {
-		DP_LOGE("historyDB is NULL");
+		DM_LOGE("NULL Check:historyDB");
 		return false;
 	}
 
@@ -617,7 +730,8 @@ bool DownloadHistoryDB::clearData(void)
 		FINALIZE_ON_ERROR(stmt);
 
 	if (sqlite3_finalize(stmt) != SQLITE_OK)
-		DP_LOGE("sqlite3_finalize is failed.");
+		DM_LOGE("Fail to call sqlite3_finalize:%s",
+				sqlite3_errmsg(historyDb));
 	close();
 	return true;
 }

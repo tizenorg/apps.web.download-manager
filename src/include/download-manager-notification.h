@@ -43,7 +43,7 @@ public:
 	void updateFromItem(void);
 	static void updateCB(void *);
 	static void clearOngoingNoti(void);
-
+	void deleteCompleteNoti(void);
 private:
 	void addOngoingNoti(void);
 	void updateOngoingNoti(void);
@@ -51,11 +51,10 @@ private:
 #ifdef _BOX_NOTI_TYPE
 	string convertSizeStr(unsigned long int size);
 #endif
-	void addCompleteNoti(string &msg, bool isFinished);
-	void deleteCompleteNoti(void);
+	void addCompleteNoti(string &msg, bool isSuccess);
 #ifdef _CAPI_NOTI
 	void destoryNotiHandle(void);
-	service_h getServiceHandle(bool isFinished);
+	service_h getServiceHandle(bool isSuccess);
 	ui_notification_h m_notiHandle;
 #else
 	void freeNotiData(notification_h notiHandle);

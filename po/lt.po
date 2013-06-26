@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "Informuojama..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "Atsisiuntimų tvarkytuvė"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "Nėra atsisiuntimų"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "Užbaigta"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "Ar atsisiųsti?"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "Failas negautas. Atsisiųsti dar kartą?"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "Failo nėra. Atsisiųsti dar kartą?"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Ruošiamasi atsisiųsti..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Nėra atsisiuntimų"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Nepakanka atminties. Ištrinkite kai kuriuos elementus"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "Atsisiuntimas baigtas"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Pranešama serveriui..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Atsisiuntimų tvarkyt."
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Pasirinkti elementų"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

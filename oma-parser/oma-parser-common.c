@@ -41,7 +41,7 @@ int op_com_util_remove_blankspace(char *Source, int srcLen)
 	char *target = Source;
 	char *Stripped = Source;
 
-	OP_LOGI("Stripped String : [%s], len[%d]", Source, srcLen);
+	OP_SLOG("Stripped String:[%s],len[%d]", Source, srcLen);
 
 	if (OP_NULL == Source && srcLen > i) {
 		ret = OP_ERR_INVALID_ARGUMENT;
@@ -63,7 +63,7 @@ int op_com_util_remove_blankspace(char *Source, int srcLen)
 		Stripped[j] = '\0';
 
 ERR:
-	OP_LOGI("Stripped String : [%s]", Source);
+	OP_SLOG("Stripped String : [%s]", Source);
 	return ret;
 }
 
@@ -77,7 +77,7 @@ int op_com_util_resolve_version(char *source, int *major, int *minor,
 	char *Ch = NULL;
 	char *pDotCh = NULL;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	/*For major version*/
 	for (Ch = source; *Ch != '.' && *Ch; Ch++) {
@@ -146,7 +146,7 @@ void op_com_utils_convert_amp_string(char *amp_string)
 	char *matched_str = NULL;
 	int i = 0;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	if (amp_string == OP_NULL || strlen(amp_string) <= 0) {
 		OP_LOGE("Invalid Argument");
@@ -172,7 +172,7 @@ void op_com_utils_convert_amp_string(char *amp_string)
 		}
 	}
 
-	OP_LOGI("amp_string[%s]", amp_string);
+	OP_SLOG("amp_string[%s]", amp_string);
 	return;
 }
 
@@ -180,7 +180,7 @@ int op_com_utils_is_number(const char *source)
 {
 	const char *pCh;
 
-	OP_LOGI("");
+	OP_LOGD("");
 
 	pCh = source;
 

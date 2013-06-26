@@ -23,13 +23,16 @@
 #include "download-manager-items.h"
 #include "download-manager-view.h"
 
+Elm_Genlist_Item_Class ViewItem::dldGenlistStyle;
+Elm_Genlist_Item_Class ViewItem::dldHistoryGenlistStyle;
+
 ViewItem::ViewItem(Item *item)
 	: m_item(item)
 	, m_glItem(NULL)
-	, m_progressBar(NULL)
 	, m_checkedBtn(NULL)
 	, m_checked(EINA_FALSE)
 	, m_isRetryCase(false)
+	, m_isClickedFromNoti(false)
 {
 	// FIXME need to makes exchange subject?? not yet, but keep it in mind!
 	if (item) {
@@ -55,7 +58,7 @@ ViewItem::ViewItem(Item *item)
 
 ViewItem::~ViewItem()
 {
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 }
 
 void ViewItem::create(Item *item)
@@ -68,11 +71,19 @@ void ViewItem::create(Item *item)
 
 void ViewItem::destroy()
 {
-	DP_LOGD("ViewItem::destroy");
+	DM_LOGI("");
 	/* After item is destory,
 	   view item also will be destroyed through event system */
 	if (m_item) {
 		m_item->destroy();
+	}
+}
+
+void ViewItem::cancel()
+{
+	DM_LOGI("");
+	if (m_item) {
+		m_item->cancel();
 	}
 }
 
@@ -85,7 +96,7 @@ void ViewItem::updateCB(void *data)
 void ViewItem::updateFromItem()
 {
 	DownloadView &view = DownloadView::getInstance();
-	DP_LOGV("ViewItem::updateFromItem() ITEM::[%d]", state());
+	DM_LOGD("state[%d]", state());
 #ifdef _ENABLE_OMA_DOWNLOAD
 	/* The OMA popup should be changed to layout style */
 	if (state() == ITEM::REQUEST_USER_CONFIRM) {
@@ -95,27 +106,39 @@ void ViewItem::updateFromItem()
 #endif
 
 	if (state() == ITEM::DESTROY) {
-		DP_LOGD("ViewItem::updateFromItem() ITEM::DESTROY");
+		DM_LOGI("DESTROY");
 		if (m_item)
 			m_item->deSubscribe(m_aptr_observer.get());
 		m_aptr_observer->clear();
+		if (m_glItem == NULL) {
+			DM_LOGE("Check NULL:m_glItem");
+			return;
+		}
 		elm_object_item_del(m_glItem);
 		m_glItem = NULL;
 		view.detachViewItem(this);
 		return;
 	}
 	if (m_glItem == NULL) {
+		DM_LOGE("Check NULL:m_glItem");
 		return;
 	}
+
+	if (isFinishedWithErr() &&
+			m_item->errorCode() == ERROR::NOT_ENOUGH_MEMORY) {
+		view.showMemoryFullPopup();
+	}
+
 	if (state() == ITEM::SUSPENDED) {
 		return;
 	} else if (state() == ITEM::DOWNLOADING) {
-		if (fileSize() > 0 && m_progressBar) {
+		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.swallow.progress");
+		if (fileSize() > 0 && progress) {
 			double percentageProgress = 0.0;
-			percentageProgress = (double)(receivedFileSize()) /
-				(double)(fileSize());
-			DP_LOGV("progress value[%.2f]",percentageProgress);
-			elm_progressbar_value_set(m_progressBar, percentageProgress);
+			percentageProgress = (double)receivedFileSize() /
+					(double)fileSize();
+			DM_LOGD("progress value[%.2f]",percentageProgress);
+			elm_progressbar_value_set(progress, percentageProgress);
 		}
 		elm_genlist_item_fields_update(m_glItem,"elm.text.2",
 			ELM_GENLIST_ITEM_FIELD_TEXT);
@@ -125,15 +148,15 @@ void ViewItem::updateFromItem()
 		elm_genlist_item_update(m_glItem);
 	} else {/* finished state */
 		elm_genlist_item_item_class_update(m_glItem, &dldHistoryGenlistStyle);
-		if (view.isGenlistEditMode())
+		if (view.isGenlistEditMode()) {
 			elm_object_item_disabled_set(m_glItem, EINA_FALSE);
+			view.handleCheckedState();
+		}
 	}
 }
 
 char *ViewItem::getGenlistLabelCB(void *data, Evas_Object *obj, const char *part)
 {
-//	DP_LOGV_FUNC();
-
 	if(!data || !obj || !part)
 		return NULL;
 
@@ -143,7 +166,7 @@ char *ViewItem::getGenlistLabelCB(void *data, Evas_Object *obj, const char *part
 
 char *ViewItem::getGenlistLabel(Evas_Object *obj, 	const char *part)
 {
-	DP_LOGV("ViewItem::getListLabel:part[%s]", part);
+	DM_LOGD("part[%s]", part);
 
 	if (strncmp(part, "elm.text.1", strlen("elm.text.1")) == 0) {
 		return strdup(getTitle());
@@ -159,7 +182,7 @@ char *ViewItem::getGenlistLabel(Evas_Object *obj, 	const char *part)
 			return strdup(outBuf.c_str());
 		}
 	} else {
-		DP_LOGD("No Implementation");
+		DM_LOGI("No Implementation");
 		return NULL;
 	}
 }
@@ -167,9 +190,8 @@ char *ViewItem::getGenlistLabel(Evas_Object *obj, 	const char *part)
 Evas_Object *ViewItem::getGenlistIconCB(void *data, Evas_Object *obj,
 	const char *part)
 {
-//	DP_LOGV_FUNC();
 	if(!data || !obj || !part) {
-		DP_LOGE("parameter is NULL");
+		DM_LOGE("NULL Check:parameter");
 		return NULL;
 	}
 
@@ -179,14 +201,19 @@ Evas_Object *ViewItem::getGenlistIconCB(void *data, Evas_Object *obj,
 
 Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 {
-	//DP_LOGD("ViewItem::getGenlistIcon:part[%s]state[%s]", part, stateStr());
+	//DM_LOGD("part[%s]state[%s]", part, stateStr());
 
 	if (elm_genlist_decorate_mode_get(obj) && isFinished()) {
 		if (strncmp(part,"elm.edit.icon.1", strlen("elm.edit.icon.1")) == 0) {
 			Evas_Object *checkBtn = elm_check_add(obj);
+			elm_object_style_set(checkBtn, "default/genlist");
 			elm_check_state_pointer_set(checkBtn, &m_checked);
-			evas_object_smart_callback_add(checkBtn, "changed", checkChangedCB,
-				this);
+			evas_object_repeat_events_set(checkBtn, EINA_TRUE);
+			evas_object_propagate_events_set(checkBtn, EINA_FALSE);
+			evas_object_size_hint_align_set(checkBtn, EVAS_HINT_FILL,
+					EVAS_HINT_FILL);
+			evas_object_size_hint_weight_set(checkBtn, EVAS_HINT_EXPAND,
+					EVAS_HINT_EXPAND);
 			m_checkedBtn = checkBtn;
 			return checkBtn;
 		} else if (strncmp(part,"elm.edit.icon.2", strlen("elm.edit.icon.2")) ==
@@ -207,29 +234,20 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 		strncmp(part, "elm.icon", strlen("elm.icon")) == 0) {
 		Evas_Object *icon = elm_image_add(obj);
 		elm_image_file_set(icon, getIconPath(), NULL);
-		evas_object_size_hint_aspect_set(icon, EVAS_ASPECT_CONTROL_VERTICAL,1,1);
+		evas_object_size_hint_align_set(icon, EVAS_HINT_FILL, EVAS_HINT_FILL);
+		evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 		return icon;
 	} else if (strcmp(part,"elm.swallow.progress") == 0) {
 		return createProgressBar(obj);
 	} else {
-		DP_LOGE("Cannot enter here");
+		DM_LOGE("Cannot enter here");
 		return NULL;
 	}
 }
 
-void ViewItem::checkChangedCB(void *data, Evas_Object *obj,
-	void *event_info)
-{
-	DownloadView &view = DownloadView::getInstance();
-	DP_LOGV_FUNC();
-	//ViewItem *item = static_cast<ViewItem *>(data);
-	//DP_LOGD("checked[%d] viewItem[%p]",(bool)(item->checkedValue()),item);
-	view.handleCheckedState();
-}
-
 void ViewItem::clickedCancelButton()
 {
-	DP_LOGD("ViewItem::clickedCancelButton()");
+	DM_LOGD("");
 	requestCancel();
 }
 
@@ -240,35 +258,47 @@ void ViewItem::requestCancel()
 	}
 }
 
+void ViewItem::clickedCanceledRetryButton()
+{
+	DM_LOGD("");
+	if (m_item && m_isClickedFromNoti) {
+		m_item->deleteCompleteNoti();
+	}
+	m_isClickedFromNoti = false;
+}
+
 void ViewItem::clickedRetryButton()
 {
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 	retryViewItem();
+	m_isClickedFromNoti = false;
 }
 
 void ViewItem::clickedGenlistItem()
 {
 	DownloadView &view = DownloadView::getInstance();
 	Elm_Object_Item *itemObject = NULL;
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 	if (!m_item) {
-		DP_LOGE("m_item is NULL");
+		DM_LOGE("NULL Check:m_item");
 		return;
 	}
 	itemObject = genlistItem();
 	if (itemObject)
 		elm_genlist_item_selected_set(itemObject, EINA_FALSE);
 	else
-		DP_LOGE("Cannot enter here! genlist item cannot be NULL");
+		DM_LOGE("Cannot enter here! genlist item cannot be NULL");
 
 	if (view.isGenlistEditMode()) {
-		m_checked = !m_checked;
-		if (m_checkedBtn && itemObject)
-			elm_genlist_item_fields_update(itemObject,"elm.edit.icon.1",
-				ELM_GENLIST_ITEM_FIELD_CONTENT);
-		else
-			DP_LOGE("m_checkedBtn is NULL");
-		view.handleCheckedState();
+		Evas_Object *ck = NULL;
+		if (itemObject)
+			ck = elm_object_item_part_content_get(itemObject, "elm.edit.icon.1");
+		if (ck) {
+			Eina_Bool state = elm_check_state_get(ck);
+			elm_check_state_set(ck, !state);
+			m_checked = !state;
+			view.handleCheckedState();
+		}
 	} else if (state() == ITEM::FINISH_DOWNLOAD) {
 		if (m_item->isExistedFile()) {
 			bool ret = m_item->play();
@@ -300,20 +330,20 @@ Elm_Genlist_Item_Class *ViewItem::elmGenlistStyle()
 
 const char *ViewItem::getMessage()
 {
-	DP_LOGV("ViewItem state() ITEM::[%d]", state());
+	DM_LOGD("state[%d]", state());
 	const char *buff = NULL;
 	switch(state()) {
 	case ITEM::IDLE:
 	case ITEM::REQUESTING:
+	case ITEM::QUEUED:
 	case ITEM::PREPARE_TO_RETRY:
 	case ITEM::RECEIVING_DOWNLOAD_INFO:
-	/* Do not display string and show only the progress bar */
-//		buff = __("Check for download");
+		buff = __("IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING");
 		break;
 	case ITEM::DOWNLOADING:
 	case ITEM::SUSPENDED:
 		buff = getHumanFriendlyBytesStr(receivedFileSize(), true);
-		//DP_LOGD("%s", buff);
+		//DM_LOGD("%s", buff);
 		break;
 	case ITEM::CANCEL:
 	case ITEM::FAIL_TO_DOWNLOAD:
@@ -324,7 +354,7 @@ const char *ViewItem::getMessage()
 		break;
 #ifdef _ENABLE_OMA_DOWNLOAD
 	case ITEM::NOTIFYING:
-		buff = __("IDS_BR_BODY_NOTIFYING_ING");
+		buff = __("IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB");
 		break;
 #endif
 	default:
@@ -411,18 +441,17 @@ Evas_Object *ViewItem::createProgressBar(Evas_Object *parent)
 {
 	Evas_Object *progress = NULL;
 	if (!parent) {
-		DP_LOGE("parent is NULL");
+		DM_LOGE("NULL Check:parent");
 		return NULL;
 	}
 	progress = elm_progressbar_add(parent);
-	setProgressBar(progress);
 	if (isFinished()) {
-		DP_LOGE("Cannot enter here. finished item has othere genlist style");
+		DM_LOGE("Cannot enter here. finished item has othere genlist style");
 		return NULL;
 	}
 
 	if (fileSize() == 0 || isPreparingDownload()) {
-		//DP_LOGD("Pending style::progressBar[%p]",progress);
+		//DM_LOGI("Pending style::progressBar[%p]",progress);
 		elm_object_style_set(progress, "pending_list");
 		elm_progressbar_horizontal_set(progress, EINA_TRUE);
 		evas_object_size_hint_align_set(progress, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -430,7 +459,7 @@ Evas_Object *ViewItem::createProgressBar(Evas_Object *parent)
 			EVAS_HINT_EXPAND);
 		elm_progressbar_pulse(progress, EINA_TRUE);
 	} else {
-		//DP_LOGD("List style::progressBar[%p] fileSize[%d] state[%d]",progress, fileSize(),state());
+		//DM_LOGI("List style::progressBar[%p] fileSize[%d] state[%d]",progress, fileSize(),state());
 		elm_object_style_set(progress, "list_progress");
 		elm_progressbar_horizontal_set(progress, EINA_TRUE);
 
@@ -457,7 +486,8 @@ void ViewItem::updateCheckedBtn()
 
 Evas_Object *ViewItem::createCancelBtn(Evas_Object *parent)
 {
-	DP_LOGV_FUNC();
+	DM_LOGD("");
+
 	Evas_Object *button = elm_button_add(parent);
 	elm_object_part_content_set(parent, "btn_style1", button);
 	elm_object_style_set(button, "style1/auto_expand");
@@ -470,9 +500,9 @@ Evas_Object *ViewItem::createCancelBtn(Evas_Object *parent)
 
 void ViewItem::cancelBtnClickedCB(void *data, Evas_Object *obj, void *event_info)
 {
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 	if (!data) {
-		DP_LOGE("data is NULL");
+		DM_LOGE("NULL Check:data");
 		return;
 	}
 	ViewItem *viewItem = static_cast<ViewItem *>(data);
@@ -483,7 +513,7 @@ void ViewItem::cancelBtnClickedCB(void *data, Evas_Object *obj, void *event_info
 void ViewItem::retryViewItem(void)
 {
 	DownloadView &view = DownloadView::getInstance();
-	DP_LOGV_FUNC();
+	DM_LOGD("");
 	if (m_item) {
 		m_isRetryCase = true;
 		m_item->clearForRetry();

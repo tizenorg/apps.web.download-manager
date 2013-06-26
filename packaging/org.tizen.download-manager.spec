@@ -22,14 +22,19 @@ BuildRequires: pkgconfig(notification)
 BuildRequires: pkgconfig(appsvc)
 BuildRequires: pkgconfig(db-util)
 BuildRequires: pkgconfig(sqlite3)
+BuildRequires: pkgconfig(vconf)
+BuildRequires: pkgconfig(utilX)
+BuildRequires: pkgconfig(xproto)
+BuildRequires: pkgconfig(x11)
+BuildRequires: efl-assist-devel
 BuildRequires: cmake
 BuildRequires: gettext-devel
 BuildRequires: expat-devel
-BuildRequires: edje-tools
 BuildRequires: hash-signer
 BuildRequires: libprivilege-control-conf
 Requires(post): coreutils
 Requires(post): sqlite
+Requires(post): sys-assert
 
 %description
 Application for support of the content download
@@ -59,17 +64,25 @@ mkdir -p %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db
 if [ ! -f %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db ];
 then
 		sqlite3 %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db 'PRAGMA journal_mode=PERSIST;
-		create table history(id integer primary key autoincrement, downloadid integer, historyid integer, downloadtype integer, contenttype integer, state integer, err integer, name, path, url, cookie, date datetime);'
+		create table history(id integer primary key autoincrement, downloadid integer, historyid integer, downloadtype integer, 
+		contenttype integer, state integer, err integer, name, path, url, cookie, headerfield, headervalue, installdir, 
+		installnotifyurl, date datetime);
+		create index history_date_index on history (date);'
 fi
+
+%post
+chown 5000:5000 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
+chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %files
 %defattr(-,root,root,-)
 %manifest org.tizen.download-manager.manifest
 /usr/apps/org.tizen.download-manager/bin/*
 /usr/apps/org.tizen.download-manager/res/*
-/usr/apps/org.tizen.download-manager/res/edje/*
+/usr/apps/org.tizen.download-manager/res/locale/*/*/download-manager.mo
 /usr/apps/org.tizen.download-manager/*.xml
 /usr/share/packages/org.tizen.download-manager.xml
+/usr/share/icons/default/small/org.tizen.download-manager.png
 /usr/share/license/%{name}
 /etc/smack/accesses.d/org.tizen.download-manager.rule
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*

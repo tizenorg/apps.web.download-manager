@@ -1,24 +1,30 @@
-msgid "IDS_BR_BODY_NOTIFYING_ING"
-msgstr "正在通知..."
-
-msgid "IDS_BR_HEADER_DOWNLOAD_MANAGER"
-msgstr "下載管理員"
-
-msgid "IDS_DL_BODY_NO_DOWNLOADS"
-msgstr "無下載項目"
-
-msgid "IDS_EMAIL_BODY_COMPLETE"
-msgstr "完成"
-
-msgid "IDS_BR_POP_DOWNLOAD_Q"
-msgstr "要下載嗎？"
-
 msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
 msgstr "檔案尚未收到。再次下載嗎？"
 
 msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
 msgstr "檔案不存在。再次下載嗎？"
 
-msgid "IDS_RH_POP_DOWNLOAD_COMPLETE"
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "正在準備下載..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "無下載項目"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "記憶體不足。請刪除一些項目"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "下載完成"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "正在通知伺服器..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "下載管理員"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "選擇項目"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "After you download items, they will be shown here"
 

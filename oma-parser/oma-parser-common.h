@@ -36,7 +36,7 @@
 #define OP_FALSE	0
 #define OP_RESULT_OK	0
 
-#define OP_MAX_URI_LEN			1024
+#define OP_MAX_URI_LEN			2048
 #define OP_MAX_FILE_PATH_LEN	256
 #define OP_MAX_STR_LEN			256
 #define OP_MAX_MIME_STR_LEN		256
@@ -56,15 +56,17 @@
 #undef LOG_TAG
 #endif
 #define LOG_TAG "oma-parser"
-#define OP_LOGI(format, ...) LOGV_IF("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
-#define OP_LOGD(format, ...) LOGD_IF("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
-#define OP_LOGE(format, ...) LOGE_IF("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define OP_LOGD(format, ...) LOGD("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define OP_LOGE(format, ...) LOGE("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define OP_SLOG(format, ...) LOGD("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+
 #else /* DEBUG_USING_DLOG */
-#define OP_LOGI(format, ...) fprintf(stderr, "[oma-parser:V][%u][%s:%d] "format" \n", \
-	(unsigned int)syscall(__NR_gettid), __FUNCTION__, __LINE__, ##__VA_ARGS__);
-#define OP_LOGD(format, ...) fprintf(stderr, "[oma-parser:D][%u][%s:%d] "format" \n", \
+#define OP_LOGD(format, ...) fprintf(stderr, "[oma-parser:V][%u][%s:%d] "format" \n", \
 	(unsigned int)syscall(__NR_gettid), __FUNCTION__, __LINE__, ##__VA_ARGS__);
 #define OP_LOGE(format, ...) fprintf(stderr, "[oma-parser:E][%u][%s:%d] "format" \n", \
+	(unsigned int)syscall(__NR_gettid), __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define OP_SLOG(format, ...) fprintf(stderr, "[oma-parser:V][%u][%s:%d] "format" \n", \
 	(unsigned int)syscall(__NR_gettid), __FUNCTION__, __LINE__, ##__VA_ARGS__);
 #endif /* DEBUG_USING_DLOG */
 

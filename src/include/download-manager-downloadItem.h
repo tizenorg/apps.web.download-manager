@@ -38,13 +38,13 @@ namespace DL_ITEM {
 enum STATE {
 	IGNORE,
 	STARTED,
+	QUEUED,
 #ifdef _ENABLE_OMA_DOWNLOAD
 	REQUEST_USER_CONFIRM,
 #endif
 	UPDATING,
 	COMPLETE_DOWNLOAD,
 	INSTALL_NOTIFY,
-	WAITING_RO,
 	SUSPENDED,
 	RESUMED,
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -72,9 +72,12 @@ public:
 	string getVendor(void) { return vendor; }
 	string getDescription(void) { return description; }
 	string getIconPath(void) { return iconPath; }
+	string getContentType(void) { return contentType; }
 	string getInstallUri(void) { return installUri; }
+	void setIdler(Ecore_Idler *i) { idler = i; }
 	int getStatus(void) { return status; }
 	void sendInstallNotification(int status);
+	void sendInstallNotification(int status, string url);
 	string getMessageForInstallNotification(int statusCode);
 	bool isNotifyFiinished(void) { return notifyFinished; }
 	void setNotifyFinished(bool b) { notifyFinished = b; }
@@ -89,6 +92,7 @@ private:
 	string nextUri;
 	string installParam;
 	string iconPath;
+	string contentType;
 	unsigned long int size;
 	int status;
 	int retryCount;
@@ -108,10 +112,14 @@ public:
 
 	void start(int id);
 	void cancel(void);
+#ifdef _ENABLE_OMA_DOWNLOAD
+	bool isNeededTocheckMimeTypeFromDD(const char *mimeType);
+	void cancelWithcontentTypeErr(void);
+#endif
 	void retry(int id);
 	void suspend(void);
 	void resume(void);
-	bool createId(int id);
+	int createId(int id);
 	void destroyId(void);
 
 	inline int downloadId(void) { return m_download_id;}
@@ -157,6 +165,13 @@ public:
 		if (m_oma_item.get() && !m_oma_item->getInstallUri().empty())
 			m_oma_item->sendInstallNotification(status);
 	}
+	inline bool isExistedInstallNotifyUri()
+	{
+		if (m_oma_item.get() && !m_oma_item->getInstallUri().empty())
+			return true;
+		else
+			return false;
+	}
 	inline bool isOMADownloadCase()
 	{
 		if (m_oma_item.get())
@@ -164,12 +179,22 @@ public:
 		else
 			return false;
 	}
+	inline string getMimeFromOmaItem(void)
+	{
+		string emptyStr = string();
+		if (m_oma_item.get())
+			return m_oma_item->getContentType();
+		else
+			return emptyStr;
+	}
 	bool isNotifyFiinished(void);
 #endif
-	inline string &url(void) { return m_aptr_request->getUrl(); }
-	inline string &cookie(void) { return m_aptr_request->getCookie(); }
+	inline string url(void) { return m_aptr_request->getUrl(); }
+	inline string cookie(void) { return m_aptr_request->getCookie(); }
+	inline string reqHeaderField(void) { return m_aptr_request->getReqHeaderField(); }
+	inline string reqHeaderValue(void) { return m_aptr_request->getReqHeaderValue(); }
+	inline string installDir(void) { return m_aptr_request->getInstallDir(); }
 	inline string sender(void) { return m_aptr_request->getSender(); }
-
 
 	ERROR::CODE _convert_error(int err);
 
@@ -197,7 +222,6 @@ private:
 	string m_registeredFilePath;
 	string m_mimeType;
 	DL_TYPE::TYPE m_downloadType;
-
 };
 
 class DownloadEngine {
