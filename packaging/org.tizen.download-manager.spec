@@ -1,7 +1,7 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.3
+Version:	0.1.6
 Release:	0
 Group:		misc
 License:	Flora License, Version 1.1
@@ -64,8 +64,8 @@ mkdir -p %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db
 if [ ! -f %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db ];
 then
 		sqlite3 %{buildroot}/opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db 'PRAGMA journal_mode=PERSIST;
-		create table history(id integer primary key autoincrement, downloadid integer, historyid integer, downloadtype integer, 
-		contenttype integer, state integer, err integer, name, path, url, cookie, headerfield, headervalue, installdir, 
+		create table history(id integer primary key autoincrement, downloadid integer, historyid integer, downloadtype integer,
+		contenttype integer, state integer, err integer, name, path, url, cookie, headerfield, headervalue, installdir,
 		installnotifyurl, date datetime);
 		create index history_date_index on history (date);'
 fi
@@ -88,6 +88,10 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Wed Jun 26 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Merge latest codes from private branch
+- Apply v1.7 UI guide (include back key, black theme etc)
+
 * Fri Mar 10 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Modify e17 and notification smac rule
 - Apply to sign application packages
