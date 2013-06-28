@@ -2,7 +2,7 @@
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
 Version:	0.1.6
-Release:	0
+Release:	1
 Group:		misc
 License:	Flora License, Version 1.1
 URL:		N/A
@@ -88,6 +88,9 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Fri Jun 28 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Change the default saved path as default storage setting
+
 * Wed Jun 26 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Merge latest codes from private branch
 - Apply v1.7 UI guide (include back key, black theme etc)
