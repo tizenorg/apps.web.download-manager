@@ -28,8 +28,10 @@
 
 using namespace std;
 
-#define DM_DEFAULT_TEMP_DIR "/opt/usr/media/.temp_download"
-#define DM_DEFAULT_INSTALL_DIR "/opt/usr/media/Downloads/"
+#define DM_DEFAULT_PHONE_TEMP_DIR "/opt/usr/media/.temp_download"
+#define DM_DEFAULT_PHONE_INSTALL_DIR "/opt/usr/media/Downloads/"
+#define DM_DEFAULT_MMC_TEMP_DIR "/opt/storage/sdcard/.temp_download"
+#define DM_DEFAULT_MMC_INSTALL_DIR "/opt/storage/sdcard/Downloads/"
 
 class FileUtility {
 public:
@@ -43,6 +45,7 @@ public:
 	bool renameFile(string from, string to);
 	bool copyFile(string from, string to);
 	void cleanTempDir(void);
+	static string getDefaultPath(bool optionTempDir);
 };
 
 class DownloadUtil

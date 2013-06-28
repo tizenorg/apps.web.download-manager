@@ -663,7 +663,8 @@ void DownloadItem::start(int id)
 		tempDir.append(DM_TEMP_DIR_NAME);
 		ret = download_set_destination(m_download_id, tempDir.c_str());
 	} else {
-		ret = download_set_destination(m_download_id, DM_DEFAULT_TEMP_DIR);
+		string dirPath = FileUtility::getDefaultPath(true);
+		ret = download_set_destination(m_download_id, dirPath.c_str());
 	}
 	if (ret != DOWNLOAD_ERROR_NONE) {
 		DM_LOGE("Fail to set destination[%s]", __convertErrToString(ret));
