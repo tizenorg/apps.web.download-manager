@@ -71,7 +71,8 @@ then
 fi
 
 %post
-chown 5000:5000 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
+chown -R 5000:5000 /opt/usr/apps/org.tizen.download-manager/data
+chmod -R 755 /opt/usr/apps/org.tizen.download-manager/data
 chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %files
