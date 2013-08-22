@@ -38,7 +38,7 @@ public:
 	int checkQueuedItem(void);
 private:
 	Items(){}
-	~Items(){DM_LOGI("");}
+	~Items(){DM_LOGD("");}
 
 	vector<Item*> m_items;
 };

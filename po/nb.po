@@ -26,5 +26,5 @@ msgid "IDS_DM_HEADER_SELECT_ITEMS"
 msgstr "Merk elementer"
 
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
-msgstr "After you download items, they will be shown here"
+msgstr "Når du har lastet ned elementer, vil de vises her"
 

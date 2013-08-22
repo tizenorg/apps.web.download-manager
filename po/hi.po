@@ -11,7 +11,7 @@ msgid "IDS_DM_BODY_NO_DOWNLOADS"
 msgstr "कोई डाउनलोड नहीं"
 
 msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
-msgstr "पर्याप्त मेमोरी नहीं। कुछ मदें हटाएँ।"
+msgstr "पर्याप्त मेमोरी नहीं। कुछ मदें हटाएँ"
 
 msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
 msgstr "डाउनलोड पूर्ण"
@@ -26,5 +26,5 @@ msgid "IDS_DM_HEADER_SELECT_ITEMS"
 msgstr "मद चुनें"
 
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
-msgstr "After you download items, they will be shown here"
+msgstr "आपके द्वारा मदें डाउनलोड करने के बाद, वे यहाँ दिखाई जाएँगी"
 

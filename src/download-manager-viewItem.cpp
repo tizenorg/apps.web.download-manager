@@ -48,7 +48,7 @@ ViewItem::ViewItem(Item *item)
 	dldGenlistStyle.func.del = NULL;
 	dldGenlistStyle.decorate_all_item_style = "edit_default";
 
-	dldHistoryGenlistStyle.item_style = "3text.1icon.2";
+	dldHistoryGenlistStyle.item_style = "3text.1icon.1";
 	dldHistoryGenlistStyle.func.text_get = getGenlistLabelCB;
 	dldHistoryGenlistStyle.func.content_get = getGenlistIconCB;
 	dldHistoryGenlistStyle.func.state_get = NULL;
@@ -58,7 +58,7 @@ ViewItem::ViewItem(Item *item)
 
 ViewItem::~ViewItem()
 {
-	DM_LOGI("");
+	DM_LOGD("");
 }
 
 void ViewItem::create(Item *item)
@@ -71,7 +71,7 @@ void ViewItem::create(Item *item)
 
 void ViewItem::destroy()
 {
-	DM_LOGI("");
+	DM_LOGD("");
 	/* After item is destory,
 	   view item also will be destroyed through event system */
 	if (m_item) {
@@ -81,7 +81,7 @@ void ViewItem::destroy()
 
 void ViewItem::cancel()
 {
-	DM_LOGI("");
+	DM_LOGD("");
 	if (m_item) {
 		m_item->cancel();
 	}
@@ -96,7 +96,7 @@ void ViewItem::updateCB(void *data)
 void ViewItem::updateFromItem()
 {
 	DownloadView &view = DownloadView::getInstance();
-	DM_LOGD("state[%d]", state());
+	DM_LOGV("state[%d]", state());
 #ifdef _ENABLE_OMA_DOWNLOAD
 	/* The OMA popup should be changed to layout style */
 	if (state() == ITEM::REQUEST_USER_CONFIRM) {
@@ -106,7 +106,7 @@ void ViewItem::updateFromItem()
 #endif
 
 	if (state() == ITEM::DESTROY) {
-		DM_LOGI("DESTROY");
+		DM_LOGD("DESTROY");
 		if (m_item)
 			m_item->deSubscribe(m_aptr_observer.get());
 		m_aptr_observer->clear();
@@ -137,7 +137,7 @@ void ViewItem::updateFromItem()
 			double percentageProgress = 0.0;
 			percentageProgress = (double)receivedFileSize() /
 					(double)fileSize();
-			DM_LOGD("progress value[%.2f]",percentageProgress);
+			DM_LOGV("progress value[%.2f]",percentageProgress);
 			elm_progressbar_value_set(progress, percentageProgress);
 		}
 		elm_genlist_item_fields_update(m_glItem,"elm.text.2",
@@ -166,7 +166,7 @@ char *ViewItem::getGenlistLabelCB(void *data, Evas_Object *obj, const char *part
 
 char *ViewItem::getGenlistLabel(Evas_Object *obj, 	const char *part)
 {
-	DM_LOGD("part[%s]", part);
+	DM_LOGV("part[%s]", part);
 
 	if (strncmp(part, "elm.text.1", strlen("elm.text.1")) == 0) {
 		return strdup(getTitle());
@@ -247,7 +247,7 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 
 void ViewItem::clickedCancelButton()
 {
-	DM_LOGD("");
+	DM_LOGV("");
 	requestCancel();
 }
 
@@ -260,7 +260,7 @@ void ViewItem::requestCancel()
 
 void ViewItem::clickedCanceledRetryButton()
 {
-	DM_LOGD("");
+	DM_LOGV("");
 	if (m_item && m_isClickedFromNoti) {
 		m_item->deleteCompleteNoti();
 	}
@@ -269,7 +269,7 @@ void ViewItem::clickedCanceledRetryButton()
 
 void ViewItem::clickedRetryButton()
 {
-	DM_LOGD("");
+	DM_LOGV("");
 	retryViewItem();
 	m_isClickedFromNoti = false;
 }
@@ -330,49 +330,45 @@ Elm_Genlist_Item_Class *ViewItem::elmGenlistStyle()
 
 const char *ViewItem::getMessage()
 {
-	DM_LOGD("state[%d]", state());
-	const char *buff = NULL;
+	DM_LOGV("state[%d]", state());
+	char *buff = NULL;
 	switch(state()) {
 	case ITEM::IDLE:
 	case ITEM::REQUESTING:
 	case ITEM::QUEUED:
 	case ITEM::PREPARE_TO_RETRY:
 	case ITEM::RECEIVING_DOWNLOAD_INFO:
-		buff = __("IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING");
+		buff = strdup(__("IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"));
 		break;
 	case ITEM::DOWNLOADING:
 	case ITEM::SUSPENDED:
-		buff = getHumanFriendlyBytesStr(receivedFileSize(), true);
-		//DM_LOGD("%s", buff);
+		getHumanFriendlyBytesStr(receivedFileSize(), true, &buff);
 		break;
 	case ITEM::CANCEL:
 	case ITEM::FAIL_TO_DOWNLOAD:
 	case ITEM::FINISH_DOWNLOAD:
-		buff = senderName().c_str();
+		buff = strdup(senderName().c_str());
 		break;
 	case ITEM::REGISTERING_TO_SYSTEM:
 		break;
 #ifdef _ENABLE_OMA_DOWNLOAD
 	case ITEM::NOTIFYING:
-		buff = __("IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB");
+		buff = strdup(__("IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"));
 		break;
 #endif
 	default:
 		break;
 	}
-	if (buff)
-		return strdup(buff);
-	else
-		return buff;
+	return buff;
 }
 
-const char *ViewItem::getHumanFriendlyBytesStr(unsigned long int bytes,
-	bool progressOption)
+void ViewItem::getHumanFriendlyBytesStr(unsigned long long bytes,
+	bool progressOption, char **buff)
 {
 	double doubleTypeBytes = 0.0;
 	const char *unitStr[4] = {"B", "KB", "MB", "GB"};
 	int unit = 0;
-	unsigned long int unitBytes = bytes;
+	unsigned long long unitBytes = bytes;
 
 	/* using bit operation to avoid floating point arithmetic */
 	for (unit = 0; (unitBytes > 1024 && unit < 4); unit++) {
@@ -390,29 +386,29 @@ const char *ViewItem::getHumanFriendlyBytesStr(unsigned long int bytes,
 	if (progressOption && fileSize() != 0) {
 		/* using fixed point arithmetic to avoid floating point arithmetic */
 		const int fixed_point = 6;
-		unsigned long long int receivedBytes = receivedFileSize() << fixed_point;
-		unsigned long long int result = (receivedBytes*100) / fileSize();
-		unsigned long long int result_int = result >> fixed_point;
-		unsigned long long int result_fraction = result &
+		unsigned long long receivedBytes = receivedFileSize() << fixed_point;
+		unsigned long long result = (receivedBytes*100) / fileSize();
+		unsigned long long result_int = result >> fixed_point;
+		unsigned long long result_fraction = result &
 			~(0xFFFFFFFF << fixed_point);
 		if (unit == 0)
-			snprintf(str, sizeof(str), "%lu %s / %llu.%.2llu %%",
+			snprintf(str, sizeof(str), "%llu %s / %llu.%.2llu %%",
 				bytes, unitStr[unit], result_int, result_fraction);
 		else
 			snprintf(str, sizeof(str), "%.2f %s / %llu.%.2llu %%",
 				doubleTypeBytes, unitStr[unit], result_int, result_fraction);
 	} else {
 		if (unit == 0)
-			snprintf(str, sizeof(str), "%lu %s", bytes, unitStr[unit]);
+			snprintf(str, sizeof(str), "%llu %s", bytes, unitStr[unit]);
 		else
 			snprintf(str, sizeof(str), "%.2f %s", doubleTypeBytes, unitStr[unit]);
 	}
 	str[63] = '\0';
-	string temp = string(str);
-	return temp.c_str();
+	*buff = strdup(str);
+	return;
 }
 
-unsigned long int ViewItem::receivedFileSize()
+unsigned long long ViewItem::receivedFileSize()
 {
 	if (m_item)
 		return m_item->receivedFileSize();
@@ -420,7 +416,7 @@ unsigned long int ViewItem::receivedFileSize()
 	return 0;
 }
 
-unsigned long int ViewItem::fileSize()
+unsigned long long ViewItem::fileSize()
 {
 	if (m_item)
 		return m_item->fileSize();
@@ -486,12 +482,9 @@ void ViewItem::updateCheckedBtn()
 
 Evas_Object *ViewItem::createCancelBtn(Evas_Object *parent)
 {
-	DM_LOGD("");
+	DM_LOGV ("");
 
 	Evas_Object *button = elm_button_add(parent);
-	elm_object_part_content_set(parent, "btn_style1", button);
-	elm_object_style_set(button, "style1/auto_expand");
-	evas_object_size_hint_aspect_set(button, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 	elm_object_text_set(button, S_("IDS_COM_SK_CANCEL"));
 	evas_object_propagate_events_set(button, EINA_FALSE);
 	evas_object_smart_callback_add(button,"clicked", cancelBtnClickedCB, this);
@@ -500,7 +493,7 @@ Evas_Object *ViewItem::createCancelBtn(Evas_Object *parent)
 
 void ViewItem::cancelBtnClickedCB(void *data, Evas_Object *obj, void *event_info)
 {
-	DM_LOGD("");
+	DM_LOGV("");
 	if (!data) {
 		DM_LOGE("NULL Check:data");
 		return;
@@ -513,7 +506,7 @@ void ViewItem::cancelBtnClickedCB(void *data, Evas_Object *obj, void *event_info
 void ViewItem::retryViewItem(void)
 {
 	DownloadView &view = DownloadView::getInstance();
-	DM_LOGD("");
+	DM_LOGV("");
 	if (m_item) {
 		m_isRetryCase = true;
 		m_item->clearForRetry();

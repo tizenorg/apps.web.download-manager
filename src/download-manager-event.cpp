@@ -48,7 +48,7 @@ void Subject::notify(void)
 	while (it < _observers.end()) {
 		curObserver = *it;
 
-		DM_LOGD("[%s]Call Update",curObserver->name().c_str());
+		DM_LOGV("[%s]Call Update",curObserver->name().c_str());
 		(*it)->update(this);
 
 		if (curObserver != *it)

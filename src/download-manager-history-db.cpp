@@ -46,7 +46,7 @@ bool DownloadHistoryDB::open()
 {
 	int ret = 0;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	close();
 
@@ -65,7 +65,7 @@ bool DownloadHistoryDB::open()
 
 void DownloadHistoryDB::close()
 {
-	DM_LOGD("");
+	DM_LOGV("");
 	if (historyDb) {
 		db_util_close(historyDb);
 		historyDb = NULL;
@@ -77,7 +77,7 @@ bool DownloadHistoryDB::createItemToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGI("");
+	DM_LOGV("");
 
 	if (!item) {
 		DM_LOGE("NULL Check:Item");
@@ -135,7 +135,7 @@ bool DownloadHistoryDB::createItemToDB(Item *item)
 
 	ret = sqlite3_step(stmt);
 
-	DM_LOGI("SQL return:%s",
+	DM_LOGD("SQL return:%s",
 			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
@@ -149,7 +149,7 @@ bool DownloadHistoryDB::updateHistoryToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	if (!item) {
 		DM_LOGE("NULL Check:Item");
@@ -209,7 +209,7 @@ bool DownloadHistoryDB::updateHistoryToDB(Item *item)
 		DM_LOGE("Fail to call sqlite3_bind_int:%s", sqlite3_errmsg(historyDb));
 	ret = sqlite3_step(stmt);
 
-	DM_LOGI("SQL return: %s",
+	DM_LOGD("SQL return: %s",
 			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
@@ -222,7 +222,7 @@ bool DownloadHistoryDB::updateDownloadInfoToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	if (!item) {
 		DM_LOGE("NULL Check:Item ");
@@ -240,7 +240,7 @@ bool DownloadHistoryDB::updateDownloadInfoToDB(Item *item)
 	}
 #ifdef _ENABLE_OMA_DOWNLOAD
 	const string statement = "update history set downloadtype=?,\
-		contenttype=?, state=?, name=?, date=?, installnotifyurl=? \
+		contenttype=?, state=?, name=?, installnotifyurl=?, date=? \
 		where historyid = ?";
 #else
 	const string statement = "update history set downloadtype=?,\
@@ -279,7 +279,7 @@ bool DownloadHistoryDB::updateDownloadInfoToDB(Item *item)
 #endif
 	ret = sqlite3_step(stmt);
 
-	DM_LOGI("SQL return: %s",
+	DM_LOGD("SQL return: %s",
 			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
@@ -292,7 +292,7 @@ bool DownloadHistoryDB::updateStateToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	if (!item) {
 		DM_LOGE("NULL Check:Item");
@@ -324,7 +324,7 @@ bool DownloadHistoryDB::updateStateToDB(Item *item)
 
 	ret = sqlite3_step(stmt);
 
-	DM_LOGI("SQL return: %s",
+	DM_LOGD("SQL return: %s",
 			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
@@ -338,7 +338,7 @@ bool DownloadHistoryDB::updateDownloadIdToDB(Item *item)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	if (!item) {
 		DM_LOGE("NULL Check:Item");
@@ -370,7 +370,7 @@ bool DownloadHistoryDB::updateDownloadIdToDB(Item *item)
 
 	ret = sqlite3_step(stmt);
 
-	DM_LOGI("SQL return: %s",
+	DM_LOGD("SQL return: %s",
 			(ret == SQLITE_DONE || ret == SQLITE_OK)?"Success":"Fail");
 
 	close();
@@ -383,7 +383,7 @@ bool DownloadHistoryDB::getCountOfHistory(int *count)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	if (!open()) {
 		DM_LOGE("NULL Check:historyDB");
@@ -418,7 +418,7 @@ bool DownloadHistoryDB::createRemainedItemsFromHistoryDB(int limit, int offset)
 	sqlite3_stmt *stmt = NULL;
 	string tmp;
 
-	DM_LOGD("");
+	DM_LOGV("");
 
 	if (!open()) {
 		DM_LOGE("NULL Check:historyDB");
@@ -539,7 +539,7 @@ bool DownloadHistoryDB::createItemsFromHistoryDB()
 	string tmp;
 	stringstream limitStr;
 
-	DM_LOGD();
+	DM_LOGV();
 
 	if (!open()) {
 		DM_LOGE("NULL check:historyDB");
@@ -638,7 +638,7 @@ bool DownloadHistoryDB::deleteItem(unsigned int historyId)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGI("");
+	DM_LOGV("");
 
 	if (!open()) {
 		DM_LOGE("NULL Check:historyDB");
@@ -671,7 +671,7 @@ bool DownloadHistoryDB::deleteMultipleItem(queue <unsigned int> &q)
 	sqlite3_stmt *stmt = NULL;
 	char *errmsg = NULL;
 
-	DM_LOGI("");
+	DM_LOGV("");
 
 	if (!open()) {
 		DM_LOGE("NULL Check:historyDB");
@@ -714,7 +714,7 @@ bool DownloadHistoryDB::clearData(void)
 	int ret = 0;
 	sqlite3_stmt *stmt = NULL;
 
-	DM_LOGI("");
+	DM_LOGD("");
 
 	if (!open()) {
 		DM_LOGE("NULL Check:historyDB");

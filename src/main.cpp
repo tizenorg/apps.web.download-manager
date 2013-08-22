@@ -50,7 +50,6 @@ struct app_data_t {
 	int load_count;
 };
 
-
 static void __lang_changed_cb(void *data)
 {
 	DM_LOGI("==Language changed notification==");
@@ -121,7 +120,7 @@ static bool __app_create(void *data)
 		}
 	}
 
-	DM_LOGI("DONE");
+	DM_LOGD("DONE");
 
 	return true;
 }
@@ -167,20 +166,19 @@ static void __app_service(service_h s, void *data)
 	string s_req_header_value = std::string();
 	string s_install_dir = std::string();
 	char *url = NULL;
-	char *cookie = NULL;
 	char *mode = NULL;
 	char *app_op = NULL;
 	char *historyid_str = NULL;
 	char *req_header_field = NULL;
 	char *req_header_value = NULL;
-	char *install_dir = NULL;
+	char *default_storage = NULL;
 	DownloadView &view = DownloadView::getInstance();
 	int ret = 0;
 
 	DM_LOGI("");
 
 	/* The default view mode is normal*/
-	view.setSilentMode(false);
+	view.setSilentMode(true);
 	if (service_get_operation(s, &app_op) < 0) {
 		DM_LOGE("Fail to get service operation");
 		return;
@@ -197,30 +195,24 @@ static void __app_service(service_h s, void *data)
 		free(url);
 	}
 
-	ret = service_get_extra_data(s, KEY_COOKIE, &cookie);
+	ret = service_get_extra_data(s, KEY_DEFAULT_STORAGE, &default_storage);
 	if (ret == SERVICE_ERROR_NONE) {
-		DM_SLOGI("cookie[%s]",cookie);
-		if (cookie)
-			s_cookie = cookie;
-		free(cookie);
-	} else {
-		DM_LOGI("Fail to get extra data cookie[%d]", ret);
-	}
-
-	ret = service_get_extra_data(s, KEY_INSTALL_DIR, &install_dir);
-	if (ret == SERVICE_ERROR_NONE) {
-		if (install_dir) {
-			s_install_dir = install_dir;
-			if (s_install_dir.compare(s_install_dir.length(), 1, "/") != 0)
-				s_install_dir.append("/");
+		if (default_storage) {
+			string defaultStorage = string(default_storage);
+			if (defaultStorage.compare("0") == 0)
+				s_install_dir.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
+			else if (defaultStorage.compare("1") == 0)
+				s_install_dir.assign(DM_DEFAULT_MMC_INSTALL_DIR);
+			else
+				s_install_dir.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
 			DM_SLOGI("install dir[%s]",s_install_dir.c_str());
 		}
-		free(install_dir);
+		free(default_storage);
 	} else {
-		DM_LOGI("Fail to get extra data install path[%d]", ret);
+		DM_LOGI("Fail to get extra data default storage[%d]", ret);
 	}
 
-	ret = service_get_extra_data(s, KEY_REQ_HTTP_HEADER_FILED, &req_header_field);
+	ret = service_get_extra_data(s, KEY_REQ_HTTP_HEADER_FIELD, &req_header_field);
 	if (ret == SERVICE_ERROR_NONE) {
 		DM_SLOGI("request header filed[%s]",req_header_field);
 		if (req_header_field)
@@ -241,6 +233,7 @@ static void __app_service(service_h s, void *data)
 		if (0 == strncmp(mode, KEY_MODE_VALUE_VIEW,
 				strlen(KEY_MODE_VALUE_VIEW))) {
 			DM_LOGI("View mode");
+			view.setSilentMode(false);
 			view.activateWindow();
 			free(mode);
 			return;
@@ -262,6 +255,7 @@ static void __app_service(service_h s, void *data)
 
 	ret = service_get_extra_data(s, KEY_FAILED_HISTORYID, &historyid_str);
 	if (ret == SERVICE_ERROR_NONE) {
+		view.setSilentMode(false);
 		view.activateWindow();
 		if (historyid_str) {
 			unsigned int id = atoi(historyid_str);

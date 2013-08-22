@@ -26,5 +26,5 @@ msgid "IDS_DM_HEADER_SELECT_ITEMS"
 msgstr "Seleccionar elementos"
 
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
-msgstr "After you download items, they will be shown here"
+msgstr "Despois de descargar elementos, estes amosaranse aquí"
 

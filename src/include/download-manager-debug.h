@@ -34,13 +34,14 @@
 
 #define LOG_TAG "DOWNLOAD_MANAGER"
 
-
+#define DM_LOGV(format, ...) ;//LOGD(format, ##__VA_ARGS__)
 #define DM_LOGD(format, ...) LOGD(format, ##__VA_ARGS__)
 #define DM_LOGI(format, ...) LOGI(format, ##__VA_ARGS__)
 #define DM_LOGE(format, ...) LOGE(format, ##__VA_ARGS__)
-#define DM_SLOGD(format, ...) LOGD(format, ##__VA_ARGS__)
-#define DM_SLOGI(format, ...) LOGI(format, ##__VA_ARGS__)
-#define DM_SLOGE(format, ...) LOGE(format, ##__VA_ARGS__)
+#define DM_SLOGD(format, ...) SECURE_LOGD(format, ##__VA_ARGS__)
+#define DM_SLOGI(format, ...) SECURE_LOGI(format, ##__VA_ARGS__)
+#define DM_SLOGE(format, ...) SECURE_LOGE(format, ##__VA_ARGS__)
+#define DM_LOGTEST(format, ...) ;//LOGD("[TEST]"format, ##__VA_ARGS__)
 
 #else
 
@@ -59,6 +60,8 @@
 #define DM_SLOGD DM_LOGD
 #define DM_SLOGI DM_LOGI
 #define DM_SLOGE DM_LOGE
+#define DM_LOGTEST
+#define DM_LOGV ;
 #endif /*_USE_DLOG*/
 
 #endif /* DOWNLOAD_MANAGER_DEBUG_H */

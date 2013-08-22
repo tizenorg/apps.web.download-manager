@@ -55,8 +55,8 @@ public:
 
 	const char *getMessage(void);
 	const char *getBytesStr(void);
-	const char *getHumanFriendlyBytesStr(unsigned long int bytes,
-		bool progressOption);
+	void getHumanFriendlyBytesStr(unsigned long long bytes,
+		bool progressOption, char **buff);
 
 	Elm_Genlist_Item_Class *elmGenlistStyle(void);
 
@@ -101,8 +101,8 @@ public:
 			return false;
 	}
 
-	unsigned long int receivedFileSize(void);
-	unsigned long int fileSize(void);
+	unsigned long long receivedFileSize(void);
+	unsigned long long fileSize(void);
 	const char *getTitle(void);
 	const char *getIconPath(void) { return m_item->iconPath().c_str(); }
 

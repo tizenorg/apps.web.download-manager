@@ -74,7 +74,7 @@ public:
 	string getIconPath(void) { return iconPath; }
 	string getContentType(void) { return contentType; }
 	string getInstallUri(void) { return installUri; }
-	void setIdler(Ecore_Idler *i) { idler = i; }
+	void setThreadData(Ecore_Thread *t) { th = t; }
 	int getStatus(void) { return status; }
 	void sendInstallNotification(int status);
 	void sendInstallNotification(int status, string url);
@@ -93,13 +93,15 @@ private:
 	string installParam;
 	string iconPath;
 	string contentType;
-	unsigned long int size;
+	unsigned long long size;
 	int status;
 	int retryCount;
 	string proxyAddr;
-	Ecore_Idler *idler;
-	string getBytesStr(unsigned long int bytes);
-	static Eina_Bool sendInstallNotifyCB(void *data);
+	Ecore_Thread *th;
+	string getBytesStr(unsigned long long bytes);
+	static void sendInstallNotifyCB(void *data, Ecore_Thread *thread);
+	static void threadEndCB(void *data, Ecore_Thread *thread);
+	static void threadCancelCB(void *data, Ecore_Thread *thread);
 	bool notifyFinished;
 };
 #endif
@@ -125,11 +127,11 @@ public:
 	inline int downloadId(void) { return m_download_id;}
 	inline void setDownloadId(int id) { m_download_id = id; }
 
-	inline unsigned long int receivedFileSize(void) { return m_receivedFileSize; }
-	inline void setReceivedFileSize(unsigned long int size) { m_receivedFileSize = size; }
+	inline unsigned long long receivedFileSize(void) { return m_receivedFileSize; }
+	inline void setReceivedFileSize(unsigned long long size) { m_receivedFileSize = size; }
 
-	inline unsigned long int fileSize(void) { return m_fileSize; }
-	inline void setFileSize(unsigned long int size) { m_fileSize = size; }
+	inline unsigned long long fileSize(void) { return m_fileSize; }
+	inline void setFileSize(unsigned long long size) { m_fileSize = size; }
 
 	inline string &filePath(void) { return m_filePath; }
 	inline void setFilePath(const char *path) { if (path) m_filePath = path; }
@@ -187,7 +189,16 @@ public:
 		else
 			return emptyStr;
 	}
+	inline string getInstallNotifyUri(void)
+	{
+		string emptyStr = string();
+		if (m_oma_item.get())
+			return m_oma_item->getInstallUri();
+		else
+			return emptyStr;
+	}
 	bool isNotifyFiinished(void);
+	bool isOMAMime(void);
 #endif
 	inline string url(void) { return m_aptr_request->getUrl(); }
 	inline string cookie(void) { return m_aptr_request->getCookie(); }
@@ -215,8 +226,8 @@ private:
 	int m_download_id;
 	DL_ITEM::STATE m_state;
 	ERROR::CODE m_errorCode;
-	unsigned long int m_receivedFileSize;
-	unsigned long int m_fileSize;
+	unsigned long long m_receivedFileSize;
+	unsigned long long m_fileSize;
 	string m_filePath;
 	string m_contentName;
 	string m_registeredFilePath;

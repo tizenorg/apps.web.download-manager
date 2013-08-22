@@ -66,7 +66,6 @@ public:
 	void update(Elm_Object_Item *glItem);
 	void updateLang(void);
 	void showViewItem(int id, const char *title);
-	void playContent(int id, const char *title);
 	void handleChangedAllCheckedState(void);
 	void handleCheckedState(void);
 	bool isGenlistEditMode(void);
@@ -89,21 +88,16 @@ private:
 	static void retryPopupRetryCB(void *data, Evas_Object *obj, void *event_info);
 	static void memoryFullPopupCancelCB(void *data, Evas_Object *obj, void *event_info);
 	static void memoryFullPopupMyFilesCB(void *data, Evas_Object *obj, void *event_info);
-#ifdef _HW_BACK_KEY
 	static void deleteBtnCB(void *data, Evas_Object *obj, void *event_info);
 	static void popupBackCB(void *data, Evas_Object *obj, void *event_info);
 	static void cancelToolBarBtnCB(void *data, Evas_Object *obj, void *event_info);
 	static void deleteToolBarBtnCB(void *data, Evas_Object *obj, void *event_info);
 	static void deletePopupDeleteCB(void *data, Evas_Object *obj, void *event_info);
-#else
-	static void cbDeleteBtnCB(void *data, Evas_Object *obj, void *event_info);
-#endif
 	static Eina_Bool popCB(void *data, Elm_Object_Item *it);
 #ifdef _ENABLE_OMA_DOWNLOAD
 	static void omaPopupResponseOKCB(void *data, Evas_Object *obj, void *event_info);
 	static void omaPopupResponseCancelCB(void *data, Evas_Object *obj, void *event_info);
 #endif
-
 private:
 	DownloadView();
 	~DownloadView();
@@ -116,16 +110,11 @@ private:
 	Evas_Object *createLayout(Evas_Object *parent);
 	void createTheme(void);
 	void createNaviBar(void);
-#ifdef	_HW_BACK_KEY
 	void createToolBar(void);
 	void destroyToolBar(void);
 	void createDeleteBtn(void);
 	void destroyDeleteBtn(void);
 	void showDeletePopup(void);
-#else
-	void createBackBtn(void);
-	void createControlBar(void);
-#endif
 	void createBox(void);
 	void createList(void);
 
@@ -144,7 +133,6 @@ private:
 	void hideGenlistEditMode(void);
 	void createSelectAll(void);
 	void destroyCheckedItem(void);
-	void showDeletedNotify(void);
 	void showSelectedNotify(int selectedCount);
 	void cleanGenlistData();
 
@@ -155,13 +143,8 @@ private:
 	Evas_Object *eoEmptyNoContent;
 	Evas_Object *eoNaviBar;
 	Elm_Object_Item *eoNaviBarItem;
-#ifdef	_HW_BACK_KEY
 	Evas_Object *eoToolBar;
 	Elm_Object_Item *eoToolBarItem;
-#else
-	Evas_Object *eoBackBtn;
-	Evas_Object *eoDeleteBtn;
-#endif
 	Evas_Object *eoBox;
 	Evas_Object *eoDldList;
 	Evas_Object *eoPopup;

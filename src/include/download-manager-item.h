@@ -36,9 +36,9 @@ using namespace std;
 namespace ITEM {
 enum STATE {
 	IDLE = 0,
+	PREPARE_TO_RETRY,
 	REQUESTING,
 	QUEUED,
-	PREPARE_TO_RETRY,
 	RECEIVING_DOWNLOAD_INFO,
 #ifdef _ENABLE_OMA_DOWNLOAD
 	REQUEST_USER_CONFIRM,
@@ -101,13 +101,13 @@ public:
 		return -1;
 	} 	// FIXME create Item's own id
 
-	inline unsigned long int receivedFileSize(void) {
+	inline unsigned long long receivedFileSize(void) {
 		if (m_aptr_downloadItem.get())
 			return m_aptr_downloadItem->receivedFileSize();
 		return 0;
 	}
 
-	inline unsigned long int fileSize(void) {
+	inline unsigned long long fileSize(void) {
 		if (m_aptr_downloadItem.get())
 			return m_aptr_downloadItem->fileSize();
 		return 0;
@@ -167,6 +167,12 @@ public:
 	bool isCompletedDownload(void); /* After stating installation */
 
 #ifdef _ENABLE_OMA_DOWNLOAD
+	inline bool isOMAMime(void)
+	{
+		if (m_aptr_downloadItem.get())
+			return m_aptr_downloadItem->isOMAMime();
+		return false;
+	}
 	inline string getUserMessage(void)
 	{
 		if (m_aptr_downloadItem.get())
@@ -179,7 +185,14 @@ public:
 			return m_aptr_downloadItem->isNotifyFiinished();
 		return true;
 	}
-	inline string installNotifyUrl(void) { return m_installNotifyUrl; }
+	inline string installNotifyUrl(void)
+	{
+#ifdef _ENABLE_OMA_DOWNLOAD
+		if (m_aptr_downloadItem.get())
+			return m_aptr_downloadItem->getInstallNotifyUri();
+#endif
+		return m_installNotifyUrl;
+	}
 	inline void setInstallNotifyUrl(string url) { m_installNotifyUrl = url; }
 	inline bool isExistedInstallNotifyUri(void)
 	{
@@ -187,6 +200,7 @@ public:
 			return m_aptr_downloadItem->isExistedInstallNotifyUri();
 		return false;
 	}
+
 	void setNotifyIdler(Ecore_Idler *idler) { m_notifyIdler = idler; }
 #endif
 	/* Test code */

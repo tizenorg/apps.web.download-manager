@@ -144,13 +144,13 @@ public:
 	inline void setType(DA_CB::TYPE type) { m_type = type; }
 	inline void setUserData(void *userData) { m_userData = userData; }
 	inline void setDownloadId(int id) { m_download_id = id; }
-	inline void setReceivedFileSize(unsigned long int size) { m_receivedFileSize = size; }
+	inline void setReceivedFileSize(unsigned long long size) { m_receivedFileSize = size; }
 
 	DA_CB::TYPE m_type;
 private:
 	void *m_userData;
 	int m_download_id;
-	unsigned long int m_receivedFileSize;
+	unsigned long long m_receivedFileSize;
 };
 
 struct pipe_data_t {
@@ -171,7 +171,7 @@ DownloadEngine::DownloadEngine()
 
 DownloadEngine::~DownloadEngine()
 {
-	DM_LOGI("");
+	DM_LOGD("");
 }
 
 void DownloadEngine::initEngine(void)
@@ -181,7 +181,7 @@ void DownloadEngine::initEngine(void)
 
 void DownloadEngine::deinitEngine(void)
 {
-	DM_LOGI("");
+	DM_LOGD("");
 	if (ecore_pipe) {
 		ecore_pipe_del(ecore_pipe);
 		ecore_pipe = NULL;
@@ -222,11 +222,11 @@ void CbData::updateDownloadItem()
 			download_cancel(m_download_id);
 			break;
 		}
-		DM_SLOGD("content size[%lu]", contentSize);
+		DM_SLOGI("content size[%llu]", contentSize);
 		/* In case of second download of OMA download, the size form server may be not set
 		 * At that case, the size from dd file should not changed.*/
 		if (contentSize > 0)
-			downloadItem->setFileSize((unsigned long int)contentSize);
+			downloadItem->setFileSize((unsigned long long)contentSize);
 		ret = download_get_content_name(m_download_id, &contentName);
 		if (ret != DOWNLOAD_ERROR_NONE) {
 			if (ret == DOWNLOAD_ERROR_NO_DATA) {
@@ -244,7 +244,7 @@ void CbData::updateDownloadItem()
 		}
 		if (contentName)
 			name = string(contentName);
-		DM_SLOGD("content name[%s]", contentName);
+		DM_SLOGI("content name[%s]", contentName);
 		downloadItem->setContentName(name);
 		free(contentName);
 		ret = download_get_mime_type(m_download_id, &mimeType);
@@ -263,11 +263,11 @@ void CbData::updateDownloadItem()
 		}
 		if (mimeType) {
 			string mime = string(mimeType);
-			DM_SLOGD("mime type[%s]", mimeType);
+			DM_SLOGI("mime type[%s]", mimeType);
 			downloadItem->setMimeType(mime);
 #ifdef _ENABLE_OMA_DOWNLOAD
 			if (downloadItem->isOMADownloadCase()) {
-				DM_SLOGD("mime type from dd[%s]",
+				DM_SLOGI("mime type from dd[%s]",
 						downloadItem->getMimeFromOmaItem().c_str());
 				if (downloadItem->isNeededTocheckMimeTypeFromDD(mimeType)) {
 					if (downloadItem->getMimeFromOmaItem().compare(mimeType))
@@ -288,12 +288,12 @@ void CbData::updateDownloadItem()
 			break;
 		}
 		if (tempPath) {
-			DM_SLOGD("temp path[%s]", tempPath);
+			DM_SLOGI("temp path[%s]", tempPath);
 			downloadItem->setFilePath(tempPath);
 			free(tempPath);
 		}
 #ifdef _ENABLE_OMA_DOWNLOAD
-		if (!downloadItem->mimeType().compare(DD_MIME_STR))
+		if (downloadItem->isOMAMime())
 			return;
 #endif
 		break;
@@ -302,7 +302,7 @@ void CbData::updateDownloadItem()
 		downloadItem->setState(DL_ITEM::UPDATING);
 		downloadItem->setReceivedFileSize(m_receivedFileSize);
 #ifdef _ENABLE_OMA_DOWNLOAD
-		if (!downloadItem->mimeType().compare(DD_MIME_STR))
+		if (downloadItem->isOMAMime())
 			return;
 #endif
 		break;
@@ -334,15 +334,15 @@ void CbData::updateDownloadItem()
 				free(savedPath);
 			break;
 		}
-		DM_SLOGD("http status code [%d]", status);
+		DM_SLOGI("http status code [%d]", status);
 		if (savedPath) {
 			string path = string(savedPath);
-			DM_SLOGD("saved path[%s]", savedPath);
+			DM_SLOGI("saved path[%s]", savedPath);
 			downloadItem->setRegisteredFilePath(path);
 			free(savedPath);
 		}
 #ifdef _ENABLE_OMA_DOWNLOAD
-		if (!downloadItem->mimeType().compare(DD_MIME_STR)) {
+		if (downloadItem->isOMAMime()) {
 			int ret = 0;
 			int err = 0;
 			dd_oma1_t *dd_info = NULL;
@@ -412,6 +412,11 @@ void CbData::updateDownloadItem()
 	case DA_CB::CANCELED:
 	{
 		download_error_e error = DOWNLOAD_ERROR_NONE;
+#ifdef _ENABLE_OMA_DOWNLOAD
+		if (downloadItem->isOMADownloadCase()) {
+			downloadItem->sendInstallNotification(902);
+		}
+#endif
 		ret = download_get_error(m_download_id, &error);
 		if (ret != DOWNLOAD_ERROR_NONE) {
 			DM_LOGE("Fail to get downloaded error:id[%d] err[%s]",
@@ -422,6 +427,7 @@ void CbData::updateDownloadItem()
 		}
 		if (downloadItem->state() == DL_ITEM::CANCELED) {
 			DM_LOGI("Already update cancel UI");
+			downloadItem->destroyId();
 			return;
 		}
 		if (error != DOWNLOAD_ERROR_NONE) {
@@ -432,11 +438,6 @@ void CbData::updateDownloadItem()
 			/* In case the content server request cancel */
 			downloadItem->setState(DL_ITEM::CANCELED);
 		}
-#ifdef _ENABLE_OMA_DOWNLOAD
-		if (downloadItem->isOMADownloadCase()) {
-			downloadItem->sendInstallNotification(902);
-		}
-#endif
 		downloadItem->destroyId();
 		break;
 	}
@@ -515,7 +516,7 @@ int DownloadItem::createId(int id)
 		DM_LOGE("Fail to create download id:[%s]", __convertErrToString(ret));
 		return ret;
 	}
-	DM_LOGI("URL download id : [%d]", m_download_id);
+	DM_LOGV("URL download id : [%d]", m_download_id);
 
 	ret = download_set_state_changed_cb(m_download_id, state_changed_cb, static_cast<void*>(this));
 	if (ret != DOWNLOAD_ERROR_NONE) {
@@ -536,7 +537,6 @@ int DownloadItem::createId(int id)
 
 DownloadItem::~DownloadItem()
 {
-	DM_LOGD("");
 	destroyId();
 }
 
@@ -750,12 +750,12 @@ void DownloadItem::cancel()
 #ifdef _ENABLE_OMA_DOWNLOAD
 bool DownloadItem::isNeededTocheckMimeTypeFromDD(const char *mimeType)
 {
-	DM_LOGI("");
+	DM_LOGD("");
 	if (getMimeFromOmaItem().empty())
 		return false;
 
-	if (strncmp(mimeType, DP_DRM_MIME_STR, strlen(DP_DRM_MIME_STR)) == 0 ||
-			strncmp(mimeType, DP_DCF_MIME_STR, strlen(DP_DCF_MIME_STR)) == 0)
+	if (strncmp(mimeType, DM_DRM_MIME_STR, strlen(DM_DRM_MIME_STR)) == 0 ||
+			strncmp(mimeType, DM_DCF_MIME_STR, strlen(DM_DCF_MIME_STR)) == 0)
 		return false;
 	return true;
 }
@@ -846,11 +846,20 @@ bool DownloadItem::isNotifyFiinished(void)
 			return true;
 }
 
+bool DownloadItem::isOMAMime()
+{
+	if (m_mimeType.empty())
+		return false;
+	if (m_mimeType.compare(DD_MIME_STR) == 0)
+		return true;
+	return false;
+}
+
 OmaItem::OmaItem()
 	: size(0)
 	, status(900)
 	, retryCount(0)
-	, idler(NULL)
+	, th(NULL)
 	, notifyFinished(false)
 {
 }
@@ -858,7 +867,7 @@ OmaItem::OmaItem()
 OmaItem::OmaItem(dd_oma1_t *dd_info)
 {
 	retryCount = 0;
-	idler = NULL;
+	th = NULL;
 	notifyFinished = false;
 	if (dd_info) {
 		if (strlen(dd_info->name)>0)
@@ -893,8 +902,8 @@ OmaItem::OmaItem(dd_oma1_t *dd_info)
 
 OmaItem::~OmaItem()
 {
-	if (idler)
-		ecore_idler_del(idler);
+	if (th)
+		ecore_thread_cancel(th);
 }
 
 void OmaItem::sendInstallNotify()
@@ -948,12 +957,12 @@ string OmaItem::getUserMessage()
 
 /* FIXME later : this function is same to getHumanFriendlyBytesStr() method
    This should move to util class */
-string OmaItem::getBytesStr(unsigned long int bytes)
+string OmaItem::getBytesStr(unsigned long long bytes)
 {
 	double doubleTypeBytes = 0.0;
 	const char *unitStr[4] = {"B", "KB", "MB", "GB"};
 	int unit = 0;
-	unsigned long int unitBytes = bytes;
+	unsigned long long unitBytes = bytes;
 
 	/* using bit operation to avoid floating point arithmetic */
 	for (unit = 0; (unitBytes > 1024 && unit < 4) ; unit++) {
@@ -969,7 +978,7 @@ string OmaItem::getBytesStr(unsigned long int bytes)
 		unit = 3;
 
 	if (unit == 0)
-		snprintf(str, sizeof(str)-1, "%lu %s", bytes, unitStr[unit]);
+		snprintf(str, sizeof(str)-1, "%llu %s", bytes, unitStr[unit]);
 	else
 		snprintf(str, sizeof(str)-1, "%.2f %s", doubleTypeBytes, unitStr[unit]);
 	str[63] = '\0';
@@ -1023,15 +1032,15 @@ int myTrace(CURL *handle, curl_infotype type, char *data, size_t size, void *use
 	switch(type) {
 	case CURLINFO_TEXT:
 		if (data)
-			DM_SLOGD("[curl] Info:%s", data);
+			DM_LOGV("[curl] Info:%s", data);
 		break;
 	case CURLINFO_HEADER_OUT:
-		DM_LOGI("[curl] Send header");
+		DM_LOGV("[curl] Send header");
 		if (data)
-			DM_SLOGD("[curl] %s", data);
+			DM_LOGV("[curl] %s", data);
 		break;
 	case CURLINFO_DATA_OUT:
-		DM_LOGI("[curl] Send data");
+		DM_LOGD("[curl] Send data");
 		if (data)
 			DM_SLOGD("[curl] %s", data);
 		break;
@@ -1060,17 +1069,19 @@ int myTrace(CURL *handle, curl_infotype type, char *data, size_t size, void *use
 void OmaItem::sendInstallNotification(int s)
 {
 	status = s;
-	idler = ecore_idler_add(sendInstallNotifyCB, this);
+	th = ecore_thread_run(sendInstallNotifyCB, threadEndCB,
+			threadCancelCB, this);
 }
 
 void OmaItem::sendInstallNotification(int s, string url)
 {
 	status = s;
 	installUri = url;
-	idler = ecore_idler_add(sendInstallNotifyCB, this);
+	th = ecore_thread_run(sendInstallNotifyCB, threadEndCB,
+			threadCancelCB, this);
 }
 
-Eina_Bool OmaItem::sendInstallNotifyCB(void *data)
+void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 {
 	CURL *curl;
 	CURLcode res;
@@ -1078,14 +1089,13 @@ Eina_Bool OmaItem::sendInstallNotifyCB(void *data)
 	OmaItem *item = (OmaItem *)data;
 	struct curl_slist *header = NULL;
 	long httpCode = 0;
-	Eina_Bool ret = ECORE_CALLBACK_CANCEL;
 	string proxyAddr = string();
 	string userAgent;
 	DownloadUtil &utilObj = DownloadUtil::getInstance();
 
 	if (!data) {
 		DM_LOGE("[CRITICAL]NULL Check: oma item");
-		return ECORE_CALLBACK_CANCEL;
+		return;
 	}
 
 	item->retryCount++;
@@ -1111,29 +1121,49 @@ Eina_Bool OmaItem::sendInstallNotifyCB(void *data)
 		curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, myTrace);
 	}
 	res = curl_easy_perform(curl);
-
 	if (res != CURLE_OK) {
 		DM_LOGE("Fail to send install notification[%s]", curl_easy_strerror(res));
-		ret = ECORE_CALLBACK_RENEW;
+		if (!ecore_thread_reschedule(th))
+			DM_LOGE("Fail to ecore_thread_reschedule");
 	} else {
 		res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 		if (res != CURLE_OK) {
-			ret = ECORE_CALLBACK_RENEW;
+			if (!ecore_thread_reschedule(th))
+				DM_LOGE("Fail to ecore_thread_reschedule");
 		} else {
 			DM_LOGI("Response Http Status code[%d]", (int)httpCode);
 			if (httpCode != 200)
-				ret = ECORE_CALLBACK_RENEW;
+				if (!ecore_thread_reschedule(th))
+					DM_LOGE("Fail to ecore_thread_reschedule");
 		}
 	}
 	curl_easy_cleanup(curl);
 	curl_slist_free_all(header);
-	if (item->retryCount > 2)
-		ret = ECORE_CALLBACK_CANCEL;
-	if (ret == ECORE_CALLBACK_CANCEL) {
-		item->setIdler(NULL);
-		item->setNotifyFinished(true);
+	if (item->retryCount > 2) {
+		ecore_thread_cancel(th);
 	}
-	return ret;
+	return;
+}
+void OmaItem::threadEndCB(void *data, Ecore_Thread *th)
+{
+	OmaItem *item = (OmaItem *)data;
+	if (!data) {
+		DM_LOGE("[CRITICAL]NULL Check: oma item");
+		return;
+	}
+	item->setNotifyFinished(true);
+	item->setThreadData(NULL);
+}
+
+void OmaItem::threadCancelCB(void *data, Ecore_Thread *th)
+{
+	OmaItem *item = (OmaItem *)data;
+	if (!data) {
+		DM_LOGE("[CRITICAL]NULL Check: oma item");
+		return;
+	}
+	item->setNotifyFinished(true);
+	item->setThreadData(NULL);
 }
 
 #endif

@@ -377,11 +377,11 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 
 			op_com_util_remove_blankspace(ch_str, len);
 			if (op_com_utils_is_number((const char*)ch_str)) {
-				dd_info->size = atoi(ch_str);
+				dd_info->size = atoll(ch_str);
 				if (dd_info->size <= 0)
 					OP_LOGE("size is invalid");
 
-				OP_SLOG("dd_info->size:[%d]", dd_info->size);
+				OP_SLOG("dd_info->size:[%llu]", dd_info->size);
 			} else {
 				OP_LOGE("size is invalid");
 			}

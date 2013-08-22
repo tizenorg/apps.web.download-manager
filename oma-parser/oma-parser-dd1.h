@@ -48,7 +48,7 @@ struct _download_descriptor_oma1_t {
 	int minor_version; /* DD Version, minor : Optional */
 	char *vendor; /* vendor : Optional */
 	char object_uri[OP_MAX_URI_LEN]; /* object URI : Mandatory */
-	int size; /* size : Mandatory */
+	unsigned long long size; /* size : Mandatory */
 	char *install_notify_uri; /* installNotifyURI : Optional */
 	char *description; /* description : Optional */
 	char *midlet_info_url; /* info url : Optional */

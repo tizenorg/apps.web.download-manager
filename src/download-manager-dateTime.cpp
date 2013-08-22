@@ -75,10 +75,10 @@ int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
 	refYday = finishedDate->tm_yday;
 	refYear = finishedDate->tm_year;
 	diffDays = nowYday - refYday;
-	DM_LOGD("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
+	DM_LOGV("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
 		(finishedDate->tm_year + 1900), (finishedDate->tm_mon + 1),
 		finishedDate->tm_mday, refTime, refYday);
-	DM_LOGD("nowDate[%d/%d/%d]",
+	DM_LOGV("nowDate[%d/%d/%d]",
 			(nowDate->tm_year + 1900), (nowDate->tm_mon + 1),
 			nowDate->tm_mday);
 	if ((nowYear-refYear)>0 && diffDays < 0) {
@@ -106,7 +106,7 @@ UDateFormat *DateUtil::getBestPattern(const char *patternStr,
 		patternLen = udatpg_getBestPattern(generator, customSkeleton,
 		u_strlen(customSkeleton), bestPattern, MAX_PATTERN_BUFFER_LEN,
 			&status);
-		DM_LOGD("udatpg_getBestPattern status[%d] bestPattern[%s]", status,
+		DM_LOGV("udatpg_getBestPattern status[%d] bestPattern[%s]", status,
 			bestPattern);
 		if (patternLen < 1) {
 			format = udat_open(UDAT_SHORT, UDAT_NONE, locale, NULL, -1,
@@ -128,11 +128,11 @@ void DateUtil::updateLocale()
 	deinitLocaleData();
 
 	uloc_setDefault(getenv("LC_TIME"), &status);
-	DM_LOGD("uloc_setDefault status[%d]",status);
+	DM_LOGV("uloc_setDefault status[%d]",status);
 
 	locale = uloc_getDefault();
 	generator = udatpg_open(locale,&status);
-	DM_LOGD("udatpg_open status[%d]",status);
+	DM_LOGV("udatpg_open status[%d]",status);
 
 	timeFormat12H = getBestPattern("hm", generator, locale);
 	timeFormat24H = getBestPattern("Hm", generator, locale);
@@ -181,7 +181,7 @@ void DateUtil::getDateStr(double finishTime, string &outBuf)
 	if (format) {
 		char tempBuf[MAX_BUF_LEN] = {0,};
 		udat_format(format, (finishTime * 1000), str, MAX_BUF_LEN - 1, NULL, &status);
-		DM_LOGD("udat_format:status[%d]", status);
+		DM_LOGV("udat_format:status[%d]", status);
 		u_austrncpy(tempBuf, str, MAX_BUF_LEN-1);
 		outBuf = string(tempBuf);
 	} else {

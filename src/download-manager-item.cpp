@@ -35,7 +35,7 @@ Item::Item()
 	, m_errorCode(ERROR::NONE)
 	, m_historyId(-1)
 	, m_id(-1)
-	, m_contentType(DP_CONTENT_UNKOWN)
+	, m_contentType(DM_CONTENT_UNKOWN)
 	, m_finishedTime(0)
 	, m_downloadType(DL_TYPE::TYPE_NONE)
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -50,7 +50,7 @@ Item::Item(DownloadRequest &rRequest)
 	: m_state(ITEM::IDLE)
 	, m_errorCode(ERROR::NONE)
 	, m_historyId(-1)
-	, m_contentType(DP_CONTENT_UNKOWN)
+	, m_contentType(DM_CONTENT_UNKOWN)
 	, m_finishedTime(0)
 	, m_downloadType(DL_TYPE::TYPE_NONE)
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -59,7 +59,7 @@ Item::Item(DownloadRequest &rRequest)
 	, m_gotFirstData(false)
 {
 	m_title = string();
-	m_iconPath = DP_UNKNOWN_ICON_PATH;
+	m_iconPath = DM_UNKNOWN_ICON_PATH;
 	m_aptr_request = auto_ptr<DownloadRequest>(new DownloadRequest(rRequest));
 	m_aptr_noti = auto_ptr<DownloadNoti>(new DownloadNoti(this));
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -80,9 +80,10 @@ void Item::create(DownloadRequest &rRequest)
 	items.attachItem(newItem);
 
 	ViewItem::create(newItem);
-	DM_LOGI("newItem[%p]",newItem);
+	DM_LOGV("newItem[%p]",newItem);
 
 	newItem->download();
+	newItem->notify();
 }
 
 Item *Item::createHistoryItem()
@@ -97,7 +98,7 @@ Item *Item::createHistoryItem()
 
 	Item *newItem = new Item(request);
 
-	DM_LOGI("new History Item[%p]",newItem);
+	DM_LOGV("new History Item[%p]",newItem);
 
 	return newItem;
 }
@@ -127,7 +128,7 @@ void Item::attachHistoryItem()
 
 void Item::destroy()
 {
-	DM_LOGI("");
+	DM_LOGD("");
 	// FIXME prohibit to destroy if downloading
 	if (!isFinished()) {
 		DM_LOGE("Cannot delete this item:state[%d]",m_state);
@@ -355,18 +356,18 @@ void Item::updateFromDownloadItem(void)
 		return;
 //		break;
 	case DL_ITEM::REQUEST_USER_CONFIRM:
-		DM_LOGI("DL_ITEM:REQUEST_USER_CONFIRM");
+		DM_LOGD("DL_ITEM:REQUEST_USER_CONFIRM");
 		setState(ITEM::REQUEST_USER_CONFIRM);
 		break;
 #endif
 	case DL_ITEM::QUEUED:
-		DM_LOGI("DL_ITEM:QUEUED");
+		DM_LOGD("DL_ITEM:QUEUED");
 		setState(ITEM::QUEUED);
 		break;
 	default:
 		break;
 	}
-	DM_LOGD("Item[%p]::updateFromDownloadItem() notify() dl_state[%d]state[%d]",
+	DM_LOGV("Item[%p]::updateFromDownloadItem() notify() dl_state[%d]state[%d]",
 			this, m_aptr_downloadItem->state(), state());
 	notify();
 }
@@ -446,54 +447,54 @@ void Item::extractTitle(void)
 void Item::extractIconPath()
 {
 	if (isFinishedWithErr()) {
-		m_iconPath = DP_FAILED_ICON_PATH;
+		m_iconPath = DM_FAILED_ICON_PATH;
 		return;
 	}
 	// FIXME Later : change 2 dimension array??
 	switch(m_contentType) {
-	case DP_CONTENT_IMAGE :
-		m_iconPath = DP_IMAGE_ICON_PATH;
+	case DM_CONTENT_IMAGE :
+		m_iconPath = DM_IMAGE_ICON_PATH;
 		break;
-	case DP_CONTENT_VIDEO :
-		m_iconPath = DP_VIDEO_ICON_PATH;
+	case DM_CONTENT_VIDEO :
+		m_iconPath = DM_VIDEO_ICON_PATH;
 		break;
-	case DP_CONTENT_MUSIC:
-		m_iconPath = DP_MUSIC_ICON_PATH;
+	case DM_CONTENT_MUSIC:
+		m_iconPath = DM_MUSIC_ICON_PATH;
 		break;
-	case DP_CONTENT_PDF:
-		m_iconPath = DP_PDF_ICON_PATH;
+	case DM_CONTENT_PDF:
+		m_iconPath = DM_PDF_ICON_PATH;
 		break;
-	case DP_CONTENT_WORD:
-		m_iconPath = DP_WORD_ICON_PATH;
+	case DM_CONTENT_WORD:
+		m_iconPath = DM_WORD_ICON_PATH;
 		break;
-	case DP_CONTENT_PPT:
-		m_iconPath = DP_PPT_ICON_PATH;
+	case DM_CONTENT_PPT:
+		m_iconPath = DM_PPT_ICON_PATH;
 		break;
-	case DP_CONTENT_EXCEL:
-		m_iconPath = DP_EXCEL_ICON_PATH;
+	case DM_CONTENT_EXCEL:
+		m_iconPath = DM_EXCEL_ICON_PATH;
 		break;
-	case DP_CONTENT_HTML:
-		m_iconPath = DP_HTML_ICON_PATH;
+	case DM_CONTENT_HTML:
+		m_iconPath = DM_HTML_ICON_PATH;
 		break;
-	case DP_CONTENT_TEXT:
-		m_iconPath = DP_TEXT_ICON_PATH;
+	case DM_CONTENT_TEXT:
+		m_iconPath = DM_TEXT_ICON_PATH;
 		break;
-	case DP_CONTENT_SD_DRM:
-	case DP_CONTENT_DRM:
-		m_iconPath = DP_DRM_ICON_PATH;
+	case DM_CONTENT_SD_DRM:
+	case DM_CONTENT_DRM:
+		m_iconPath = DM_DRM_ICON_PATH;
 		break;
-	case DP_CONTENT_FLASH:
-		m_iconPath = DP_FALSH_ICON_PATH;
+	case DM_CONTENT_FLASH:
+		m_iconPath = DM_FALSH_ICON_PATH;
 		break;
-	case DP_CONTENT_TPK:
-		m_iconPath = DP_TPK_ICON_PATH;
+	case DM_CONTENT_TPK:
+		m_iconPath = DM_TPK_ICON_PATH;
 		break;
-	case DP_CONTENT_VCAL:
-		m_iconPath = DP_VCAL_ICON_PATH;
+	case DM_CONTENT_VCAL:
+		m_iconPath = DM_VCAL_ICON_PATH;
 		break;
-	case DP_CONTENT_UNKOWN:
+	case DM_CONTENT_UNKOWN:
 	default:
-		m_iconPath = DP_UNKNOWN_ICON_PATH;
+		m_iconPath = DM_UNKNOWN_ICON_PATH;
 		break;
 	}
 }
@@ -660,7 +661,7 @@ void Item::createHistoryId()
 			tempId = -1;
 			break;
 		}
-		DM_LOGI("Random historyId[%ld]", m_historyId);
+		DM_LOGD("Random historyId[%ld]", m_historyId);
 	}
 	m_historyId = tempId;
 }
@@ -703,7 +704,7 @@ void Item::suspend()
 
 bool Item::retry()
 {
-	DM_LOGI("");
+	DM_LOGD("");
 	if (m_aptr_downloadItem.get()) {
 		NetMgr &netMgrInstance = NetMgr::getInstance();
 		setState(ITEM::PREPARE_TO_RETRY);
@@ -714,6 +715,7 @@ bool Item::retry()
 		/* Donot delete db, just update db. */
 		netMgrInstance.subscribe(m_aptr_netEventObserver.get());
 		m_aptr_downloadItem->retry(m_id);
+		setState(ITEM::REQUESTING);
 		return true;
 	} else {
 		m_state = ITEM::FAIL_TO_DOWNLOAD;
@@ -725,11 +727,11 @@ void Item::clearForRetry()
 {
 	m_state = ITEM::IDLE;
 	m_errorCode = ERROR::NONE;
-	m_contentType = DP_CONTENT_UNKOWN;
+	m_contentType = DM_CONTENT_UNKOWN;
 	m_finishedTime = 0;
 	m_downloadType = DL_TYPE::TYPE_NONE;
 	m_gotFirstData = false;
-	m_iconPath = m_iconPath.assign(DP_UNKNOWN_ICON_PATH);
+	m_iconPath = m_iconPath.assign(DM_UNKNOWN_ICON_PATH);
 	if (!m_registeredFilePath.empty())
 		m_registeredFilePath.clear();
 }
@@ -793,6 +795,9 @@ bool Item::isPreparingDownload()
 	case ITEM::IDLE:
 	case ITEM::REQUESTING:
 	case ITEM::PREPARE_TO_RETRY:
+#ifdef _ENABLE_OMA_DOWNLOAD
+	case ITEM::REQUEST_USER_CONFIRM:
+#endif
 	case ITEM::QUEUED:
 		ret = true;
 		break;

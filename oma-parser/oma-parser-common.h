@@ -56,9 +56,9 @@
 #undef LOG_TAG
 #endif
 #define LOG_TAG "oma-parser"
-#define OP_LOGD(format, ...) LOGD("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define OP_LOGD(format, ...) ;//LOGD("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
 #define OP_LOGE(format, ...) LOGE("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
-#define OP_SLOG(format, ...) LOGD("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define OP_SLOG(format, ...) SECURE_LOGD("[%s:%d] "format" \n", __FUNCTION__, __LINE__, ##__VA_ARGS__);
 
 
 #else /* DEBUG_USING_DLOG */

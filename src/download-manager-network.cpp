@@ -196,7 +196,7 @@ void NetMgr::netTypeChanged()
 {
 	int changedStatus = NET_INACTIVE;
 	changedStatus = getConnectionState();
-	DM_LOGI("Previous[%d] Changed[%d]", m_netStatus, changedStatus);
+	DM_LOGD("Previous[%d] Changed[%d]", m_netStatus, changedStatus);
 	if (m_netStatus != changedStatus) {
 		if (changedStatus == NET_INACTIVE)
 			DM_LOGI("Netowrk is disconnected");
@@ -214,7 +214,7 @@ void NetMgr::netTypeChanged()
 void NetMgr::netConfigChanged(string ipAddr)
 {
 
-	DM_LOGI("");
+	DM_LOGD("");
 
 	if (ipAddr.length() > 1) {/* network is connected */
 		getProxy();

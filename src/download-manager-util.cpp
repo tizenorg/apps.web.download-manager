@@ -44,7 +44,8 @@ struct MimeTableType
 	int contentType;
 };
 
-#define MAX_MIME_TABLE_NUM 15
+#define MAX_SUFFIX_COUNT		1000000000
+#define MAX_MIME_TABLE_NUM 	15
 const char *ambiguousMIMETypeList[] = {
 		"text/plain",
 		"application/octet-stream"
@@ -52,27 +53,27 @@ const char *ambiguousMIMETypeList[] = {
 
 struct MimeTableType MimeTable[]={
 		// PDF
-		{"application/pdf",DP_CONTENT_PDF},
+		{"application/pdf",DM_CONTENT_PDF},
 		// word
-		{"application/msword",DP_CONTENT_WORD},
-		{"application/vnd.openxmlformats-officedocument.wordprocessingml.document",DP_CONTENT_WORD},
+		{"application/msword",DM_CONTENT_WORD},
+		{"application/vnd.openxmlformats-officedocument.wordprocessingml.document",DM_CONTENT_WORD},
 		// ppt
-		{"application/vnd.ms-powerpoint",DP_CONTENT_PPT},
-		{"application/vnd.openxmlformats-officedocument.presentationml.presentation",DP_CONTENT_PPT},
+		{"application/vnd.ms-powerpoint",DM_CONTENT_PPT},
+		{"application/vnd.openxmlformats-officedocument.presentationml.presentation",DM_CONTENT_PPT},
 		// excel
-		{"application/vnd.ms-excel",DP_CONTENT_EXCEL},
-		{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",DP_CONTENT_EXCEL},
+		{"application/vnd.ms-excel",DM_CONTENT_EXCEL},
+		{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",DM_CONTENT_EXCEL},
 		// html
-		{"text/html",DP_CONTENT_HTML},
+		{"text/html",DM_CONTENT_HTML},
 		// txt
-		{"text/txt",DP_CONTENT_TEXT},
-		{"text/plain",DP_CONTENT_TEXT},
+		{"text/txt",DM_CONTENT_TEXT},
+		{"text/plain",DM_CONTENT_TEXT},
 		// DRM
-		{"application/vnd.oma.drm.content",DP_CONTENT_SD_DRM},
-		{"application/vnd.oma.drm.message",DP_CONTENT_DRM},
-		{"application/x-shockwave-flash", DP_CONTENT_FLASH},
-		{"application/vnd.tizen.package", DP_CONTENT_TPK},
-		{"text/calendar",DP_CONTENT_VCAL},
+		{"application/vnd.oma.drm.content",DM_CONTENT_SD_DRM},
+		{"application/vnd.oma.drm.message",DM_CONTENT_DRM},
+		{"application/x-shockwave-flash", DM_CONTENT_FLASH},
+		{"application/vnd.tizen.package", DM_CONTENT_TPK},
+		{"text/calendar",DM_CONTENT_VCAL},
 };
 
 void FileUtility::cleanTempDir()
@@ -190,7 +191,7 @@ bool FileUtility::copyFile(string from, string to)
 				break;
 			}
 		} else {
-			DM_LOGD("read[%d]", readNum);
+			DM_LOGV("read[%d]", readNum);
 			break;
 		}
 	}
@@ -225,7 +226,7 @@ bool FileUtility::openFile(string path, int contentType)
 		return false;
 	}
 
-	if (contentType == DP_CONTENT_HTML || contentType == DP_CONTENT_TEXT) {
+	if (contentType == DM_CONTENT_HTML || contentType == DM_CONTENT_TEXT) {
 		filePath = "file://";
 		filePath.append(path.c_str());
 		if (service_set_mime(handle, "text/html") < 0) {
@@ -286,7 +287,7 @@ void FileUtility::openMyFilesApp()
 bool FileUtility::checkTempDir(string userInstallDir)
 {
 	string defaultDir;
-	DM_LOGI("");
+	DM_LOGV("");
 	if (userInstallDir.empty()) {
 		defaultDir = FileUtility::getDefaultPath(true);
 	} else {
@@ -316,17 +317,12 @@ string FileUtility::getDefaultPath(bool optionTempDir)
 	else
 		path.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
 
-	if (0 != vconf_get_int(VCONFKEY_SETAPPL_DEFAULT_MEM_WAP_INT, &value)) {
-		DM_LOGE("Fail to get vconf_get_int");
-		return path;
-	}
-
 	switch (value) {
 	case SETTING_DEF_MEMORY_PHONE:
-		DM_LOGD("Default Storage : PHONE");
+		DM_LOGV("Default Storage : PHONE");
 		break;
 	case SETTING_DEF_MEMORY_MMC:
-		DM_LOGD("Default Storage : MMC");
+		DM_LOGV("Default Storage : MMC");
 		if (optionTempDir)
 			path.assign(DM_DEFAULT_MMC_TEMP_DIR);
 		else
@@ -348,12 +344,12 @@ DownloadUtil::DownloadUtil()
 int DownloadUtil::getContentType(const char *mime, const char *filePath)
 {
 	int i = 0;
-	int type = DP_CONTENT_UNKOWN;
+	int type = DM_CONTENT_UNKOWN;
 	int ret = 0;
 	char tempMime[MAX_FILE_PATH_LEN] = {0,};
-	DM_LOGD("");
+	DM_LOGV("");
 	if (mime == NULL || strlen(mime) < 1)
-		return DP_CONTENT_UNKOWN;
+		return DM_CONTENT_UNKOWN;
 
 	strncpy(tempMime, mime, MAX_FILE_PATH_LEN-1);
 	if (isAmbiguousMIMEType(mime)) {
@@ -377,7 +373,7 @@ int DownloadUtil::getContentType(const char *mime, const char *filePath)
 	/* If there is no mime at mime table, check the category with the first
 	 *   domain of mime string
 	 * ex) video/... => video type */
-	if (type == DP_CONTENT_UNKOWN) {
+	if (type == DM_CONTENT_UNKOWN) {
 		const char *unaliasedMime = NULL;
 		/* unaliased_mimetype means representative mime among similar types */
 		unaliasedMime = xdg_mime_unalias_mime_type(tempMime);
@@ -385,14 +381,14 @@ int DownloadUtil::getContentType(const char *mime, const char *filePath)
 		if (unaliasedMime != NULL) {
 			DM_SLOGD("unaliased mime type[%s]",unaliasedMime);
 			if (strstr(unaliasedMime,"video/") != NULL)
-				type = DP_CONTENT_VIDEO;
+				type = DM_CONTENT_VIDEO;
 			else if (strstr(unaliasedMime,"audio/") != NULL)
-				type = DP_CONTENT_MUSIC;
+				type = DM_CONTENT_MUSIC;
 			else if (strstr(unaliasedMime,"image/") != NULL)
-				type = DP_CONTENT_IMAGE;
+				type = DM_CONTENT_IMAGE;
 		}
 	}
-	DM_SLOGD("type[%d]",type);
+	DM_LOGV("type[%d]",type);
 	return type;
 }
 
@@ -407,7 +403,7 @@ bool DownloadUtil::isAmbiguousMIMEType(const char *mimeType)
 	for (index = 0; index < listSize; index++) {
 		if (0 == strncmp(mimeType, ambiguousMIMETypeList[index],
 				strlen(ambiguousMIMETypeList[index]))) {
-			DM_SLOGD("It is ambiguous:[%s]", ambiguousMIMETypeList[index]);
+			DM_LOGV("It is ambiguous");
 			return true;
 		}
 	}
@@ -467,14 +463,14 @@ string DownloadUtil::saveContent(string filePath, string userInstallDir)
 		else
 			finalPath = dirPath + contentName + countStr;
 
-		if (count > 1000) {
+		if (count > MAX_SUFFIX_COUNT) {
 			finalPath.clear();
 			break;
 		}
 		memset(tempStr, 0, 10);
 	}
 
-	DM_SLOGD("finalPath[%s]", finalPath.c_str());
+	DM_SLOGI("finalPath[%s]", finalPath.c_str());
 	if (!fileObj.renameFile(filePath, finalPath))
 		finalPath.clear();
 

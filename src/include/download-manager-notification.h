@@ -22,12 +22,7 @@
 #ifndef DOWNLOAD_MANAGER_NOTIFICATION_H
 #define DOWNLOAD_MANAGER_NOTIFICATION_H
 
-#ifdef _CAPI_NOTI
-#include "app_service.h"
-#include "app_ui_notification.h"
-#else
 #include "notification.h"
-#endif
 
 #include "download-manager-common.h"
 #include "download-manager-event.h"
@@ -46,20 +41,13 @@ public:
 	void deleteCompleteNoti(void);
 private:
 	void addOngoingNoti(void);
+	void updateTitleOngoingNoti();
 	void updateOngoingNoti(void);
-
-#ifdef _BOX_NOTI_TYPE
-	string convertSizeStr(unsigned long int size);
-#endif
+	string convertSizeStr(unsigned long long size);
 	void addCompleteNoti(string &msg, bool isSuccess);
-#ifdef _CAPI_NOTI
-	void destoryNotiHandle(void);
-	service_h getServiceHandle(bool isSuccess);
-	ui_notification_h m_notiHandle;
-#else
 	void freeNotiData(notification_h notiHandle);
-	int m_noti_id;
-#endif
+	int m_notiId;
+	notification_h m_notiHandle;
 	Item *m_item;
 	auto_ptr<Observer> m_aptr_observer;
 };
