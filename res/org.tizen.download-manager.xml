@@ -62,5 +62,11 @@
 				<uri name="https" />
 				<uri name="NULL" />
 		</application-service>
+		<application-service>
+			<operation name="http://tizen.org/appcontrol/operation/view" />
+				<uri name="http"/>
+				<uri name="https"/>
+				<mime name="*/*"/>
+		</application-service>
 	</ui-application>
 </manifest>
