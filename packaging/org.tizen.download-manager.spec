@@ -1,7 +1,7 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.7
+Version:	0.1.8
 Release:	0
 Group:		misc
 License:	Flora License, Version 1.1
@@ -89,6 +89,14 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Thu Aug 22 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Update download icon for ongoing notification
+- Remove function to receive network changed event
+- Remove the function to get the default path from vconf
+- Apply UI guide of version 2.0
+- Restore the default value of silent mode at app paused state
+- Resolve failed items of menu tree test
+
 * Thu Aug 22 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Add view operation about all mime types
 - Apply latest UI and GUI guide
