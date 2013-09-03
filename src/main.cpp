@@ -100,10 +100,6 @@ static bool __app_create(void *data)
 		return false;
 	}
 
-	/* Init network */
-	NetMgr &netObj = NetMgr::getInstance();
-	netObj.initNetwork();
-
 	/* Make genlist items of history for UI performance */
 	view.update();
 
@@ -129,8 +125,6 @@ static void __app_terminate(void *data)
 {
 	DM_LOGI("");
 	struct app_data_t *app_data = (struct app_data_t *)data;
-	NetMgr &netObj = NetMgr::getInstance();
-	netObj.deinitNetwork();
 	DownloadView &view = DownloadView::getInstance();
 	view.destroy();
 	if (app_data && app_data->idler)
@@ -154,6 +148,7 @@ static void __app_resume(void *data)
 {
 	DM_LOGI("");
 	DownloadView &view = DownloadView::getInstance();
+	view.setSilentMode(true);
 	view.resume();
 	return;
 }

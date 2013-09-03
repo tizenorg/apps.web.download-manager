@@ -148,11 +148,6 @@ void Item::destroy()
 		m_aptr_downloadObserver->clear();
 	else
 		DM_LOGE("NULL Check:download observer");
-	/* When deleting item after download is failed */
-	if (m_aptr_netEventObserver.get()) {
-		NetMgr &netMgrInstance = NetMgr::getInstance();
-		netMgrInstance.deSubscribe(m_aptr_netEventObserver.get());
-	}
 
 #ifdef _ENABLE_OMA_DOWNLOAD
 	if (m_notifyIdler)
@@ -168,15 +163,11 @@ void Item::deleteFromDB()
 
 void Item::download()
 {
-	NetMgr &netMgrInstance = NetMgr::getInstance();
-
 	setState(ITEM::REQUESTING);
 
 	createSubscribeData();
 
 	DownloadHistoryDB::createItemToDB(this);
-
-	netMgrInstance.subscribe(m_aptr_netEventObserver.get());
 
 	m_aptr_downloadItem->start(-1);
 	m_id = id();
@@ -405,11 +396,6 @@ void Item::handleFinishedItem()
 	//createHistoryId();
 	m_finishedTime = time(NULL);
 	DownloadHistoryDB::updateHistoryToDB(this);
-	/* If download is finished, it is not need to get network event */
-	if (m_aptr_netEventObserver.get()) {
-		NetMgr &netMgrInstance = NetMgr::getInstance();
-		netMgrInstance.deSubscribe(m_aptr_netEventObserver.get());
-	}
 	/* Check QUEUED item and try to satrt downlaod it */
 	checkQueuedItem();
 }
@@ -706,14 +692,12 @@ bool Item::retry()
 {
 	DM_LOGD("");
 	if (m_aptr_downloadItem.get()) {
-		NetMgr &netMgrInstance = NetMgr::getInstance();
 		setState(ITEM::PREPARE_TO_RETRY);
 		if (!m_aptr_noti.get()) {
 			m_aptr_noti = auto_ptr<DownloadNoti>(new DownloadNoti(this));
 		}
 		notify();
 		/* Donot delete db, just update db. */
-		netMgrInstance.subscribe(m_aptr_netEventObserver.get());
 		m_aptr_downloadItem->retry(m_id);
 		setState(ITEM::REQUESTING);
 		return true;

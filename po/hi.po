@@ -28,3 +28,9 @@ msgstr "मद चुनें"
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
 msgstr "आपके द्वारा मदें डाउनलोड करने के बाद, वे यहाँ दिखाई जाएँगी"
 
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "डाउनलोड रद्द किया गया"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "डाउनलोड विफल"
+

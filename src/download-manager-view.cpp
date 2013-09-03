@@ -255,7 +255,7 @@ void DownloadView::clickedItemFromNoti(unsigned id)
 		/* elm_genlist_item_select_mode_get is needed to check group item */
 		if (item && item->historyId() == id) {
 			elm_genlist_item_bring_in(it, ELM_GENLIST_ITEM_SCROLLTO_TOP);
-			string msg = __("IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q");
+			string msg = __("IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q");
 			item->setIsClickedFromNoti(true);
 			showRetryPopup(item, msg);
 			break;
@@ -1036,6 +1036,12 @@ void DownloadView::showMemoryFullPopup()
 
 	DM_LOGI("");
 
+	if (m_silentMode) {
+		DM_LOGI("silent mode");
+		evas_object_show(eoWindow);
+		elm_win_activate(eoWindow);
+	}
+
 	/* If another popup is shown, delete it*/
 	removePopup();
 	eoPopup = elm_popup_add(eoWindow);
@@ -1062,6 +1068,12 @@ void DownloadView::showMemoryFullPopup()
 
 void DownloadView::showErrPopup(string &desc)
 {
+	if (m_silentMode) {
+		DM_LOGI("silent mode");
+		evas_object_show(eoWindow);
+		elm_win_activate(eoWindow);
+	}
+
 	removePopup();
 
 	eoPopup = elm_popup_add(eoWindow);

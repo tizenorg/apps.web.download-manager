@@ -345,7 +345,11 @@ const char *ViewItem::getMessage()
 		getHumanFriendlyBytesStr(receivedFileSize(), true, &buff);
 		break;
 	case ITEM::CANCEL:
+		buff = strdup(__("IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"));
+		break;
 	case ITEM::FAIL_TO_DOWNLOAD:
+		buff = strdup(__("IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"));
+		break;
 	case ITEM::FINISH_DOWNLOAD:
 		buff = strdup(senderName().c_str());
 		break;

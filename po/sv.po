@@ -28,3 +28,9 @@ msgstr "Välj objekt"
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
 msgstr "När du har hämtat objekt kommer de att visas här"
 
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Hämtningen avbröts"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Hämtningen misslyckades"
+

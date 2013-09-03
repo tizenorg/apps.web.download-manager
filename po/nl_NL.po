@@ -28,3 +28,9 @@ msgstr "Items selecteren"
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
 msgstr "Nadat u items hebt gedownload, worden ze hier getoond"
 
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Download geannuleerd"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Downloaden mislukt"
+

@@ -28,3 +28,9 @@ msgstr "Elementlarni tanlang"
 msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
 msgstr "Elementlarni yuklab olganingizdan so‘ng ular shu yerda ko‘rsatiladi"
 
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Yuklab olish to'xtatildi"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Yuklab olib bo‘lmadi"
+

@@ -309,31 +309,13 @@ bool FileUtility::checkTempDir(string userInstallDir)
 
 string FileUtility::getDefaultPath(bool optionTempDir)
 {
-	int value = -1;
-	string path = string();
+	string path;
 
 	if (optionTempDir)
 		path.assign(DM_DEFAULT_PHONE_TEMP_DIR);
 	else
 		path.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
 
-	switch (value) {
-	case SETTING_DEF_MEMORY_PHONE:
-		DM_LOGV("Default Storage : PHONE");
-		break;
-	case SETTING_DEF_MEMORY_MMC:
-		DM_LOGV("Default Storage : MMC");
-		if (optionTempDir)
-			path.assign(DM_DEFAULT_MMC_TEMP_DIR);
-		else
-			path.assign(DM_DEFAULT_MMC_INSTALL_DIR);
-		break;
-	case SETTING_DEF_MEMORY_MAX:
-		break;
-	default:
-		DM_LOGE("Fail to get vconf_get_int");
-		break;
-	}
    return path;
 }
 
