@@ -445,17 +445,10 @@ void DownloadView::createToolBar()
 
 void DownloadView::destroyToolBar()
 {
-	Elm_Object_Item *objItem = NULL;
-	objItem = elm_toolbar_first_item_get(eoToolBar);
-	if(objItem)
-		elm_object_item_del(objItem);
-	if(eoToolBarItem) {
-		elm_object_item_del(eoToolBarItem);
-		eoToolBarItem = NULL;
-	}
 	if(eoToolBar) {
 		evas_object_del(eoToolBar);
 		eoToolBar = NULL;
+		eoToolBarItem = NULL;
 	}
 	if (eoNaviBarItem)
 		elm_object_item_part_content_unset(eoNaviBarItem, "toolbar");
