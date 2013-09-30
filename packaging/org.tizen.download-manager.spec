@@ -1,7 +1,7 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.8
+Version:	0.1.9
 Release:	0
 Group:		misc
 License:	Flora License, Version 1.1
@@ -89,6 +89,9 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Mon Aug 30 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Change to destroy only toolbar winset
+
 * Thu Aug 22 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Update download icon for ongoing notification
 - Remove function to receive network changed event
