@@ -127,6 +127,7 @@ void ViewItem::updateFromItem()
 	if (isFinishedWithErr() &&
 			m_item->errorCode() == ERROR::NOT_ENOUGH_MEMORY) {
 		view.showMemoryFullPopup();
+		m_item->setErrorCode(ERROR::ENGINE_FAIL);
 	}
 
 	if (state() == ITEM::SUSPENDED) {
