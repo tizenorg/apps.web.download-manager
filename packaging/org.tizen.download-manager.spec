@@ -1,7 +1,7 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.9
+Version:	0.1.10
 Release:	0
 Group:		misc
 License:	Flora License, Version 1.1
@@ -89,6 +89,10 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Fri Oct 04 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Change the package name for osp myfiles in case of full memeory(N_SE-52966)
+- Reset error code when memory full popup is disappeared
+
 * Mon Aug 30 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Change to destroy only toolbar winset
 
