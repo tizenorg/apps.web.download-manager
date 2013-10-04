@@ -74,7 +74,7 @@
 #define DM_DRM_MIME_STR "application/vnd.oma.drm.message"
 #define DM_DCF_MIME_STR "application/vnd.oma.drm.content"
 
-#define MYFILE_PKG_NAME "com.samsung.myfile"
+#define MYFILE_PKG_NAME "tizen.filemanager"
 
 #define DM_DEFAULT_PHONE_TEMP_DIR "/opt/usr/media/.temp_download"
 #define DM_DEFAULT_PHONE_INSTALL_DIR "/opt/usr/media/Downloads/"
