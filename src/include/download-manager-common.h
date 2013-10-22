@@ -54,9 +54,11 @@
 #define DM_VCAL_ICON_PATH IMAGEDIR"/U01_icon_vcs.png"
 #define DM_FAILED_ICON_PATH IMAGEDIR"/U01_icon_broken.png"
 #define DM_NOTI_COMPLETED_ICON_PATH IMAGEDIR"/Q02_Notification_download_complete.png"
-#define DM_NOTI_FAILED_ICON_PATH IMAGEDIR"/Q02_Notification_Download_failed.png"
+#define DM_NOTI_FAILED_ICON_PATH IMAGEDIR"/Q02_Notification_download_failed.png"
 #define DM_NOTI_ONGOING_ICON_PATH IMAGEDIR"/Notification_download_animation.gif"
 #define DM_NOTI_DOWNLOADING_ICON_PATH "reserved://indicator/ani/downloading"
+#define DM_SELECT_ALL_ICON_PATH IMAGEDIR"/00_icon_select_all.png"
+#define DM_DELETE_ICON_PATH IMAGEDIR"/00_icon_delete.png"
 
 #define MAX_FILE_PATH_LEN 256
 #define MAX_BUF_LEN 256

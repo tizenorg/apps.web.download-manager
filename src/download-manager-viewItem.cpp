@@ -129,7 +129,6 @@ void ViewItem::updateFromItem()
 		view.showMemoryFullPopup();
 		m_item->setErrorCode(ERROR::ENGINE_FAIL);
 	}
-
 	if (state() == ITEM::SUSPENDED) {
 		return;
 	} else if (state() == ITEM::DOWNLOADING) {
@@ -397,11 +396,11 @@ void ViewItem::getHumanFriendlyBytesStr(unsigned long long bytes,
 		unsigned long long result_fraction = result &
 			~(0xFFFFFFFF << fixed_point);
 		if (unit == 0)
-			snprintf(str, sizeof(str), "%llu %s / %llu.%.2llu %%",
-				bytes, unitStr[unit], result_int, result_fraction);
+			snprintf(str, sizeof(str), "%llu.%.2llu %%", result_int,
+					result_fraction);
 		else
-			snprintf(str, sizeof(str), "%.2f %s / %llu.%.2llu %%",
-				doubleTypeBytes, unitStr[unit], result_int, result_fraction);
+			snprintf(str, sizeof(str), "%llu.%.2llu %%", result_int,
+					result_fraction);
 	} else {
 		if (unit == 0)
 			snprintf(str, sizeof(str), "%llu %s", bytes, unitStr[unit]);

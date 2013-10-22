@@ -131,7 +131,8 @@ private:
 #endif
 	void showGenlistEditMode(void);
 	void hideGenlistEditMode(void);
-	void createSelectAll(void);
+	void changeSelectAll(void);
+	void restoreDeleteBtn(void);
 	void destroyCheckedItem(void);
 	void showSelectedNotify(int selectedCount);
 	void cleanGenlistData();
@@ -148,7 +149,6 @@ private:
 	Evas_Object *eoBox;
 	Evas_Object *eoDldList;
 	Evas_Object *eoPopup;
-	Evas_Object *eoAllCheckedBox;
 	Eina_Bool m_allChecked;
 #ifdef _ENABLE_OMA_DOWNLOAD
 	ViewItem *prevOmaViewItem;

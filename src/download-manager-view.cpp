@@ -47,7 +47,6 @@ DownloadView::DownloadView(void)
 	, eoBox(NULL)
 	, eoDldList(NULL)
 	, eoPopup(NULL)
-	, eoAllCheckedBox(NULL)
 	, m_allChecked(EINA_FALSE)
 #ifdef _ENABLE_OMA_DOWNLOAD
 	, prevOmaViewItem(NULL)
@@ -119,10 +118,6 @@ void DownloadView::destroy()
 		hideGenlistEditMode();
 	}
 	removePopup();
-	if(eoAllCheckedBox) {
-		evas_object_del(eoAllCheckedBox);
-		eoAllCheckedBox = NULL;
-	}
 	if(eoEmptyNoContent) {
 		evas_object_del(eoEmptyNoContent);
 		eoEmptyNoContent = NULL;
@@ -465,16 +460,13 @@ void DownloadView::createDeleteBtn()
 {
 	Evas_Object *icon = NULL;
 	Evas_Object *button = elm_button_add(eoNaviBar);
-	string iconPath;
 	if (!button) {
 		DM_LOGE("Null Check:eoNaviBarItem");
 		return;
 	}
 	elm_object_style_set(button, "naviframe/title_icon");
 	icon = elm_image_add(eoNaviBar);
-	iconPath.assign(IMAGEDIR);
-	iconPath.append("/00_icon_delete.png");
-	elm_image_file_set(icon, iconPath.c_str(), NULL);
+	elm_image_file_set(icon, DM_DELETE_ICON_PATH, NULL);
 	elm_image_resizable_set(icon, EINA_TRUE, EINA_TRUE);
 	elm_object_part_content_set(button, "icon", icon);
 	evas_object_smart_callback_add(button, "clicked", deleteBtnCB, NULL);
@@ -704,18 +696,29 @@ bool DownloadView::isGenlistEditMode()
 }
 
 
-void DownloadView::createSelectAll()
+void DownloadView::changeSelectAll()
 {
-	eoAllCheckedBox = elm_check_add(eoNaviBar);
-	elm_check_state_pointer_set(eoAllCheckedBox, &m_allChecked);
-	evas_object_size_hint_aspect_set(eoAllCheckedBox,
-			EVAS_ASPECT_CONTROL_BOTH, 1, 1);
-	evas_object_smart_callback_add(eoAllCheckedBox, "changed",
-		selectAllChangedCB, NULL);
-	evas_object_propagate_events_set(eoAllCheckedBox, EINA_FALSE);
-	evas_object_show(eoAllCheckedBox);
-	elm_object_item_part_content_set(eoNaviBarItem, "title_right_btn",
-			eoAllCheckedBox);
+	Evas_Object *icon = NULL;
+	Evas_Object *button = NULL;
+	button = elm_object_item_part_content_get(eoNaviBarItem, "title_right_btn");
+	icon = elm_object_part_content_get(button, "icon");
+	elm_image_file_set(icon, DM_SELECT_ALL_ICON_PATH, NULL);
+	evas_object_smart_callback_del(button, "clicked", deleteBtnCB);
+	evas_object_smart_callback_add(button, "clicked", selectAllChangedCB, NULL);
+	evas_object_show(button);
+	m_allChecked = EINA_FALSE;
+}
+
+void DownloadView::restoreDeleteBtn()
+{
+	Evas_Object *icon = NULL;
+	Evas_Object *button = NULL;
+	button = elm_object_item_part_content_get(eoNaviBarItem, "title_right_btn");
+	icon = elm_object_part_content_get(button, "icon");
+	elm_image_file_set(icon, DM_DELETE_ICON_PATH, NULL);
+	evas_object_smart_callback_del(button, "clicked", selectAllChangedCB);
+	evas_object_smart_callback_add(button, "clicked", deleteBtnCB, NULL);
+	evas_object_show(button);
 	m_allChecked = EINA_FALSE;
 }
 
@@ -780,10 +783,9 @@ void DownloadView::showGenlistEditMode()
 	elm_object_style_set(eoBackground, "edit_mode");
 
 	createToolBar();
-	destroyDeleteBtn();
 
 	/* Append 'Select All' layout */
-	createSelectAll();
+	changeSelectAll();
 	/* Set reorder end edit mode */
 	elm_genlist_reorder_mode_set(eoDldList, EINA_TRUE);
 	elm_genlist_decorate_mode_set(eoDldList, EINA_TRUE);
@@ -806,31 +808,23 @@ void DownloadView::showGenlistEditMode()
 		it = elm_genlist_item_next_get(it);
 	}
 	elm_object_item_disabled_set(eoToolBarItem, EINA_TRUE);
-	if (finishedCount == 0)
-		elm_object_disabled_set(eoAllCheckedBox, EINA_TRUE);
-	else
-		elm_object_disabled_set(eoAllCheckedBox, EINA_FALSE);
 }
 
 void DownloadView::hideGenlistEditMode()
 {
+	Elm_Object_Item *it = NULL;
+	ViewItem *viewItem = NULL;
+
 	DM_LOGD("");
 
-	elm_object_item_text_set(eoNaviBarItem, __("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
+	elm_object_item_text_set(eoNaviBarItem,
+			__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
 	elm_object_style_set(eoBackground, "default");
-
-	elm_object_item_part_content_unset(eoNaviBarItem, "title_right_btn");
-	if(eoAllCheckedBox) {
-		evas_object_del(eoAllCheckedBox);
-		eoAllCheckedBox = NULL;
-	}
 
 	elm_genlist_reorder_mode_set(eoDldList, EINA_FALSE);
 	elm_genlist_decorate_mode_set(eoDldList, EINA_FALSE);
 	elm_genlist_select_mode_set(eoDldList, ELM_OBJECT_SELECT_MODE_DEFAULT);
 
-	Elm_Object_Item *it = NULL;
-	ViewItem *viewItem = NULL;
 	it = elm_genlist_first_item_get(eoDldList);
 	while (it) {
 		viewItem = (ViewItem *)elm_object_item_data_get(it);
@@ -843,10 +837,8 @@ void DownloadView::hideGenlistEditMode()
 		it = elm_genlist_item_next_get(it);
 	}
 
-	m_allChecked = EINA_FALSE;
-
 	destroyToolBar();
-	createDeleteBtn();
+	restoreDeleteBtn();
 
 	if (m_viewItemCount < 1) {
 		showEmptyView();
@@ -859,6 +851,7 @@ void DownloadView::handleChangedAllCheckedState()
 	Elm_Object_Item *it = NULL;
 	ViewItem *viewItem = NULL;
 	it = elm_genlist_first_item_get(eoDldList);
+	m_allChecked = !m_allChecked;
 	while (it) {
 		viewItem = (ViewItem *)elm_object_item_data_get(it);
 		if (viewItem) {
@@ -877,6 +870,7 @@ void DownloadView::handleChangedAllCheckedState()
 	} else {
 		elm_object_item_disabled_set(eoToolBarItem, EINA_TRUE);
 		showSelectedNotify(0);
+		m_allChecked = EINA_FALSE;
 	}
 }
 
@@ -905,14 +899,11 @@ void DownloadView::handleCheckedState()
 		m_allChecked = EINA_TRUE;
 	else
 		m_allChecked = EINA_FALSE;
-	elm_check_state_pointer_set(eoAllCheckedBox, &m_allChecked);
 
 	if (checkedCount == 0)
 		elm_object_item_disabled_set(eoToolBarItem, EINA_TRUE);
 	else
 		elm_object_item_disabled_set(eoToolBarItem, EINA_FALSE);
-	if (elm_object_disabled_get(eoAllCheckedBox) == EINA_TRUE)
-		elm_object_disabled_set(eoAllCheckedBox, EINA_FALSE);
 	showSelectedNotify(checkedCount);
 }
 
@@ -1040,18 +1031,16 @@ void DownloadView::showMemoryFullPopup()
 	eoPopup = elm_popup_add(eoWindow);
 	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND,
 			EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(eoPopup, EVAS_HINT_FILL,
-		EVAS_HINT_FILL);
 
 	elm_object_text_set(eoPopup, ERROR_POPUP_LOW_MEM);
+
 	btn1 = elm_button_add(eoPopup);
 	elm_object_text_set(btn1, S_("IDS_COM_BODY_MY_FILES"));
 	elm_object_part_content_set(eoPopup, "button1", btn1);
 	evas_object_smart_callback_add(btn1, "clicked", memoryFullPopupMyFilesCB,
 			NULL);
 	btn2 = elm_button_add(eoPopup);
-	elm_object_text_set(btn2, S_("IDS_COM_POP_CLOSE"));
-
+	elm_object_text_set(btn2, S_("IDS_COM_SK_CANCEL"));
 	elm_object_part_content_set(eoPopup, "button2", btn2);
 	evas_object_smart_callback_add(btn2, "clicked", memoryFullPopupCancelCB,
 			NULL);
@@ -1061,6 +1050,8 @@ void DownloadView::showMemoryFullPopup()
 
 void DownloadView::showErrPopup(string &desc)
 {
+	Evas_Object *btn1 = NULL;
+
 	if (m_silentMode) {
 		DM_LOGI("silent mode");
 		evas_object_show(eoWindow);
@@ -1072,8 +1063,11 @@ void DownloadView::showErrPopup(string &desc)
 	eoPopup = elm_popup_add(eoWindow);
 	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_object_text_set(eoPopup, desc.c_str());
-	elm_popup_timeout_set(eoPopup, 2);
-	evas_object_smart_callback_add(eoPopup, "response", errPopupResponseCB, NULL);
+	btn1 = elm_button_add(eoPopup);
+	elm_object_text_set(btn1, S_("IDS_COM_SK_OK"));
+	elm_object_part_content_set(eoPopup, "button1", btn1);
+	evas_object_smart_callback_add(btn1, "clicked", errPopupResponseCB,
+			NULL);
 	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 }
