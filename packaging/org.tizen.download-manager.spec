@@ -1,7 +1,7 @@
 
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.1.10
+Version:	0.1.11
 Release:	0
 Group:		misc
 License:	Flora License, Version 1.1
@@ -89,6 +89,11 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 %attr(660,app,app) /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 
 %changelog
+* Tue Oct 22 2013 Jungki Kwak <jungki.kwak@samsung.com>
+- Update notification icons according to latest UI guide
+- Change the icon of select all. (N_SE-55604)
+- Change the string of error popup.
+
 * Fri Oct 04 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Change the package name for osp myfiles in case of full memeory(N_SE-52966)
 - Reset error code when memory full popup is disappeared
@@ -113,9 +118,3 @@ chmod 660 /opt/usr/apps/org.tizen.download-manager/data/db/.download-history.db*
 * Wed Jul 03 2013 Jungki Kwak <jungki.kwak@samsung.com>
 - Change directory access permission under opt
 
-* Fri Jun 28 2013 Jungki Kwak <jungki.kwak@samsung.com>
-- Change the default saved path as default storage setting
-
-* Wed Jun 26 2013 Jungki Kwak <jungki.kwak@samsung.com>
-- Merge latest codes from private branch
-- Apply v1.7 UI guide (include back key, black theme etc)
