@@ -1,0 +1,36 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "ファイルを受信できませんでした。再度ダウンロードしますか？"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "ファイルがありません。再度ダウンロードしますか？"
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "ダウンロード準備中..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "ダウンロードデータがありません。"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "メモリが不足しています。不要なアイテムを削除してください。"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "ダウンロード完了"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "サーバーに通知中..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "ﾀﾞｳﾝﾛｰﾄﾞﾏﾈｰｼﾞｬｰ"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "アイテムを選択"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "アイテムをダウンロードすると、ここにアイテムが表示されます。"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "ダウンロード中止"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "ダウンロードに失敗"
+

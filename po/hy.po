@@ -1,0 +1,36 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Ֆայլը չի ստացվել. ներբեռնե՞լ նորից:"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Ֆայլը գոյություն չունի. ներբեռնե՞լ նորից:"
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Պատրաստվում է ներբեռնել..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Ներբեռնումներ չկան"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Հիշողությունը չի բավարարում: Ջնջեք որոշ տարրեր"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Ներբեռնումն ավարտվեց"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Սերվերը ծանուցվում է..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Ներբեռնման կառավարիչ"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Ընտրել տարրեր"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Ապրանքներ ներբեռնելուց հետո դրանք կցուցադրվեն այստեղ"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Ներբեռնումը դադարեցված է"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Ներբեռնումը ձախողվեց"
+
