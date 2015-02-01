@@ -49,6 +49,9 @@ enum STATE {
 #ifdef _ENABLE_OMA_DOWNLOAD
 	NOTIFYING,
 #endif
+#ifdef _ENABLE_WAITING_RO
+	WAITING_RO,
+#endif
 	FINISH_DOWNLOAD,
 	FAIL_TO_DOWNLOAD,
 	CANCEL,
@@ -94,72 +97,86 @@ public:
 	void updateFromDownloadItem(void);
 	void suspend(void);
 
-	inline int id(void) {
+	inline int getId(void) {
 		if (m_aptr_downloadItem.get())
-			return (int)(m_aptr_downloadItem->downloadId());
+			return (int)(m_aptr_downloadItem->getDownloadId());
 
 		return -1;
 	} 	// FIXME create Item's own id
 
-	inline unsigned long long receivedFileSize(void) {
+	inline unsigned long long getReceivedFileSize(void) {
 		if (m_aptr_downloadItem.get())
-			return m_aptr_downloadItem->receivedFileSize();
+			return m_aptr_downloadItem->getReceivedFileSize();
 		return 0;
 	}
 
-	inline unsigned long long fileSize(void) {
-		if (m_aptr_downloadItem.get())
-			return m_aptr_downloadItem->fileSize();
+	inline unsigned long long getFileSize(void) {
+		if (m_aptr_downloadItem.get()) {
+			return m_aptr_downloadItem->getFileSize();
+		}
 		return 0;
 	}
 
-	inline string &filePath(void) {
+	inline string &getFilePath(void) {
 		if (m_aptr_downloadItem.get())
-			return m_aptr_downloadItem->filePath();
+			return m_aptr_downloadItem->getFilePath();
 		return m_emptyString;
 	}
 
 
-	inline string &contentName(void) {
+	inline string &getContentName(void) {
 		if (m_aptr_downloadItem.get())
-			return m_aptr_downloadItem->contentName();
+			return m_aptr_downloadItem->getContentName();
 		return m_emptyString;
 	}
 
-	inline string sender(void) {
+	inline string getSender(void) {
 		if (m_aptr_downloadItem.get())
-			return m_aptr_downloadItem->sender();
+			return m_aptr_downloadItem->getSender();
+		return m_emptyString;
+	}
+
+	inline string getEtag(void) {
+		if (m_aptr_downloadItem.get())
+			return m_aptr_downloadItem->getEtag();
+		return m_emptyString;
+	}
+
+	inline string getTempPath(void) {
+		if (m_aptr_downloadItem.get())
+			return m_aptr_downloadItem->getFilePath();
 		return m_emptyString;
 	}
 
 	inline void setId(int id) { m_id = id; }
 	inline void setHistoryId(unsigned int i) { m_historyId = i; }
-	inline unsigned int historyId(void) { return m_historyId; }	// FIXME duplicated with m_id
-	inline string &title(void) {return m_title;}
+	inline unsigned int getHistoryId(void) { return m_historyId; }	// FIXME duplicated with m_id
+	inline string &getTitle(void) {return m_title;}
 	inline void setTitle(string &title) { m_title = title; }
-	string &registeredFilePath(void);
+	inline void setFileSize(unsigned long long fileSize) { m_fileSize = fileSize; }
+	string &getRegisteredFilePath(void);
 	inline void setRegisteredFilePath(string &r) { m_registeredFilePath = r; }
-	string url(void);
-	string cookie(void);
-	string reqHeaderField(void);
-	string reqHeaderValue(void);
-	string installDir(void);
-	void setRetryData(string url, string cookie,
-			string reqHeaderField, string reqHeaderValue, string installDir);
-	int contentType(void) { return m_contentType; }
+	string getUrl(void);
+	string getReqHeaderField(void);
+	string getReqHeaderValue(void);
+	string getInstallDir(void);
+	string getFileName(void);
+	void setRetryData(string url,  string reqHeaderField, string reqHeaderValue,
+			string installDir, string fileName, string tempFilePath, string etag);
+	int getContentType(void) { return m_contentType; }
 	inline void setContentType(int t) { m_contentType = t; }
-	DL_TYPE::TYPE downloadType(void);
+	DL_TYPE::TYPE getDownloadType(void);
 	inline void setDownloadType(DL_TYPE::TYPE t) { m_downloadType = t; }
-	string &thumbnailPath(void) { return m_thumbnailPath; }
-	inline string &iconPath(void) { return m_iconPath; }
+	string &getThumbnailPath(void) { return m_thumbnailPath; }
+	inline string &getIconPath(void) { return m_iconPath; }
 
 	inline void setState(ITEM::STATE state) { m_state = state; }
-	inline ITEM::STATE state(void) { return m_state; }
+	inline ITEM::STATE getState(void) { return m_state; }
 
 	inline void setErrorCode(ERROR::CODE err) { m_errorCode = err; }
-	inline ERROR::CODE errorCode(void) { return m_errorCode; }
+	inline ERROR::CODE getErrorCode(void) { return m_errorCode; }
 	inline void setFinishedTime(double t) { m_finishedTime = t; }
-	inline double finishedTime(void) { return m_finishedTime; }
+	inline double getFinishedTime(void) { return m_finishedTime; }
 
 	bool isFinished(void); /* include finish download state with error */
 	bool isFinishedWithErr(void);
@@ -202,9 +219,18 @@ public:
 	}
 
 	void setNotifyIdler(Ecore_Idler *idler) { m_notifyIdler = idler; }
+#ifdef _ENABLE_WAITING_RO
+	void sendInstallNotification(int status);
+#endif
 #endif
 	/* Test code */
 	const char *stateStr(void);
+
+#ifdef _ENABLE_WAITING_RO
+	void increaseTimerCount(void) { m_timerCount++; }
+	int timerCount(void) { return m_timerCount; }
+	void initTimerCount(void) { m_timerCount = 0; }
+#endif
 
 private:
 	Item(void);
@@ -234,6 +260,14 @@ private:
 
 #ifdef _ENABLE_OMA_DOWNLOAD
 	static Eina_Bool checkInstallNotifyCB(void *data);
+#ifdef _ENABLE_WAITING_RO
+	static Eina_Bool waitingRoForOmaCB(void *data);
+#endif
+#endif
+
+#ifdef _ENABLE_WAITING_RO
+	static Eina_Bool waitingRoCB(void *data);
+	static Eina_Bool waitingRo(Item *item, bool isOmaCase);
 #endif
 
 	ITEM::STATE m_state;
@@ -242,22 +276,31 @@ private:
 	unsigned int m_historyId;
 	int m_id;
 	int m_contentType;
+	unsigned long long m_fileSize;
 	string m_iconPath; // FIXME Later:is it right to exist here? (ViewItem or not)
-	string m_emptyString; // FIXME this is temporary to avoid crash when filePath() is called if m_aptr_downloaditem points nothing
+	string m_emptyString; // FIXME this is temporary to avoid crash when getFilePath() is called if m_aptr_downloaditem points nothing
 	double m_finishedTime;
 	DL_TYPE::TYPE m_downloadType;
 	string m_registeredFilePath;
 	string m_url;
-	string m_cookie;
+	string m_fileName;
 	string m_reqHeaderField;
 	string m_reqHeaderValue;
 	string m_installDir;
 	string m_thumbnailPath;
+	string m_tempFilePath;
+	string m_etag;
 
 #ifdef _ENABLE_OMA_DOWNLOAD
 	Ecore_Idler *m_notifyIdler;
 	string m_installNotifyUrl;
 #endif
+
+#ifdef _ENABLE_WAITING_RO
+	Ecore_Timer *m_waitingRoTimer;
+	int m_timerCount;
+#endif
+
 	bool m_gotFirstData;
 };
 

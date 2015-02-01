@@ -31,6 +31,18 @@
 #include "oma-parser-dd1.h"
 #include "oma-parser-common.h"
 
+/* This function Initialize libxml for oma parser
+* @param[in]	void
+* @return	void
+*/
+void op_parser_init(void);
+
+/* This function do cleanup task for libxml in oma parser
+* @param[in]	void
+* @return	void
+*/
+void op_parser_deinit(void);
+
 /**
   * This function parses the OMA Download Descriptor and returns parsed data specific to version.
   * It takes file path as input

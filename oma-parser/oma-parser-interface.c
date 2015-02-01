@@ -25,9 +25,17 @@
 
 #include "oma-parser-interface.h"
 
-#define BUFFSIZE	4096
+static int op_check_mandatory_tags(op_parser_app_data_t *app_data);
 
-static int op_check_mandatory_tags(XML_Parser parser);
+void op_parser_init(void)
+{
+	xmlInitParser();
+}
+
+void op_parser_deinit(void)
+{
+	xmlCleanupParser();
+}
 
 int op_parse_dd_file(
         const char *dd_file_path,
@@ -35,17 +43,13 @@ int op_parse_dd_file(
         int *error_code)
 {
 	int b_ret = OP_TRUE;
-	FILE *fp = OP_NULL;
-	XML_Parser parser = OP_NULL;
-	char buff[BUFFSIZE] = {0, };
 	op_parser_app_data_t *app_data = OP_NULL;
-	dd_oma1_t *dd = OP_NULL;
 	int ret_code = OP_RESULT_OK;
 
 	OP_LOGD("");
 
-	if (dd_file_path == OP_NULL || error_code == OP_NULL ||
-		dd_info == OP_NULL) {
+	if (dd_file_path == OP_NULL || strpbrk(dd_file_path, OP_INVALID_PATH_STRING) != NULL ||
+		error_code == OP_NULL || dd_info == OP_NULL) {
 
 		OP_LOGE("OP INVALID ARGUMENT");
 		if (error_code)
@@ -58,63 +62,37 @@ int op_parse_dd_file(
 	*error_code = OP_PARSER_ERR_NO_ERROR;
 	*dd_info = OP_NULL;
 
-	fp = fopen(dd_file_path, "r");
-	if (fp == OP_NULL) {
-		OP_LOGE("op_parse_dd_file: Given file can not be opened");
-		*error_code = OP_PARSER_ERROR_FILE;
-		b_ret = OP_FALSE;
-		goto ERR;
-	}
-
-	parser = XML_ParserCreate(NULL);
-	if (parser == OP_NULL) {
+	xmlSAXHandler *sHandlerPtr = calloc(1, sizeof(xmlSAXHandler));
+	if (sHandlerPtr == OP_NULL) {
 		OP_LOGE("OP NULL RETURN");
 		*error_code = OP_PARSER_ERR_CREATE;
 		b_ret = OP_FALSE;
 		goto ERR;
 	}
 
-	ret_code = op_parse_dd1_file(parser, &dd);
+	ret_code = op_parse_dd1_file(sHandlerPtr, &app_data);
 	if (OP_RESULT_OK == ret_code) {
-		*dd_info = (void*)dd;
+		*dd_info = (void *)(((dd1_cntx *)(app_data->data))->dd1);
 	} else {
 		*error_code = ret_code;
 		b_ret = OP_FALSE;
 		goto ERR;
 	}
 
-	app_data = (op_parser_app_data_t*)XML_GetUserData(parser);
-
-	for (;;) {
-		int last_invokation = 0;
-		int len = 0;
-
-		len = fread(buff, 1, BUFFSIZE, fp);
-		last_invokation = feof(fp); /* len < BUFFSIZE; */
-		/* In the last call, "last_invokation" must be 1,
-		 * "len" can be zero for it. */
-		if (XML_Parse(parser, buff, len, last_invokation)
-		        == XML_STATUS_ERROR) {
-			OP_LOGE("Parse error at line[%ld], Error:[%s]",
-					XML_GetCurrentLineNumber(parser),
-					XML_ErrorString(XML_GetErrorCode(parser)));
-			*error_code = OP_PARSER_ERR_INTERNAL_PARSING;
-			b_ret = OP_FALSE;
-			goto ERR;
-		}
-
-		if (app_data) {
-			if (OP_RESULT_OK != app_data->parseError) {
-				*error_code = app_data->parseError;
-				b_ret = OP_FALSE;
-				goto ERR;
-			}
-		}
-		if (last_invokation || len == 0)
-			break;
+	if (xmlSAXUserParseFile(sHandlerPtr, app_data, dd_file_path) < 0) {
+		OP_LOGD("Error : return value less than zero");
+		*error_code = app_data->parseError;
+		b_ret = OP_FALSE;
+		goto ERR;
 	}
 
-	if (OP_FALSE == (b_ret = op_check_mandatory_tags(parser))) {
+	if (OP_RESULT_OK != app_data->parseError) {
+		*error_code = app_data->parseError;
+		b_ret = OP_FALSE;
+		goto ERR;
+	}
+
+	if (OP_FALSE == (b_ret = op_check_mandatory_tags(app_data))) {
 		OP_LOGE("Parse error happened. Mandatory Element Missing");
 		*error_code = OP_PARSER_ERR_MISSING_MANOPTORY_TAG;
 		goto ERR;
@@ -122,14 +100,11 @@ int op_parse_dd_file(
 
 	OP_LOGD("DD1 prasing is Successful");
 ERR:
-	if (fp)
-		fclose(fp);
 	if (app_data) {
 		free(app_data->data);
+		free(app_data);
 	}
-	free(app_data);
-	if (parser)
-		XML_ParserFree(parser);
+	free(sHandlerPtr);
 
 	return b_ret;
 }
@@ -139,13 +114,13 @@ void op_free_dd_info(void *dd_info)
 	op_free_dd1_info((dd_oma1_t*)dd_info);
 }
 
-int op_check_mandatory_tags(XML_Parser parser)
+int op_check_mandatory_tags(op_parser_app_data_t *app_data)
 {
 	int ret = OP_FALSE;
 
 	OP_LOGD("");
 
-	ret = op_check_dd1_mandatory_tags(parser);
+	ret = op_check_dd1_mandatory_tags(app_data);
 
 	return ret;
 }

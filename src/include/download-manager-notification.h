@@ -23,6 +23,7 @@
 #define DOWNLOAD_MANAGER_NOTIFICATION_H
 
 #include "notification.h"
+#include "notification_internal.h"
 
 #include "download-manager-common.h"
 #include "download-manager-event.h"
@@ -44,7 +45,9 @@ private:
 	void updateTitleOngoingNoti();
 	void updateOngoingNoti(void);
 	string convertSizeStr(unsigned long long size);
-	void addCompleteNoti(string &msg, bool isSuccess);
+	notification_h createNoti(NOTIFICATION_TYPE::TYPE type);
+	void addCompleteNoti();
+	void addFailedNoti();
 	void freeNotiData(notification_h notiHandle);
 	int m_notiId;
 	notification_h m_notiHandle;

@@ -22,7 +22,8 @@
 #include <stdio.h>
 #include <vector>
 
-#include "appsvc.h"
+#include "app_control.h"
+#include "app_control_internal.h"
 #include "download-manager-notification.h"
 
 DownloadNoti::DownloadNoti(Item *item)
@@ -56,8 +57,8 @@ void DownloadNoti::updateFromItem()
 	if (!m_item)
 		return;
 
-	DM_LOGV("state:[%d]", m_item->state());
-	switch(m_item->state()) {
+	DM_LOGV("state:[%d]", m_item->getState());
+	switch(m_item->getState()) {
 	case ITEM::REQUESTING:
 	case ITEM::QUEUED:
 		DM_LOGD("REQUESTING or QUEUED");
@@ -83,33 +84,30 @@ void DownloadNoti::updateFromItem()
 		break;
 	case ITEM::CANCEL:
 		DM_LOGD("CANCEL");
-		msg = S_("IDS_COM_POP_DOWNLOAD_FAILED");
 		if (m_notiHandle) {
 			freeNotiData(m_notiHandle);
 			m_notiHandle = NULL;
 		}
-		addCompleteNoti(msg, false);
+		addFailedNoti();
 		break;
 	case ITEM::REGISTERING_TO_SYSTEM:
 		DM_LOGD("REGISTERING_TO_SYSTEM");
 		break;
 	case ITEM::FAIL_TO_DOWNLOAD:
 		DM_LOGD("FAIL_TO_DOWNLOAD");
-		msg = S_("IDS_COM_POP_DOWNLOAD_FAILED");
 		if (m_notiHandle) {
 			freeNotiData(m_notiHandle);
 			m_notiHandle = NULL;
 		}
-		addCompleteNoti(msg, false);
+		addFailedNoti();
 		break;
 	case ITEM::FINISH_DOWNLOAD:
 		DM_LOGD("FINISH_DOWNLOAD");
-		msg = __("IDS_DM_HEADER_DOWNLOAD_COMPLETE");
 		if (m_notiHandle) {
 			freeNotiData(m_notiHandle);
 			m_notiHandle = NULL;
 		}
-		addCompleteNoti(msg, true);
+		addCompleteNoti();
 		break;
 	case ITEM::DESTROY:
 		DM_LOGD("DESTROY");
@@ -125,28 +123,30 @@ void DownloadNoti::updateFromItem()
 void DownloadNoti::freeNotiData(notification_h notiHandle)
 {
 	DM_LOGV("");
-	notification_error_e err = NOTIFICATION_ERROR_NONE;
+	int err = NOTIFICATION_ERROR_NONE;
 
 	if (notiHandle) {
 		err = notification_free(notiHandle);
 		if (err != NOTIFICATION_ERROR_NONE)
 			DM_LOGE("Fail to free noti data [%d]",err);
-			notiHandle = NULL;
+		notiHandle = NULL;
 	}
 }
 
 void DownloadNoti::addOngoingNoti()
 {
 	notification_h notiHandle = NULL;
-	notification_error_e err = NOTIFICATION_ERROR_NONE;
+	int err = NOTIFICATION_ERROR_NONE;
 	int privId = 0;
+	bundle *b = NULL;
+	app_control_h handle;
 
 	if (!m_item) {
 		DM_LOGE("NULL Check:item");
 		return;
 	}
-	DM_LOGV("downloadId[%d]", m_item->id());
-	DM_SLOGD("title[%s]", m_item->title().c_str());
+	DM_LOGV("downloadId[%d]", m_item->getId());
+	DM_SLOGD("title[%s]", m_item->getTitle().c_str());
 
 	notiHandle = notification_create(NOTIFICATION_TYPE_ONGOING);
 
@@ -154,12 +154,15 @@ void DownloadNoti::addOngoingNoti()
 		DM_LOGE("Fail to create notification handle");
 		return;
 	}
-	if (m_item->title().empty())
-		err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_TITLE,
-				S_("IDS_COM_BODY_NO_NAME"), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
-	else
-		err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_TITLE,
-				m_item->title().c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+	string tmpStr;
+	if (m_item->getTitle().empty()) {
+		tmpStr = string(DM_BODY_TEXT_NO_NAME);
+	} else {
+		tmpStr = m_item->getTitle();
+	}
+
+	err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_TITLE,
+			tmpStr.c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to set title [%d]", err);
 		freeNotiData(notiHandle);
@@ -196,6 +199,54 @@ void DownloadNoti::addOngoingNoti()
 		return;
 	}
 
+	if (app_control_create(&handle) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to create app_control");
+		freeNotiData(notiHandle);
+		return;
+	}
+
+	if (app_control_set_app_id(handle, PACKAGE_NAME) !=
+			APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set pkgname");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	char buff[MAX_BUF_LEN] = {0,};
+	snprintf(buff, MAX_BUF_LEN, "%u", m_item->getHistoryId());
+	if (app_control_add_extra_data(handle, KEY_DOWNLOADING_HISTORYID,
+			(const char *)buff) != APP_CONTROL_ERROR_NONE) {
+				DM_LOGE("Fail to app_control set extra param data");
+				app_control_destroy(handle);
+				freeNotiData(notiHandle);
+				return;
+	}
+	if (app_control_export_as_bundle(handle, &b) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to convert app_control to bundle");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	if (b == NULL) {
+		DM_LOGE("Bundle is NULL");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	err = notification_set_execute_option(notiHandle,
+			NOTIFICATION_EXECUTE_TYPE_SINGLE_LAUNCH, "Launch", NULL, b);
+
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set apps [%d]", err);
+		freeNotiData(notiHandle);
+		app_control_destroy(handle);
+		bundle_free(b);
+		return;
+	}
+	if (app_control_destroy(handle) != APP_CONTROL_ERROR_NONE)
+		DM_LOGE("Failed to destroy the app_control");
+	bundle_free(b);
+
 	err = notification_insert(notiHandle, &privId);
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to insert [%d]", err);
@@ -214,19 +265,22 @@ void DownloadNoti::updateTitleOngoingNoti()
 {
 	DM_LOGD("");
 	if (m_notiHandle) {
-		notification_error_e err = NOTIFICATION_ERROR_NONE;
-		DM_SLOGD("title[%s]", m_item->title().c_str());
+		string tmpStr = m_item->getTitle();
+		int err = NOTIFICATION_ERROR_NONE;
+		DM_SLOGD("title[%s]", m_item->getTitle().c_str());
 		err = notification_set_text(m_notiHandle, NOTIFICATION_TEXT_TYPE_TITLE,
-						m_item->title().c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+				tmpStr.c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
 		if (err != NOTIFICATION_ERROR_NONE) {
 			DM_LOGE("Fail to set title [%d]", err);
 			freeNotiData(m_notiHandle);
+			m_notiHandle = NULL;
 			return;
 		}
 		err = notification_update(m_notiHandle);
 		if (err != NOTIFICATION_ERROR_NONE) {
 			DM_LOGE("Fail to update [%d]", err);
 			freeNotiData(m_notiHandle);
+			m_notiHandle = NULL;
 			return;
 		}
 	}
@@ -234,14 +288,14 @@ void DownloadNoti::updateTitleOngoingNoti()
 
 void DownloadNoti::updateOngoingNoti(void)
 {
-	notification_error_e err = NOTIFICATION_ERROR_NONE;
-	if (m_item->fileSize() > 0) {
-		double progress = (double)m_item->receivedFileSize() / (double)m_item->fileSize();
+	int err = NOTIFICATION_ERROR_NONE;
+	if (m_item->getFileSize() > 0) {
+		double progress = (double)m_item->getReceivedFileSize() / (double)m_item->getFileSize();
 		err = notification_update_progress(NULL, m_notiId, progress);
 		if (err != NOTIFICATION_ERROR_NONE)
 			DM_LOGE("Fail to update noti progress[%d]", err);
 	} else {
-		err = notification_update_size(NULL, m_notiId, m_item->receivedFileSize());
+		err = notification_update_size(NULL, m_notiId, m_item->getReceivedFileSize());
 		if (err != NOTIFICATION_ERROR_NONE)
 			DM_LOGE("Fail to update noti progress[%d]", err);
 	}
@@ -279,23 +333,19 @@ string DownloadNoti::convertSizeStr(unsigned long long size)
 	return temp;
 }
 
-void DownloadNoti::addCompleteNoti(string &msg, bool isSuccess)
+notification_h DownloadNoti::createNoti(NOTIFICATION_TYPE::TYPE type)
 {
 	notification_h notiHandle = NULL;
-	notification_error_e err = NOTIFICATION_ERROR_NONE;
-	int privId = 0;
-	bundle *b = NULL;
-
-	if (!m_item) {
-		DM_LOGE("m_item is NULL");
-		return;
-	}
+	int err = NOTIFICATION_ERROR_NONE;
+	const char *fileName = NULL;
+	const char *statusText = NULL;
+	const char *statusTextId = NULL;
 
 	DM_LOGI("historyId [%d], downloadId[%d]",
-			m_item->historyId(), m_item->id());
-	DM_SLOGD("title[%s]", m_item->title().c_str());
+			m_item->getHistoryId(), m_item->getId());
+	DM_SLOGD("title[%s]", m_item->getTitle().c_str());
 
-	/* Remove ongoing noti */
+	/*If setting complete noti Remove ongoing noti first */
 	err = notification_delete_by_priv_id(NULL, NOTIFICATION_TYPE_ONGOING,
 			m_notiId);
 	if (err != NOTIFICATION_ERROR_NONE) {
@@ -304,159 +354,273 @@ void DownloadNoti::addCompleteNoti(string &msg, bool isSuccess)
 	m_notiId = 0;
 
 	notiHandle = notification_create(NOTIFICATION_TYPE_NOTI);
-
 	if (!notiHandle) {
 		DM_LOGE("Fail to insert notification");
-		return;
+		return NULL;
 	}
-	if (m_item->title().empty())
-		err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_CONTENT,
-				S_("IDS_COM_BODY_NO_NAME"), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
-	else
-		err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_CONTENT,
-				m_item->title().c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+
+	err = notification_set_layout(notiHandle, NOTIFICATION_LY_NOTI_EVENT_SINGLE);
 	if (err != NOTIFICATION_ERROR_NONE) {
-		DM_LOGE("Fail to set content name [%d]", err);
+		DM_LOGE("Fail to set notification layout [%d]", err);
 		freeNotiData(notiHandle);
-		return;
+		return NULL;
 	}
+
+	err = notification_set_text_domain(notiHandle, DM_DOMAIN, DM_LOCALEDIR);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set text domain [%d]", err);
+		freeNotiData(notiHandle);
+		return NULL;
+	}
+
+	if (m_item->getTitle().empty())
+		fileName = DM_BODY_TEXT_NO_NAME;
+	else
+		fileName = m_item->getTitle().c_str();
+
+	if (NOTIFICATION_TYPE::NOTI_COMPLETED == type) {
+		statusText = DM_POP_TEXT_DOWNLOAD_COMPLETE;
+		statusTextId = DM_DOWNLOAD_COMPLETE_STRING_ID;
+	} else if (NOTIFICATION_TYPE::NOTI_FAILED == type) {
+		statusText = DM_POP_TEXT_DOWNLOAD_FAILED;
+		statusTextId = DM_DOWNLOAD_FAILED_STRING_ID;
+	}
+
+#ifdef _TIZEN_2_3_UX
 	err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_TITLE,
-			msg.c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+			fileName, NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to set status [%d]", err);
 		freeNotiData(notiHandle);
-		return;
+		return NULL;
 	}
 
-	if (isSuccess) {
-		string sizeStr = convertSizeStr(m_item->receivedFileSize());
-		err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_INFO_1,
-				sizeStr.c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
-		if (err != NOTIFICATION_ERROR_NONE) {
-			DM_LOGE("Fail to set size [%d]", err);
-			freeNotiData(notiHandle);
-			return;
-		}
-		if (!m_item->thumbnailPath().empty()) {
-			err = notification_set_image(notiHandle,
-					NOTIFICATION_IMAGE_TYPE_BACKGROUND,
-					m_item->thumbnailPath().c_str());
-			if (err != NOTIFICATION_ERROR_NONE) {
-				DM_LOGE("Fail to set bg thumbnail image [%d]", err);
-				freeNotiData(notiHandle);
-				return;
-			}
-		} else {
-			err = notification_set_image(notiHandle,
-					NOTIFICATION_IMAGE_TYPE_ICON, DM_NOTI_COMPLETED_ICON_PATH);
-			if (err != NOTIFICATION_ERROR_NONE) {
-				DM_LOGE("Fail to set icon [%d]", err);
-				freeNotiData(notiHandle);
-				return;
-			}
-		}
-		err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON_FOR_INDICATOR,
-				DM_NOTI_COMPLETED_ICON_PATH);
-		if (err != NOTIFICATION_ERROR_NONE) {
-			DM_LOGE("Fail to set icon [%d]", err);
-			freeNotiData(notiHandle);
-			return;
-		}
-	} else {
-		err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON,
-				DM_NOTI_FAILED_ICON_PATH);
-		if (err != NOTIFICATION_ERROR_NONE) {
-			DM_LOGE("Fail to set icon [%d]", err);
-			freeNotiData(notiHandle);
-			return;
-		}
-		err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON_FOR_INDICATOR,
-				DM_NOTI_FAILED_ICON_PATH);
-		if (err != NOTIFICATION_ERROR_NONE) {
-			DM_LOGE("Fail to set icon [%d]", err);
-			freeNotiData(notiHandle);
-			return;
-		}
-	}
-
-	err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_INFO_2,
-			m_item->sender().c_str(), NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+	err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_CONTENT,
+				statusText, statusTextId, NOTIFICATION_VARIABLE_TYPE_NONE);
 	if (err != NOTIFICATION_ERROR_NONE) {
-		DM_LOGE("Fail to set sender [%d]", err);
+		DM_LOGE("Fail to set content name [%d]", err);
 		freeNotiData(notiHandle);
-		return;
+		return NULL;
+	}
+#else
+	err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_CONTENT,
+			fileName, NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set status [%d]", err);
+		freeNotiData(notiHandle);
+		return NULL;
 	}
 
-	err = notification_set_time_to_text(notiHandle,
-			NOTIFICATION_TEXT_TYPE_INFO_SUB_1, (time_t)(m_item->finishedTime()));
-
+	err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_TITLE,
+				statusText, statusTextId, NOTIFICATION_VARIABLE_TYPE_NONE);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set content name [%d]", err);
+		freeNotiData(notiHandle);
+		return NULL;
+	}
+#endif
+	err = notification_set_time(notiHandle, (time_t)(m_item->getFinishedTime()));
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to set time [%d]", err);
 		freeNotiData(notiHandle);
+		return NULL;
+	}
+	return notiHandle;
+}
+
+void DownloadNoti::addCompleteNoti()
+{
+	notification_h notiHandle = NULL;
+	int err = NOTIFICATION_ERROR_NONE;
+	int privId = 0;
+	bundle *b = NULL;
+	app_control_h handle;
+
+	if (!m_item) {
+		DM_LOGE("m_item is NULL");
+		return;
+	}
+	if((notiHandle = createNoti(NOTIFICATION_TYPE::NOTI_COMPLETED)) == NULL) {
+		DM_LOGD("Failed to create noti");
 		return;
 	}
 
-	b = bundle_create();
-	if (!b) {
-		DM_LOGE("Fail to create bundle");
+	if (!m_item->getThumbnailPath().empty()) {
+		err = notification_set_image(notiHandle,
+				NOTIFICATION_IMAGE_TYPE_ICON,
+				m_item->getThumbnailPath().c_str());
+		if (err != NOTIFICATION_ERROR_NONE) {
+			DM_LOGE("Fail to set thumbnail image [%d]", err);
+			freeNotiData(notiHandle);
+			return;
+		}
+	} else {
+		err = notification_set_image(notiHandle,
+				NOTIFICATION_IMAGE_TYPE_ICON, m_item->getIconPath().c_str());
+		if (err != NOTIFICATION_ERROR_NONE) {
+			DM_LOGE("Fail to set icon [%d]", err);
+			freeNotiData(notiHandle);
+			return;
+		}
+	}
+
+	err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON_FOR_INDICATOR,
+			DM_NOTI_COMPLETED_INDICATOR_ICON_PATH);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set icon [%d]", err);
 		freeNotiData(notiHandle);
 		return;
 	}
 
-	if (isSuccess) {
-		if (appsvc_set_operation(b, APPSVC_OPERATION_VIEW) != APPSVC_RET_OK) {
-			DM_LOGE("Fail to appsvc set operation");
-			bundle_free(b);
-			freeNotiData(notiHandle);
-			return;
-		}
-		if (appsvc_set_uri(b, m_item->registeredFilePath().c_str()) !=
-				APPSVC_RET_OK) {
-			DM_LOGE("Fail to appsvc set uri");
-			bundle_free(b);
-			freeNotiData(notiHandle);
-			return;
-		}
-		err = notification_set_execute_option(notiHandle,
-				NOTIFICATION_EXECUTE_TYPE_SINGLE_LAUNCH, "View", NULL, b);
-	} else {
-			char buff[MAX_BUF_LEN] = {0,};
-			if (appsvc_set_pkgname(b, PACKAGE_NAME) !=
-					APPSVC_RET_OK) {
-				DM_LOGE("Fail to appsvc set pkgname");
-				bundle_free(b);
-				freeNotiData(notiHandle);
-				return;
-			}
-			snprintf(buff, MAX_BUF_LEN, "%u", m_item->historyId());
-			if (appsvc_add_data(b, KEY_FAILED_HISTORYID,
-					(const char *)buff) != APPSVC_RET_OK) {
-				DM_LOGE("Fail to appsvc set extra param data");
-				bundle_free(b);
-				freeNotiData(notiHandle);
-				return;
-			}
-
-			err = notification_set_execute_option(notiHandle,
-					NOTIFICATION_EXECUTE_TYPE_SINGLE_LAUNCH, "Launch", NULL, b);
+	if (app_control_create(&handle) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to create app_control");
+		freeNotiData(notiHandle);
+		return;
 	}
+
+	if (app_control_set_operation(handle, APP_CONTROL_OPERATION_VIEW) !=
+			APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set operation");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	if (app_control_set_uri(handle, m_item->getRegisteredFilePath().c_str()) !=
+			APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set uri");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	if (app_control_export_as_bundle(handle, &b) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to convert app_control to bundle");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	if (b == NULL) {
+		DM_LOGE("Bundle is NULL");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	err = notification_set_execute_option(notiHandle,
+			NOTIFICATION_EXECUTE_TYPE_SINGLE_LAUNCH, "View", NULL, b);
+
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to set apps [%d]", err);
 		freeNotiData(notiHandle);
+		app_control_destroy(handle);
 		bundle_free(b);
 		return;
 	}
-
+	if (app_control_destroy(handle) != APP_CONTROL_ERROR_NONE)
+		DM_LOGE("Failed to destroy the app_control");
 	bundle_free(b);
 
-	if (isSuccess) {
-		err = notification_set_property(notiHandle,
-				NOTIFICATION_PROP_DISABLE_TICKERNOTI);
-	} else {
-		err = notification_set_property(notiHandle,
-				NOTIFICATION_PROP_DISABLE_TICKERNOTI |
-				NOTIFICATION_PROP_DISABLE_AUTO_DELETE);
+	err = notification_set_property(notiHandle,
+			NOTIFICATION_PROP_DISABLE_TICKERNOTI);
+
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set property [%d]", err);
+		freeNotiData(notiHandle);
+		return;
 	}
+
+	err = notification_insert(notiHandle, &privId);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to insert [%d]", err);
+		freeNotiData(notiHandle);
+		return;
+	}
+
+	DM_LOGI("priv id [%d]", privId);
+	m_notiId = privId;
+
+	freeNotiData(notiHandle);
+}
+
+void DownloadNoti::addFailedNoti()
+{
+	notification_h notiHandle = NULL;
+	int err = NOTIFICATION_ERROR_NONE;
+	int privId = 0;
+	bundle *b = NULL;
+	app_control_h handle;
+
+	if (!m_item) {
+		DM_LOGE("m_item is NULL");
+		return;
+	}
+	if((notiHandle = createNoti(NOTIFICATION_TYPE::NOTI_FAILED)) == NULL) {
+		DM_LOGD("Failed to create noti");
+		return;
+	}
+
+	err = notification_set_image(notiHandle,
+			NOTIFICATION_IMAGE_TYPE_ICON, DM_NOTI_FAILED_ICON_PATH);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set icon [%d]", err);
+		freeNotiData(notiHandle);
+		return;
+	}
+	err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON_FOR_INDICATOR,
+			DM_NOTI_FAILED_INDICATOR_ICON_PATH);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set icon [%d]", err);
+		freeNotiData(notiHandle);
+		return;
+	}
+
+	if (app_control_create(&handle) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to create app_control");
+		freeNotiData(notiHandle);
+		return;
+	}
+	char buff[MAX_BUF_LEN] = {0,};
+	if (app_control_set_app_id(handle, PACKAGE_NAME) !=
+			APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set pkgname");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	snprintf(buff, MAX_BUF_LEN, "%u", m_item->getHistoryId());
+	if (app_control_add_extra_data(handle, KEY_FAILED_HISTORYID,
+			(const char *)buff) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set extra param data");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	if (app_control_export_as_bundle(handle, &b) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to convert app_control to bundle");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	if (b == NULL) {
+		DM_LOGE("Bundle is NULL");
+		app_control_destroy(handle);
+		freeNotiData(notiHandle);
+		return;
+	}
+	err = notification_set_execute_option(notiHandle,
+			NOTIFICATION_EXECUTE_TYPE_SINGLE_LAUNCH, "Launch", NULL, b);
+	if (err != NOTIFICATION_ERROR_NONE) {
+		DM_LOGE("Fail to set apps [%d]", err);
+		freeNotiData(notiHandle);
+		app_control_destroy(handle);
+		bundle_free(b);
+		return;
+	}
+	if (app_control_destroy(handle) != APP_CONTROL_ERROR_NONE)
+		DM_LOGE("Failed to destroy the app_control");
+	bundle_free(b);
+
+	err = notification_set_property(notiHandle,
+			NOTIFICATION_PROP_DISABLE_TICKERNOTI |
+			NOTIFICATION_PROP_DISABLE_AUTO_DELETE);
 
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to set property [%d]", err);
@@ -479,7 +643,7 @@ void DownloadNoti::addCompleteNoti(string &msg, bool isSuccess)
 
 void DownloadNoti::deleteCompleteNoti()
 {
-	notification_error_e err = NOTIFICATION_ERROR_NONE;
+	int err = NOTIFICATION_ERROR_NONE;
 	if (!m_item) {
 		DM_LOGE("m_item is NULL");
 		return;
@@ -490,7 +654,7 @@ void DownloadNoti::deleteCompleteNoti()
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to delete [%d]", err);
 	}
-	DM_LOGI("delete historyID[%d] m_id[%d]", m_item->historyId(), m_notiId);
+	DM_LOGI("delete historyID[%d] m_id[%d]", m_item->getHistoryId(), m_notiId);
 	m_notiId = 0;
 }
 
@@ -501,7 +665,7 @@ void DownloadNoti::clearOngoingNoti()
 	/* If the application was terminated abnormaly before or
 	    when the application is terminated
 	   NULL (first param) means caller process */
-	notification_error_e err = NOTIFICATION_ERROR_NONE;
+	int err = NOTIFICATION_ERROR_NONE;
 	err = notification_delete_all_by_type(NULL, NOTIFICATION_TYPE_ONGOING);
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to clear notificaton [%d]", err);

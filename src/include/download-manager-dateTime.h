@@ -24,22 +24,11 @@
 #define DOWNLOAD_MANAGER_DATE_TIME_H
 
 #include <time.h>
-#include <unicode/udat.h>
-#include <unicode/udatpg.h>
-#include <unicode/ustring.h>
+#include <utils_i18n.h>
 
 #include "download-manager-common.h"
 
 using namespace std;
-
-namespace LOCALE_STYLE{
-enum {
-	TIME = 0,
-	SHORT_DATE,
-	MEDIUM_DATE,
-	FULL_DATE
-};
-}
 
 class DateUtil {
 public:
@@ -48,26 +37,24 @@ public:
 		return inst;
 	}
 	void updateLocale(void);
+	int getDiffDays(time_t nowTime, time_t refTime);
 	void getDateStr(double finishTime, string &outBuf);
 
 private:
 	DateUtil(void);
 	~DateUtil(void);
-
-	int getDiffDays(time_t nowTime, time_t refTime);
-	UDateFormat *getBestPattern(const char *patternStr,
-		UDateTimePatternGenerator *generator, const char *locale);
-	void deinitLocaleData(void);
+	void deinitLocaleData();
+	i18n_udate_format_h getBestPattern(const char *formatString,
+			i18n_udatepg_h patternGenerator, const char *locale);
 	/* Update this in case of follows
 	 * 1. show main view.
 	 * 2. add new item
 	 * 3. create today group
 	**/
-	UDateFormat *dateShortFormat;
-	UDateFormat *dateMediumFormat;
-	UDateFormat *dateFullFormat;
-	UDateFormat *timeFormat12H;
-	UDateFormat *timeFormat24H;
+	i18n_udate_format_h dateShortFormat;
+	i18n_udate_format_h timeFormat12H;
+	i18n_udate_format_h timeFormat24H;
+
 };
 
 #endif /* DOWNLOAD_MANAGER_DATE_TIME_H */

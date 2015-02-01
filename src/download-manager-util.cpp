@@ -29,12 +29,16 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include "aul.h"
+#include <storage.h>
 #include "xdgmime.h"
-#include "app_service.h"
+#include "app_control.h"
 #include "media_content.h"
 #include "media_info.h"
+#ifdef _ENABLE_WAITING_RO
+#include "drm_client.h"
+#endif
 #include "vconf.h"
+#include "mime_type.h"
 
 #include "download-manager-util.h"
 
@@ -160,6 +164,40 @@ bool FileUtility::renameFile(string from, string to)
 	return true;
 }
 
+bool FileUtility::deleteFile(string filePath)
+{
+	if (filePath.empty())
+		return false;
+	if (isExistedFile(filePath, false)) {
+		if (unlink(filePath.c_str()) < 0) {
+			DM_LOGE("Fail to Remove file err[%s]", strerror(errno));
+			return false;
+		}
+	} else {
+		DM_LOGE("File does not exist");
+		return false;
+	}
+	return true;
+}
+
+bool FileUtility::checkAvailableMemory(unsigned long long size)
+{
+	struct statvfs file_info;
+	unsigned long long avail;
+	int r = storage_get_internal_memory_size(&file_info);
+	if (r < 0) {
+		DM_LOGE("storage_get_internal_memory_size API failed");
+		return false;
+	} else {
+		avail = (unsigned long long)file_info.f_bsize * file_info.f_bavail;
+		DM_SLOGD("avail: %llu, size: %llu", avail, size);
+		if (size < avail)
+			return true;
+		else
+			return false;
+	}
+}
+
 bool FileUtility::copyFile(string from, string to)
 {
 	FILE *fs = NULL;
@@ -167,6 +205,19 @@ bool FileUtility::copyFile(string from, string to)
 	int readNum = 0;
 	int writeNum = 0;
 	char buff[4096] = {0};
+	char *validate_path = NULL;
+
+	validate_path = strpbrk((char *)from.c_str(), DM_INVALID_PATH_STRING);
+	if (validate_path != NULL) {
+		DM_LOGE("Invalid source Path");
+		return false;
+	}
+
+	validate_path = strpbrk((char *)to.c_str(), DM_INVALID_PATH_STRING);
+	if (validate_path != NULL){
+		DM_LOGE("Invalid destination Path");
+		return false;
+	}
 
 	fs = fopen(from.c_str(), "rb");
 	if (!fs) {
@@ -203,84 +254,84 @@ bool FileUtility::copyFile(string from, string to)
 
 bool FileUtility::openFile(string path, int contentType)
 {
-	service_h handle = NULL;
+	app_control_h handle = NULL;
 	string filePath;
 
 	if (path.empty())
 		return false;
 
 	DM_SLOGD("path [%s]", path.c_str());
-	if (service_create(&handle) < 0) {
-		DM_LOGE("Fail to create service handle");
+	if (app_control_create(&handle) < 0) {
+		DM_LOGE("Fail to create app_control handle");
 		return false;
 	}
 
 	if (!handle) {
-		DM_LOGE("NULL Check: service handle");
+		DM_LOGE("NULL Check: app_control handle");
 		return false;
 	}
 
-	if (service_set_operation(handle, SERVICE_OPERATION_VIEW) < 0) {
-		DM_LOGE("Fail to set service operation");
-		service_destroy(handle);
+	if (app_control_set_operation(handle, APP_CONTROL_OPERATION_VIEW) < 0) {
+		DM_LOGE("Fail to set app_control operation");
+		app_control_destroy(handle);
 		return false;
 	}
 
 	if (contentType == DM_CONTENT_HTML || contentType == DM_CONTENT_TEXT) {
 		filePath = "file://";
 		filePath.append(path.c_str());
-		if (service_set_mime(handle, "text/html") < 0) {
+		if (app_control_set_mime(handle, "text/html") < 0) {
 			DM_LOGE("Fail to set mime");
-			service_destroy(handle);
+			app_control_destroy(handle);
 			return false;
 		}
 	} else {
 		filePath = path;
 	}
-	if (service_set_uri(handle, filePath.c_str()) < 0) {
+	if (app_control_set_uri(handle, filePath.c_str()) < 0) {
 		DM_LOGE("Fail to set uri");
-		service_destroy(handle);
+		app_control_destroy(handle);
 		return false;
 	}
 
-	if (service_send_launch_request(handle, NULL, NULL) < 0) {
-		DM_LOGE("Fail to launch service");
-		service_destroy(handle);
+	if (app_control_send_launch_request(handle, NULL, NULL) < 0) {
+		DM_LOGE("Fail to launch app_control");
+		app_control_destroy(handle);
 		return false;
 	}
 
-	service_destroy(handle);
+	app_control_destroy(handle);
 
 	return true;
 }
 
 void FileUtility::openMyFilesApp()
 {
-	service_h handle = NULL;
+	app_control_h handle = NULL;
 	DM_LOGD("");
 
-	if (service_create(&handle) < 0) {
-		DM_LOGE("Fail to create service handle");
+	if (app_control_create(&handle) < 0) {
+		DM_LOGE("Fail to create app_control handle");
 		return;
 	}
 
 	if (!handle) {
-		DM_LOGE("NULL Check: service handle");
+		DM_LOGE("NULL Check: app_control handle");
 		return;
 	}
 
-	if (service_set_app_id(handle, MYFILE_PKG_NAME) < 0) {
-		DM_LOGE("Fail to set service operation");
-		service_destroy(handle);
+	if (app_control_set_app_id(handle, MYFILE_PKG_NAME) < 0) {
+		DM_LOGE("Fail to set app_control operation");
+		app_control_destroy(handle);
 		return;
 	}
 
-	if (service_send_launch_request(handle, NULL, NULL) < 0) {
-		DM_LOGE("Fail to launch service");
-		service_destroy(handle);
+	if (app_control_send_launch_request(handle, NULL, NULL) < 0) {
+		DM_LOGE("Fail to launch app_control");
+		app_control_destroy(handle);
 		return;
 	}
-	service_destroy(handle);
+	app_control_destroy(handle);
 	return;
 }
 
@@ -319,6 +370,21 @@ string FileUtility::getDefaultPath(bool optionTempDir)
    return path;
 }
 
+unsigned long long FileUtility::getFileSize(string filePath)
+{
+	struct stat st;
+	int ret = 0;
+	if (filePath.empty())
+		return 0;
+
+	ret = stat(filePath.c_str(), &st);
+	if(ret != 0) {
+		DM_LOGE("stat error:%s[%d]", strerror(errno), errno);
+		return 0;
+	}
+	return (unsigned long long)st.st_size;
+}
+
 DownloadUtil::DownloadUtil()
 {
 }
@@ -327,23 +393,29 @@ int DownloadUtil::getContentType(const char *mime, const char *filePath)
 {
 	int i = 0;
 	int type = DM_CONTENT_UNKOWN;
-	int ret = 0;
-	char tempMime[MAX_FILE_PATH_LEN] = {0,};
+	char *tempMime = NULL;
 	DM_LOGV("");
 	if (mime == NULL || strlen(mime) < 1)
 		return DM_CONTENT_UNKOWN;
 
-	strncpy(tempMime, mime, MAX_FILE_PATH_LEN-1);
-	if (isAmbiguousMIMEType(mime)) {
-		if (filePath) {
-			memset(tempMime, 0x00, MAX_FILE_PATH_LEN);
-			ret = aul_get_mime_from_file(filePath,tempMime,sizeof(tempMime));
-			if (ret < AUL_R_OK )
-				strncpy(tempMime, mime, MAX_FILE_PATH_LEN-1);
-			else
-				DM_SLOGD("mime from extension name[%s]",tempMime);
+	if ((filePath != NULL) && (strlen(filePath) > 0) &&
+			isAmbiguousMIMEType(mime)) {
+		const char *ext = strrchr(filePath, '.');
+		if (ext == NULL) {
+			DM_LOGE("File Extension is NULL");
+			return type;
 		}
+		mime_type_get_mime_type(ext + 1, &tempMime);
 	}
+	if (tempMime == NULL) {
+		tempMime = (char *)calloc(1, MAX_FILE_PATH_LEN);
+		if (tempMime == NULL) {
+			DM_LOGE("Fail to call calloc");
+			return type;
+		}
+		strncpy(tempMime, mime, MAX_FILE_PATH_LEN - 1);
+	}
+	DM_SLOGD("mime type [%s]", tempMime);
 
 	/* Search a content type from mime table. */
 	for (i = 0; i < MAX_MIME_TABLE_NUM; i++) {
@@ -370,6 +442,7 @@ int DownloadUtil::getContentType(const char *mime, const char *filePath)
 				type = DM_CONTENT_IMAGE;
 		}
 	}
+	free(tempMime);
 	DM_LOGV("type[%d]",type);
 	return type;
 }
@@ -519,3 +592,68 @@ string DownloadUtil::getUserAgent()
 	free(str);
 	return userAgentStr;
 }
+
+#ifdef _ENABLE_OMA_UNSUPPROTED_CONTENT
+/* If the error is happened, the true is returned */
+bool app_matched_cb(app_control_h handle, const char *appid, void *user_data)
+{
+	int *count = NULL;
+	count = (int *)user_data;
+	if (appid) {
+		DM_SLOGD("appid[%s]",appid);
+		*count = *count + 1;
+	}
+	return true;
+}
+
+bool DownloadUtil::isSupportedMIMEType(string mime)
+{
+	app_control_h handle = NULL;
+	int count = 0;
+	if (mime.empty())
+		return true;
+
+	if (app_control_create(&handle) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control create");
+		return true;
+	}
+	if (app_control_set_operation(handle, APP_CONTROL_OPERATION_VIEW) !=
+			APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set operation");
+		app_control_destroy(handle);
+		return true;
+	}
+	if (app_control_set_mime(handle, mime.c_str()) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set mime");
+		app_control_destroy(handle);
+		return true;
+	}
+	if (app_control_foreach_app_matched(handle, app_matched_cb, &count) != APP_CONTROL_ERROR_NONE) {
+		DM_LOGE("Fail to app_control set mime");
+		app_control_destroy(handle);
+		return true;
+	}
+	DM_LOGV("Available application list count[%d]", count);
+	app_control_destroy(handle);
+	if (count > 0)
+		return true;
+	else
+		return false;
+}
+#endif
+
+#ifdef _ENABLE_WAITING_RO
+bool DownloadDrm::validRo(const char *filePath)
+{
+	int ret = 0;
+	drm_permission_type_e permType = DRM_PERMISSION_TYPE_PLAY;
+	drm_license_status_e status = DRM_LICENSE_STATUS_UNDEFINED;
+	ret = drm_get_license_status(filePath, permType, &status);
+	if (ret != DRM_RETURN_SUCCESS)
+		return false;
+	if (status == DRM_LICENSE_STATUS_VALID)
+		return true;
+	return false;
+}
+#endif
+

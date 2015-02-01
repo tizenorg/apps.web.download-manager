@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ODUSTANI"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "Izbr. će se više stavki (%d)."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Ova će se stavka izbrisati."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Priprema..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Nema skidanja"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Stavke će se prikazati ovdje nakon što ih skinete."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Preuzimanje prekinuto"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Skidanje dovršeno"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Skidanje neuspješno"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Upravitelj skidanja"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 stavka bit će obrisana."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Aktiviranje DRM sadržaja..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Obavješćivanje poslužitelja..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d datoteka bit će obrisano."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Spremanje"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Dodirnite Preuzmi za ponovni pokušaj."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Ova se datoteka ne može pronaći. Dodirnite Preuzmi kako biste je pokušali ponovno preuzeti."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Nema aplikacije potrebne za otvaranje ove datoteke."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Prekid"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Skini"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Idi u Memoriju"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Zadana memorija puna"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Starije"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d odabrano"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Danas"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Jučer"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Odaberi sve"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Obriši"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "IZBRIŠI"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Nema dovoljno prostora u memoriji uređaja. Idite na %s postavke da biste izbrisali neke podatke ili umetnite SD karticu."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Nema dovoljno prostora u memoriji uređaja. Idite na %s postavke da biste oslobodili memoriju, a zatim pokušajte ponovno."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Nema dovoljno prostora na SD kartici. Idite na %s postavke da biste izbrisali neke podatke ili promijenite zadano mjesto spremanja na Uređaju."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Nema dovoljno prostora na SD kartici. Idite na %s postavke da biste izbrisali neke podatke, a zatim pokušajte ponovno."
+

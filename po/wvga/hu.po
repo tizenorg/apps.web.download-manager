@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "MÉGSE"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "Töröl %d elemet."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Törli ezt az elemet."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Előkész..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Nincsenek letöltések"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Itt jelennek majd meg a letöltött tételei."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Letöltés megszakítva"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "A letöltés befejeződött"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Sikertelen letöltés"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Letöltéskezelő"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "Törölni fog 1 tételt."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "DRM-tartalom aktiválása..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Szerver értesítése..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d tételt törölni fog."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Tárhely"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Érintse meg a Letöltés gombot az újabb próbálkozáshoz."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "A fájl nem található. A Letöltés megérintésével megpróbálhatja újból letölteni."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Nem található alkalmazás a fájl megnyitásához."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Mégse"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Letöltés"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Tárhely megnyitása"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Az alapértelmezett tárhely megtelt"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Régebbi"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d kijelölve"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Ma"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Tegnap"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Összes kijelölése"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Törlés"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "TÖRLÉS"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Nincs elég hely az eszköz tárhelyén. Nyissa meg a(z) %s beállításait, és töröljön adatokat, vagy helyezzen be SD-kártyát."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Nincs elég hely az eszköz tárhelyén. Nyissa meg a(z) %s beállításait, szabadítson fel tárterületet, majd próbálja újra."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Nincs elég hely az SD-kártyán. Nyissa meg a(z) %s beállításait, és töröljön adatokat, vagy válassza ki alapértelmezett tárhelyként az Eszközt."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Nincs elég hely az SD-kártyán. Nyissa meg a(z) %s beállításait, és töröljön adatokat, majd próbálja újra."
+

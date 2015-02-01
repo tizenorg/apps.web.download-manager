@@ -30,8 +30,18 @@
 
 using namespace std;
 
+namespace VIEWITEM_GROUP {
+enum GROUP {
+	TODAY = 0,
+	YESTERDAY,
+	OLDER,
+	NONE,
+};
+}
+
 class ViewItem {
 public:
+	ViewItem(VIEWITEM_GROUP::GROUP type);
 	~ViewItem();
 	static void create(Item *item);
 	void destroy(void);
@@ -52,7 +62,13 @@ public:
 	static Evas_Object *getGenlistIconCB(void *data, Evas_Object *obj,
 		const char *part);
 	Evas_Object *getGenlistIcon(Evas_Object *obj, const char *part);
+#ifdef _TIZEN_2_3_UX
+	static void checkBoxChangedCB(void *data, Evas_Object *obj,
+		void *event_info);
+#endif
+	static void deleteGenlistData(void *data, Evas_Object *obj);
 
+	const char *getGroupTitle();
 	const char *getMessage(void);
 	const char *getBytesStr(void);
 	void getHumanFriendlyBytesStr(unsigned long long bytes,
@@ -64,9 +80,9 @@ public:
 		{ return &dldGenlistStyle; }
 	inline Elm_Genlist_Item_Class *elmGenlistHistoryItemClass(void)
 		{ return &dldHistoryGenlistStyle; }
-	inline ITEM::STATE state(void) {
+	inline ITEM::STATE getState(void) {
 		if (m_item)
-			return m_item->state();
+			return m_item->getState();
 		else
 			return ITEM::IDLE;
 	}
@@ -100,32 +116,36 @@ public:
 		else
 			return false;
 	}
+	inline void setInsertAtFirst(bool insertAtFirst) {
+		m_insertAtFirst = insertAtFirst;
+	}
+	inline bool getInsertAtFirst() { return m_insertAtFirst; }
+	inline bool isGroupTitle(void) { return m_isGroupTitle; }
 
-	unsigned long long receivedFileSize(void);
-	unsigned long long fileSize(void);
+	unsigned long long getReceivedFileSize(void);
+	unsigned long long getFileSize(void);
 	const char *getTitle(void);
-	const char *getIconPath(void) { return m_item->iconPath().c_str(); }
+	const char *getIconPath(void) { return m_item->getIconPath().c_str(); }
 
 	inline Elm_Object_Item *genlistItem(void) { return m_glItem; }
 	inline void setGenlistItem(Elm_Object_Item *glItem) { m_glItem = glItem; }
-	inline string senderName(void) { return m_item->sender(); }
+	inline string senderName(void) { return m_item->getSender(); }
 
 	void clickedCancelButton(void);
 	void clickedCanceledRetryButton(void);
 	void clickedRetryButton(void);
 	void clickedGenlistItem(void);
-	void requestCancel(void);
 	inline Eina_Bool checkedValue(void) { return m_checked; }
 	void setCheckedValue(Eina_Bool b) { m_checked = b; }
 	inline Evas_Object *checkedBtn(void) { return m_checkedBtn; }
 	void setCheckedBtn(Evas_Object *e) { m_checkedBtn = e; }
 
-	void updateCheckedBtn(void);
-
-	inline double finishedTime(void) { return m_item->finishedTime();}
+	inline double getFinishedTime(void) { return m_item->getFinishedTime();}
+	inline VIEWITEM_GROUP::GROUP getItemGroup(void) { return m_group; }
+	inline void setItemGroup(VIEWITEM_GROUP::GROUP group) { m_group = group; }
 	void extractDateGroupType(void);
 
-	inline unsigned int historyId(void) { return m_item->historyId(); }
+	inline unsigned int getHistoryId(void) { return m_item->getHistoryId(); }
 
 	void setIsClickedFromNoti(bool b) { m_isClickedFromNoti = b; }
 	bool isClickedFromNoti(void) { return m_isClickedFromNoti; }
@@ -149,11 +169,15 @@ private:
 
 	static Elm_Genlist_Item_Class dldGenlistStyle;
 	static Elm_Genlist_Item_Class dldHistoryGenlistStyle;
+	static Elm_Genlist_Item_Class dldGroupTitleGenlistStyle;
 	Elm_Object_Item *m_glItem;
 	Evas_Object *m_checkedBtn;
 	Eina_Bool m_checked;
 	bool m_isRetryCase;
 	bool m_isClickedFromNoti;
+	bool m_isGroupTitle;
+	bool m_insertAtFirst;
+	VIEWITEM_GROUP::GROUP m_group;
 };
 
 #endif /* DOWNLOAD_MANAGER_VIEW_ITEM_H */

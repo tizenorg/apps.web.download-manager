@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Файл алынбады. Қайта жүктеу керек пе?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Файл жоқ. Қайта жүктеу керек пе?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Жүктеулер жоқ"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Жад жетыспейт.Көп арналы жою."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Жүктеу аяқталды"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Серверге хабар-да..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Жүктеулер реттеушісі"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Элементтер таңдау"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Элементтерді жүктеп алған соң, олар осында көрсетіледі."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Жүктеуден бас тартылды"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Жүктеу орындалмады"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Жүктеуге дайындалуда..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Жүктеуге дайындалуда..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Құрылғы жадында бос орын жеткіліксіз. Кейбір деректерді жою немесе SD картасын енгізу үшін, %s параметріне өтіңіз."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Құрылғы жадында бос орын жеткіліксіз. Сақтау орнын босату үшін, %s параметріне өтіп, әрекетті қайталаңыз."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "SD картасында бос орын жеткіліксіз. Кейбір деректерді жою немесе әдепкі сақтау орнын құрылғыға өзгерту үшін, %s параметріне өтіңіз."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "SD картасында бос орын жеткіліксіз. Кейбір деректерді жою үшін, %s параметріне өтіңіз, содан кейін әрекетті қайталаңыз."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Қоймаға өту"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Файлды ашу мүмкін емес"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "%d файлды жоясыз ба?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Өшіресіз бе?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Әдепкі сақтау орны толы"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Ескірек"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Файлды жою"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Сақтау орны"
+

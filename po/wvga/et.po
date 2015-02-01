@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "TÜHISTA"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "%d üksust kustutatakse."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "See üksus kustutatakse."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Valmistum..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Allalaadimisi pole"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Uksused kuvatakse siin parast nende allalaadimist."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Allalaadimine tühistati"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Allalaadimine on lõpule viidud"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Allalaadimine nurjus"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Allalaadimishaldur"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 üksus kustutatakse."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "DRM-sisu aktiveerimine..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Serveri teavitamine..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d uksust kustutatakse."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Hoiundamine"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Uuesti proovimiseks toksake käsku Laadi alla."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Seda faili ei leita. Toksake käsku Laadi alla, et proovida seda uuesti alla laadida."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Selle faili avamiseks ei leita rakendust."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Tühista"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Lae alla"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Ava menüü Mälu"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Vaikemälu on täis"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Vanemad"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d on valitud"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Täna"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Eile"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Vali kõik"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Kustuta"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "KUSTUTA"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Seadme mälus pole piisavalt ruumi. Avage menüü %s seaded, et kustutada mõned andmed, või paigaldage SD-kaart."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Seadme mälus pole piisavalt ruumi. Avage menüü %s seaded, et vabastada mäluruumi, ning seejärel proovige uuesti."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Teie SD-kaardil pole piisavalt ruumi. Avage menüü %s seaded, et kustutada mõned andmed, või muutke vaikemälu asukohaks Seade."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Teie SD-kaardil pole piisavalt ruumi. Avage menüü %s seaded, et kustutada mõned andmed, ning seejärel proovige uuesti."
+

@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fitxategiak ez da jaso. Deskargatu berriz?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fitxategiak ez du existitzen. Deskargatu berriz?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Deskargarik ez"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Ez dago memoria nahikoa. Elementu batzuk ezabatu."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Deskarga osatuta"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Zerbitz. jakinarazten..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Deskargen kudeatzailea"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Aukeratu elementuak"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Elementuak deskargatu ondoren, hemen erakutsiko dira"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Deskarga utzita"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Deskargak huts egin du"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Deskargatzeko prestatzen..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Deskargatzeko prestatzen..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Ez dago nahikoa espazio zure gailuaren memorian. Joan %s ezarpenetara, hainbat datu ezabatzeko edo sartu SD txartel bat."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Ez dago nahikoa espazio zure gailuaren memorian. Joan %s ezarpenetara, hainbat memoria espazio libratzeko, eta saiatu berriz."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Ez dago nahikoa espazio zure SD txartelean. Joan %s ezarpenetara, hainbat datu ezabatzeko edo lehenetsitako biltegiratze kokapena Gailura aldatzeko."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Ez dago nahikoa espazio zure SD txartelean. Joan %s ezarpenetara, hainbat datu ezabatzeko eta saiatu berriz."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Joan Biltegira."
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Ezin izan da fitxategia ireki"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Ezabatu %d fitxategi?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Ezabatu?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Biltegi lehenetsia beteta"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Zaharragoa"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Ezabatu fitxategia"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Biltegiratzea"
+

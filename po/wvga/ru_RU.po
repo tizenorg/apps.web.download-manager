@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ОТМЕНА"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "Элементы (%d) будут удалены."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Этот элемент будет удален."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Подготовка..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Нет загрузок"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Здесь отображаются загруженные элементы."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Загрузка отменена"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Загрузка завершена"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Сбой загрузки"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Диспетчер загрузки"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "Будет удален 1 элемент."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Активация содержимого DRM..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Уведомление сервера..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "Элементы (%d) будут удалены."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Память"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Нажмите “Загрузить”, чтобы повторить попытку."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Не удается найти этот файл. Нажмите “Загрузка”, чтобы снова загрузить его."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Не удалось найти приложение для открытия этого файла."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Отмена"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Загрузка"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Перейти в “Хранил.”"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "ОК"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Хранилище по умолчанию заполнено"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Старые"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "Выбрано: %d"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Сегодня"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Вчера"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Выбрать все"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Удалить"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "УДАЛИТЬ"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Недостаточно места в памяти устройства. Вставьте карту памяти SD или перейдите в меню %s, чтобы удалить некоторые данные."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Недостаточно места в памяти устройства. Перейдите в меню %s, чтобы освободить место, затем повторите попытку."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Недостаточно места на карте памяти SD. Перейдите в меню %s, чтобы удалить некоторые данные, или измените место хранения по умолчанию на “Устройство”."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Недостаточно места на карте памяти SD. Перейдите в меню %s, чтобы удалить некоторые данные, затем повторите попытку."
+

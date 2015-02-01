@@ -36,10 +36,15 @@ Item::Item()
 	, m_historyId(-1)
 	, m_id(-1)
 	, m_contentType(DM_CONTENT_UNKOWN)
+	, m_fileSize(0)
 	, m_finishedTime(0)
 	, m_downloadType(DL_TYPE::TYPE_NONE)
 #ifdef _ENABLE_OMA_DOWNLOAD
 	, m_notifyIdler(NULL)
+#endif
+#ifdef _ENABLE_WAITING_RO
+	, m_waitingRoTimer(NULL)
+	, m_timerCount(0)
 #endif
 	, m_gotFirstData(false)
 {
@@ -51,10 +56,15 @@ Item::Item(DownloadRequest &rRequest)
 	, m_errorCode(ERROR::NONE)
 	, m_historyId(-1)
 	, m_contentType(DM_CONTENT_UNKOWN)
+	, m_fileSize(0)
 	, m_finishedTime(0)
 	, m_downloadType(DL_TYPE::TYPE_NONE)
 #ifdef _ENABLE_OMA_DOWNLOAD
 	, m_notifyIdler(NULL)
+#endif
+#ifdef _ENABLE_WAITING_RO
+	, m_waitingRoTimer(NULL)
+	, m_timerCount(0)
 #endif
 	, m_gotFirstData(false)
 {
@@ -89,12 +99,12 @@ void Item::create(DownloadRequest &rRequest)
 Item *Item::createHistoryItem()
 {
 	string url = string();
-	string cookie = string();
+	string fileName = string();
 	string reqHeaderField = string();
 	string reqHeaderValue = string();
 	string installDir = string();
-	DownloadRequest request(url, cookie, reqHeaderField, reqHeaderValue,
-			installDir);
+	DownloadRequest request(url, reqHeaderField, reqHeaderValue,
+			installDir, fileName);
 
 	Item *newItem = new Item(request);
 
@@ -107,7 +117,7 @@ void Item::attachHistoryItem()
 {
 	Items &items = Items::getInstance();
 
-	DM_LOGI("attach History Item[%p] state[%d]",this, state());
+	DM_LOGI("attach History Item[%p] state[%d]",this, getState());
 	items.attachItem(this);
 	if (!isFinished()) {
 		DM_LOGI("Change downloading state to fail state");
@@ -129,6 +139,7 @@ void Item::attachHistoryItem()
 void Item::destroy()
 {
 	DM_LOGD("");
+	FileUtility fileObj;
 	// FIXME prohibit to destroy if downloading
 	if (!isFinished()) {
 		DM_LOGE("Cannot delete this item:state[%d]",m_state);
@@ -140,6 +151,7 @@ void Item::destroy()
 		deleteCompleteNoti();
 	}
 
+	fileObj.deleteFile(getTempPath());
 	setState(ITEM::DESTROY);
 	notify();
 
@@ -150,9 +162,19 @@ void Item::destroy()
 		DM_LOGE("NULL Check:download observer");
 
 #ifdef _ENABLE_OMA_DOWNLOAD
-	if (m_notifyIdler)
+	if (m_notifyIdler) {
 		ecore_idler_del(m_notifyIdler);
+		m_notifyIdler = NULL;
+	}
 #endif
+
+#ifdef _ENABLE_WAITING_RO
+	if (m_waitingRoTimer) {
+		ecore_timer_del(m_waitingRoTimer);
+		m_waitingRoTimer = NULL;
+	}
+#endif
+
 	Items::getInstance().detachItem(this);
 }
 
@@ -170,14 +192,14 @@ void Item::download()
 	DownloadHistoryDB::createItemToDB(this);
 
 	m_aptr_downloadItem->start(-1);
-	m_id = id();
+	m_id = getId();
 	DownloadHistoryDB::updateDownloadIdToDB(this);
 }
 
 void Item::downloadFromQueuedState()
 {
 	m_aptr_downloadItem->start(-1);
-	m_id = id();
+	m_id = getId();
 	DownloadHistoryDB::updateDownloadIdToDB(this);
 }
 
@@ -199,7 +221,7 @@ void Item::startUpdate(void)
 {
 	if (m_gotFirstData) {
 		setState(ITEM::DOWNLOADING);
-		if (!registeredFilePath().empty())
+		if (!getRegisteredFilePath().empty())
 			/* need to parse title again, because installed path can be changed */
 			extractTitle();
 		return;
@@ -212,13 +234,14 @@ void Item::startUpdate(void)
 		return;
 	}
 	m_gotFirstData = true;
+	setFileSize(m_aptr_downloadItem->getFileSize());
 //	setState(ITEM::DOWNLOADING);
 	setState(ITEM::RECEIVING_DOWNLOAD_INFO);
 
 	extractTitle();
 	DownloadUtil &util = DownloadUtil::getInstance();
 	m_contentType = util.getContentType(
-		m_aptr_downloadItem->mimeType().c_str(), filePath().c_str());
+		m_aptr_downloadItem->getMimeType().c_str(), getFilePath().c_str());
 	extractIconPath();
 	DownloadHistoryDB::updateDownloadInfoToDB(this);
 }
@@ -227,14 +250,96 @@ void Item::failCaseUpdate(void)
 {
 	FileUtility fileObj;
 	DM_LOGD("");
-	if (m_title.empty() && !contentName().empty())
+	if (m_title.empty() && !getContentName().empty())
 		extractTitle();
 	extractIconPath();
-	if(fileObj.isExistedFile(registeredFilePath(), false)) {
-		DM_SLOGE("File %s is removed", registeredFilePath().c_str());
-		unlink(registeredFilePath().c_str());
+	if (getErrorCode() == ERROR::NOT_ENOUGH_MEMORY) {
+		if(fileObj.deleteFile(getFilePath()))
+			DM_SLOGE("File %s is removed", getFilePath().c_str());
 	}
+	if (fileObj.deleteFile(getRegisteredFilePath()))
+		DM_SLOGE("File %s is removed", getRegisteredFilePath().c_str());
 }
+
+#ifdef _ENABLE_OMA_DOWNLOAD
+#ifdef _ENABLE_WAITING_RO
+void Item::sendInstallNotification(int status)
+{
+	if (m_aptr_downloadItem.get())
+		m_aptr_downloadItem->sendInstallNotification(status);
+	return;
+}
+Eina_Bool Item::waitingRoForOmaCB(void *data)
+{
+	Item *item = (Item*)data;
+	return waitingRo(item, true);
+}
+#endif
+#endif
+
+#ifdef _ENABLE_WAITING_RO
+Eina_Bool Item::waitingRo(Item *item, bool isOmaCase)
+{
+	DownloadDrm &drmObj = DownloadDrm::getInstance();
+
+	if (!item) {
+		DM_LOGE("[CRITICAL]NULL Check:item");
+		return ECORE_CALLBACK_CANCEL;
+	}
+
+	if(drmObj.validRo(item->getRegisteredFilePath().c_str()) ||
+			item->timerCount() >= WAITING_RO_MAX_SECONDS) {
+		DownloadUtil &util = DownloadUtil::getInstance();
+		DM_LOGI("Valid RO or Timeout");
+		if (!util.registerContent(item->getRegisteredFilePath(),
+				item->getThumbnailPath())) {
+			item->setState(ITEM::FAIL_TO_DOWNLOAD);
+			item->setErrorCode(ERROR::FAIL_TO_INSTALL);
+			if (isOmaCase)
+				item->sendInstallNotification(952);
+			item->failCaseUpdate();
+			item->handleFinishedItem();
+		} else {
+			if (isOmaCase) {
+				if (!item->isExistedInstallNotifyUri()) {
+					item->setState(ITEM::FINISH_DOWNLOAD);
+					item->handleFinishedItem();
+				} else {
+					item->setState(ITEM::NOTIFYING);
+					item->sendInstallNotification(900);
+				}
+			} else {
+				item->setState(ITEM::FINISH_DOWNLOAD);
+				item->handleFinishedItem();
+			}
+		}
+		if (isOmaCase && item->isExistedInstallNotifyUri()) {
+			Ecore_Idler *idler = NULL;
+			idler = ecore_idler_add(checkInstallNotifyCB, item);
+			item->setNotifyIdler(idler);
+		} else {
+			item->setNotifyIdler(NULL);
+		}
+		DM_LOGI("Item[%p]::updateAfterCheckRo() notify() state[%d]",
+				item, item->getState());
+		item->notify();
+		item->initTimerCount();
+		return ECORE_CALLBACK_CANCEL;
+	}
+
+	item->increaseTimerCount();
+	DM_LOGI("Check again RO Timer count[%d]", item->timerCount());
+	item->setState(ITEM::WAITING_RO);
+	item->notify();
+	return ECORE_CALLBACK_RENEW;
+}
+
+Eina_Bool Item::waitingRoCB(void *data)
+{
+	Item *item = (Item*)data;
+	return waitingRo(item, false);
+}
+#endif
 
 void Item::updateFromDownloadItem(void)
 {
@@ -246,18 +351,18 @@ void Item::updateFromDownloadItem(void)
 		 * the cancel operation is not operated in download daemon at once due to timing issue
 		 * The canceled state is updated later.
 		 * It is necessary to check queued time for that case.*/
-		if (m_aptr_downloadItem->state() == DL_ITEM::CANCELED) {
+		if (m_aptr_downloadItem->getState() == DL_ITEM::CANCELED) {
 			checkQueuedItem();
 		}
 		DM_LOGI("Already finished. Ignored. dl_state[%d], state[%d]",
-				m_aptr_downloadItem->state(), state());
+				m_aptr_downloadItem->getState(), getState());
 		return;
 	}
 
-	switch (m_aptr_downloadItem->state()) {
+	switch (m_aptr_downloadItem->getState()) {
 	case DL_ITEM::STARTED:
 #ifdef _ENABLE_OMA_DOWNLOAD
-		if (state() == ITEM::REQUEST_USER_CONFIRM)
+		if (getState() == ITEM::REQUEST_USER_CONFIRM)
 			setState(ITEM::REQUESTING);
 #endif
 		DownloadHistoryDB::updateStateToDB(this);
@@ -278,7 +383,7 @@ void Item::updateFromDownloadItem(void)
 		break;
 	case DL_ITEM::FINISHED:
 		setState(ITEM::FINISH_DOWNLOAD);
-		finalPath = util.saveContent(registeredFilePath(), installDir());
+		finalPath = util.saveContent(getRegisteredFilePath(), getInstallDir());
 		if (finalPath.empty()) {
 			setState(ITEM::FAIL_TO_DOWNLOAD);
 			setErrorCode(ERROR::FAIL_TO_INSTALL);
@@ -289,7 +394,15 @@ void Item::updateFromDownloadItem(void)
 		setRegisteredFilePath(finalPath);
 		/* need to parse title again, because installed path can be changed */
 		extractTitle();
-		if (!util.registerContent(registeredFilePath(), thumbnailPath())) {
+#ifdef _ENABLE_WAITING_RO
+		if (getContentType() == DM_CONTENT_SD_DRM) {
+			if (m_waitingRoTimer)
+				ecore_timer_del(m_waitingRoTimer);
+			m_waitingRoTimer = ecore_timer_add(1, waitingRoCB, this);
+			return;
+		}
+#endif
+		if (!util.registerContent(getRegisteredFilePath(), getThumbnailPath())) {
 			setState(ITEM::FAIL_TO_DOWNLOAD);
 			setErrorCode(ERROR::FAIL_TO_INSTALL);
 			failCaseUpdate();
@@ -309,14 +422,14 @@ void Item::updateFromDownloadItem(void)
 		/* Due to async callback,
 		 * the content name and mime are received when the fail event is received */
 		setState(ITEM::FAIL_TO_DOWNLOAD);
-		setErrorCode(m_aptr_downloadItem->errorCode());
+		setErrorCode(m_aptr_downloadItem->getErrorCode());
 		failCaseUpdate();
 		handleFinishedItem();
 		break;
 #ifdef _ENABLE_OMA_DOWNLOAD
 	case DL_ITEM::NOTIFYING:
 		setState(ITEM::NOTIFYING);
-		finalPath = util.saveContent(registeredFilePath(), installDir());
+		finalPath = util.saveContent(getRegisteredFilePath(), getInstallDir());
 		if (finalPath.empty()) {
 			setState(ITEM::FAIL_TO_DOWNLOAD);
 			setErrorCode(ERROR::FAIL_TO_INSTALL);
@@ -327,7 +440,17 @@ void Item::updateFromDownloadItem(void)
 		}
 		setRegisteredFilePath(finalPath);
 		extractTitle();
-		if (!util.registerContent(registeredFilePath(), thumbnailPath())) {
+#ifdef _ENABLE_WAITING_RO
+		if (getContentType() == DM_CONTENT_SD_DRM) {
+			if (m_waitingRoTimer)
+				ecore_timer_del(m_waitingRoTimer);
+			// this is necessary in OMA download case. Because there are two download event.
+			initTimerCount();
+			m_waitingRoTimer = ecore_timer_add(1, waitingRoForOmaCB, this);
+			return;
+		}
+#endif
+		if (!util.registerContent(getRegisteredFilePath(), getThumbnailPath())) {
 			setState(ITEM::FAIL_TO_DOWNLOAD);
 			setErrorCode(ERROR::FAIL_TO_INSTALL);
 			m_aptr_downloadItem->sendInstallNotification(952);
@@ -348,6 +471,7 @@ void Item::updateFromDownloadItem(void)
 //		break;
 	case DL_ITEM::REQUEST_USER_CONFIRM:
 		DM_LOGD("DL_ITEM:REQUEST_USER_CONFIRM");
+		DownloadHistoryDB::updateNotiUrlToHistoryDB(this);
 		setState(ITEM::REQUEST_USER_CONFIRM);
 		break;
 #endif
@@ -359,7 +483,7 @@ void Item::updateFromDownloadItem(void)
 		break;
 	}
 	DM_LOGV("Item[%p]::updateFromDownloadItem() notify() dl_state[%d]state[%d]",
-			this, m_aptr_downloadItem->state(), state());
+			this, m_aptr_downloadItem->getState(), getState());
 	notify();
 }
 
@@ -395,7 +519,10 @@ void Item::handleFinishedItem()
 {
 	//createHistoryId();
 	m_finishedTime = time(NULL);
-	DownloadHistoryDB::updateHistoryToDB(this);
+	if (this->m_state == ITEM::CANCEL)
+		DownloadHistoryDB::updateCanceledItemToDB(this);
+	else
+		DownloadHistoryDB::updateHistoryToDB(this);
 	/* Check QUEUED item and try to satrt downlaod it */
 	checkQueuedItem();
 }
@@ -417,17 +544,16 @@ void Item::extractTitle(void)
 		return;
 	}
 	size_t found = 0;
-	string path;
-	if (!registeredFilePath().empty()) {
-		path = registeredFilePath();
+	string path = getRegisteredFilePath();
+	if (!path.empty()) {
 		found = path.find_last_of("/");
 		if (found != string::npos)
 			m_title = path.substr(found+1);
-	} else if (!contentName().empty()){
-		m_title = contentName();
+	} else if (!getContentName().empty()){
+		m_title = getContentName();
 	}
 	DM_SLOGD("title [%s] contentName [%s]", m_title.c_str(),
-			contentName().c_str());
+			getContentName().c_str());
 }
 
 void Item::extractIconPath()
@@ -470,7 +596,7 @@ void Item::extractIconPath()
 		m_iconPath = DM_DRM_ICON_PATH;
 		break;
 	case DM_CONTENT_FLASH:
-		m_iconPath = DM_FALSH_ICON_PATH;
+		m_iconPath = DM_FLASH_ICON_PATH;
 		break;
 	case DM_CONTENT_TPK:
 		m_iconPath = DM_TPK_ICON_PATH;
@@ -504,18 +630,18 @@ void Item::netEventCBObserver(void *data)
 
 bool Item::isExistedFile()
 {
-	return m_fileObj.isExistedFile(registeredFilePath(), false);
+	return m_fileObj.isExistedFile(getRegisteredFilePath(), false);
 }
 
 bool Item::play()
 {
-	return m_fileObj.openFile(registeredFilePath(), m_contentType);
+	return m_fileObj.openFile(getRegisteredFilePath(), m_contentType);
 }
 
 /* Test code */
 const char *Item::stateStr(void)
 {
-	switch((int)state()) {
+	switch((int)getState()) {
 	case ITEM::IDLE:
 		return "IDLE";
 	case ITEM::REQUESTING:
@@ -530,6 +656,10 @@ const char *Item::stateStr(void)
 		return "REGISTERING_TO_SYSTEM";
 	case ITEM::SUSPENDED:
 		return "SUSPENDED";
+#ifdef _ENABLE_WAITING_RO
+	case ITEM::WAITING_RO:
+		return "WAITING_RO";
+#endif
 	case ITEM::FINISH_DOWNLOAD:
 		return "FINISH_DOWNLOAD";
 	case ITEM::FAIL_TO_DOWNLOAD:
@@ -550,88 +680,88 @@ const char *Item::stateStr(void)
 	return "Unknown State";
 }
 
-DL_TYPE::TYPE Item::downloadType()
+DL_TYPE::TYPE Item::getDownloadType()
 {
 	if (m_downloadType == DL_TYPE::TYPE_NONE) {
 		if (!m_aptr_downloadItem.get()) {
 			DM_LOGE("Fail to get download item");
 			return DL_TYPE::TYPE_NONE;
 		}
-		m_downloadType = m_aptr_downloadItem->downloadType();
+		m_downloadType = m_aptr_downloadItem->getDownloadType();
 	}
 	return m_downloadType;
 }
 
-string &Item::registeredFilePath()
+string &Item::getRegisteredFilePath()
 {
 	if (m_registeredFilePath.empty()) {
 		if (!m_aptr_downloadItem.get()) {
 			DM_LOGE("Fail to get download item");
 			return m_emptyString;
 		}
-		m_registeredFilePath = m_aptr_downloadItem->registeredFilePath();
+		m_registeredFilePath = m_aptr_downloadItem->getRegisteredFilePath();
 	}
 	return m_registeredFilePath;
 }
 
-string Item::url()
+string Item::getUrl()
 {
 	if (m_url.empty()) {
 		if (!m_aptr_downloadItem.get()) {
 			DM_LOGE("Fail to get download item");
 			return m_emptyString;
 		}
-		m_url = m_aptr_downloadItem->url();
+		m_url = m_aptr_downloadItem->getUrl();
 	}
 	return m_url;
 }
 
-string Item::cookie()
-{
-	if (m_cookie.empty()) {
-		if (!m_aptr_downloadItem.get()) {
-			DM_LOGE("Fail to get download item");
-			return m_emptyString;
-		}
-		m_cookie = m_aptr_downloadItem->cookie();
-	}
-	return m_cookie;
-}
-
-string Item::reqHeaderField()
+string Item::getReqHeaderField()
 {
 	if (m_reqHeaderField.empty()) {
 		if (!m_aptr_downloadItem.get()) {
 			DM_LOGE("Fail to get download item");
 			return m_emptyString;
 		}
-		m_reqHeaderField = m_aptr_downloadItem->reqHeaderField();
+		m_reqHeaderField = m_aptr_downloadItem->getReqHeaderField();
 	}
 	return m_reqHeaderField;
 }
 
-string Item::reqHeaderValue()
+string Item::getReqHeaderValue()
 {
 	if (m_reqHeaderValue.empty()) {
 		if (!m_aptr_downloadItem.get()) {
 			DM_LOGE("Fail to get download item");
 			return m_emptyString;
 		}
-		m_reqHeaderValue = m_aptr_downloadItem->reqHeaderValue();
+		m_reqHeaderValue = m_aptr_downloadItem->getReqHeaderValue();
 	}
 	return m_reqHeaderValue;
 }
 
-string Item::installDir()
+string Item::getInstallDir()
 {
 	if (m_installDir.empty()) {
 		if (!m_aptr_downloadItem.get()) {
 			DM_LOGE("Fail to get download item");
 			return m_emptyString;
 		}
-		m_installDir = m_aptr_downloadItem->installDir();
+		m_installDir = m_aptr_downloadItem->getInstallDir();
 	}
 	return m_installDir;
+}
+
+string Item::getFileName()
+{
+	if (m_fileName.empty()) {
+		if (!m_aptr_downloadItem.get()) {
+			DM_LOGE("Fail to get download item");
+			return m_emptyString;
+		}
+		m_fileName = m_aptr_downloadItem->getFileName();
+	}
+	return m_fileName;
 }
 
 void Item::createHistoryId()
@@ -658,19 +788,23 @@ bool Item::isExistedHistoryId(unsigned int id)
 	return items.isExistedHistoryId(id);
 }
 
-void Item::setRetryData(string url, string cookie,
-		string reqHeaderField, string reqHeaderValue, string installDir)
+void Item::setRetryData(string url, string reqHeaderField, string reqHeaderValue,
+		string installDir, string fileName, string tempFilePath, string etag)
 {
 	m_url = url;
-	m_cookie = cookie;
 	m_reqHeaderField = reqHeaderField;
 	m_reqHeaderValue = reqHeaderValue;
 	m_installDir = installDir;
+	m_fileName = fileName;
+	m_tempFilePath = tempFilePath;
+	m_etag = etag;
 	m_aptr_request->setUrl(url);
-	m_aptr_request->setCookie(cookie);
 	m_aptr_request->setReqHeaderField(reqHeaderField);
 	m_aptr_request->setReqHeaderValue(reqHeaderValue);
 	m_aptr_request->setInstallDir(installDir);
+	m_aptr_request->setFileName(fileName);
+	m_aptr_request->setTempFilePath(tempFilePath);
+	m_aptr_request->setEtag(etag);
 	createSubscribeData();
 }
 
@@ -685,7 +819,7 @@ void Item::suspend()
 	if (!isCompletedDownload() && !isPreparingDownload())
 		m_aptr_downloadItem->suspend();
 	else
-		DM_LOGI("Cannot suspend due to invalid state[%d]", state());
+		DM_LOGI("Cannot suspend due to invalid state[%d]", getState());
 }
 
 bool Item::retry()
@@ -698,8 +832,8 @@ bool Item::retry()
 		}
 		notify();
 		/* Donot delete db, just update db. */
-		m_aptr_downloadItem->retry(m_id);
-		setState(ITEM::REQUESTING);
+		if (m_aptr_downloadItem->retry(m_id, m_fileSize))
+			setState(ITEM::REQUESTING);
 		return true;
 	} else {
 		m_state = ITEM::FAIL_TO_DOWNLOAD;
@@ -725,7 +859,7 @@ void Item::handleUserConfirm(bool res)
 {
 	if (res) {
 		m_aptr_downloadItem->start(-1);
-		m_id = id();
+		m_id = getId();
 		DownloadHistoryDB::updateDownloadIdToDB(this);
 	} else {
 		m_state = ITEM::CANCEL;
@@ -799,6 +933,10 @@ bool Item::isCompletedDownload()
 		return true;
 #ifdef _ENABLE_OMA_DOWNLOAD
 	if (m_state == ITEM::NOTIFYING)
+		return true;
+#endif
+#ifdef _ENABLE_WAITING_RO
+	if (m_state == ITEM::WAITING_RO)
 		return true;
 #endif
 	return false;

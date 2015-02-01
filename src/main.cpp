@@ -27,9 +27,12 @@
 
 #include "Ecore.h"
 #include "Ecore_X.h"
-#include "aul.h"
 #include "app.h"
-#include "app_service.h"
+#include "app_control.h"
+#include "efl_assist.h"
+#ifdef _ENABLE_OMA_DOWNLOAD
+#include <oma-parser-interface.h>
+#endif
 
 #include "download-manager-common.h"
 #include "download-manager-view.h"
@@ -50,9 +53,52 @@ struct app_data_t {
 	int load_count;
 };
 
+
+#ifdef _TIZEN_2_3_UX
+static Ea_Theme_Color_Table *colorTable = NULL;
+static Eina_List *fontTable = NULL;
+
+static void __dm_changeable_theme_init(void)
+{
+	DM_LOGD("");
+	Ea_Theme_Style style = ea_theme_style_get();
+	colorTable = ea_theme_color_table_new(DM_COLOR_TABLE_PATH);
+	if (colorTable)
+		ea_theme_colors_set(colorTable, style);
+	else
+		DM_LOGE("[ERR] color table create fail");
+
+	fontTable = ea_theme_font_table_new(DM_FONT_TABLE_PATH);
+	if (fontTable)
+		ea_theme_fonts_set(fontTable);
+	else
+		DM_LOGE("[ERR] font table create fail");
+}
+
+static void __dm_changeable_theme_free(void)
+{
+	DM_LOGD("");
+	if (colorTable) {
+		ea_theme_color_table_free(colorTable);
+		colorTable = NULL;
+	}
+
+	if (fontTable) {
+		ea_theme_font_table_free(fontTable);
+		fontTable = NULL;
+	}
+}
+
+#endif
+
 static void __lang_changed_cb(void *data)
 {
 	DM_LOGI("==Language changed notification==");
+	char *lang_set = vconf_get_str(VCONFKEY_LANGSET);
+	if (lang_set) {
+		elm_language_set(lang_set);
+		free(lang_set);
+	}
 	DownloadView &view = DownloadView::getInstance();
 	view.updateLang();
 	return;
@@ -99,7 +145,13 @@ static bool __app_create(void *data)
 		DM_LOGE("Fail to create main window");
 		return false;
 	}
-
+	ea_theme_changeable_ui_enabled_set(EINA_TRUE);
+#ifdef _TIZEN_2_3_UX
+	__dm_changeable_theme_init();
+#endif
+#ifdef _ENABLE_OMA_DOWNLOAD
+	op_parser_init();
+#endif
 	/* Make genlist items of history for UI performance */
 	view.update();
 
@@ -127,12 +179,16 @@ static void __app_terminate(void *data)
 	struct app_data_t *app_data = (struct app_data_t *)data;
 	DownloadView &view = DownloadView::getInstance();
 	view.destroy();
+#ifdef _TIZEN_2_3_UX
+	__dm_changeable_theme_free();
+#endif
+#ifdef _ENABLE_OMA_DOWNLOAD
+	op_parser_deinit();
+#endif
 	if (app_data && app_data->idler)
 		ecore_idler_del(app_data->idler);
-	if (app_data) {
-		free(app_data);
-		app_data = NULL;
-	}
+	DownloadHistoryDB::closeDBConn();
+	DM_LOGD("[Info] DB Connection closed");
 	return;
 }
 
@@ -153,13 +209,13 @@ static void __app_resume(void *data)
 	return;
 }
 
-static void __app_service(service_h s, void *data)
+static void __app_control(app_control_h s, void *data)
 {
-	string s_url = std::string();
-	string s_cookie = std::string();
-	string s_req_header_field = std::string();
-	string s_req_header_value = std::string();
-	string s_install_dir = std::string();
+	string reqUrl = std::string();
+	string reqHeaderField = std::string();
+	string reqHeaderValue = std::string();
+	string reqInstallDir = std::string();
+	string reqFileName = std::string();
 	char *url = NULL;
 	char *mode = NULL;
 	char *app_op = NULL;
@@ -167,6 +223,8 @@ static void __app_service(service_h s, void *data)
 	char *req_header_field = NULL;
 	char *req_header_value = NULL;
 	char *default_storage = NULL;
+	char *file_name = NULL;
+	char *network_bonding = NULL;
 	DownloadView &view = DownloadView::getInstance();
 	int ret = 0;
 
@@ -174,56 +232,65 @@ static void __app_service(service_h s, void *data)
 
 	/* The default view mode is normal*/
 	view.setSilentMode(true);
-	if (service_get_operation(s, &app_op) < 0) {
-		DM_LOGE("Fail to get service operation");
+	if (app_control_get_operation(s, &app_op) < 0) {
+		DM_LOGE("Fail to get app control operation");
 		return;
 	}
 	DM_SLOGI("operation[%s]", app_op);
 	free(app_op);
 
-	if (service_get_uri(s, &url) < 0) {
+	if (app_control_get_uri(s, &url) < 0) {
 		DM_LOGE("Invalid URL");
 	} else {
 		DM_SLOGI("url[%s]",url);
 		if (url)
-			s_url = url;
+			reqUrl = url;
 		free(url);
 	}
 
-	ret = service_get_extra_data(s, KEY_DEFAULT_STORAGE, &default_storage);
-	if (ret == SERVICE_ERROR_NONE) {
+	ret = app_control_get_extra_data(s, KEY_DEFAULT_STORAGE, &default_storage);
+	if (ret == APP_CONTROL_ERROR_NONE) {
 		if (default_storage) {
 			string defaultStorage = string(default_storage);
-			if (defaultStorage.compare("0") == 0)
-				s_install_dir.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
-			else if (defaultStorage.compare("1") == 0)
-				s_install_dir.assign(DM_DEFAULT_MMC_INSTALL_DIR);
+			if (defaultStorage.compare("1") == 0)
+				reqInstallDir.assign(DM_DEFAULT_MMC_INSTALL_DIR);
 			else
-				s_install_dir.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
-			DM_SLOGI("install dir[%s]",s_install_dir.c_str());
+				reqInstallDir.assign(DM_DEFAULT_PHONE_INSTALL_DIR);
+			DM_SLOGI("install dir[%s]",reqInstallDir.c_str());
 		}
 		free(default_storage);
 	} else {
 		DM_LOGI("Fail to get extra data default storage[%d]", ret);
 	}
 
-	ret = service_get_extra_data(s, KEY_REQ_HTTP_HEADER_FIELD, &req_header_field);
-	if (ret == SERVICE_ERROR_NONE) {
+	ret = app_control_get_extra_data(s, KEY_FILE_NAME, &file_name);
+	if (ret == APP_CONTROL_ERROR_NONE) {
+		if (file_name) {
+			reqFileName.assign(file_name);
+			DM_SLOGI("User preferred file name[%s]",reqFileName.c_str());
+		}
+		free(file_name);
+	} else {
+		DM_LOGI("Fail to get extra data file name[%d]", ret);
+	}
+
+	ret = app_control_get_extra_data(s, KEY_REQ_HTTP_HEADER_FIELD, &req_header_field);
+	if (ret == APP_CONTROL_ERROR_NONE) {
 		DM_SLOGI("request header filed[%s]",req_header_field);
 		if (req_header_field)
-			s_req_header_field = req_header_field;
+			reqHeaderField = req_header_field;
 		free(req_header_field);
-		ret = service_get_extra_data(s, KEY_REQ_HTTP_HEADER_VALUE, &req_header_value);
-		if (ret == SERVICE_ERROR_NONE) {
+		ret = app_control_get_extra_data(s, KEY_REQ_HTTP_HEADER_VALUE, &req_header_value);
+		if (ret == APP_CONTROL_ERROR_NONE) {
 			DM_SLOGI("request header value[%s]",req_header_value);
 			if (req_header_value)
-				s_req_header_value = req_header_value;
+				reqHeaderValue = req_header_value;
 			free(req_header_value);
 		}
 	}
 
-	ret = service_get_extra_data(s, KEY_MODE, &mode);
-	if (ret == SERVICE_ERROR_NONE) {
+	ret = app_control_get_extra_data(s, KEY_MODE, &mode);
+	if (ret == APP_CONTROL_ERROR_NONE) {
 		DM_SLOGI("mode[%s]",mode);
 		if (0 == strncmp(mode, KEY_MODE_VALUE_VIEW,
 				strlen(KEY_MODE_VALUE_VIEW))) {
@@ -248,14 +315,37 @@ static void __app_service(service_h s, void *data)
 		DM_LOGI("Fail to get extra data mode[%d]", ret);
 	}
 
-	ret = service_get_extra_data(s, KEY_FAILED_HISTORYID, &historyid_str);
-	if (ret == SERVICE_ERROR_NONE) {
+	ret = app_control_get_extra_data(s, KEY_DOWNLOADING_HISTORYID, &historyid_str);
+	if (ret == APP_CONTROL_ERROR_NONE) {
+		view.setSilentMode(false);
+		view.activateWindow();
+		if (historyid_str) {
+			errno = 0;
+			char *end_ptr = historyid_str;
+			unsigned int id = (int) strtol(historyid_str, &end_ptr, 0);
+			if (ERANGE == errno) {
+				DM_LOGE("HistoryId String conversion failed");
+				return;
+			}
+			DM_LOGI("History Id from downloading noti[%s]", historyid_str);
+			view.clickedItemFromNoti(id, NOTIFICATION_TYPE::NOTI_DOWNLOADING);
+		} else {
+			DM_LOGE("Invalid history Id string");
+		}
+		free(historyid_str);
+		return;
+	} else {
+		DM_LOGI("Fail to get extra data downloading history ID[%d]", ret);
+	}
+
+	ret = app_control_get_extra_data(s, KEY_FAILED_HISTORYID, &historyid_str);
+	if (ret == APP_CONTROL_ERROR_NONE) {
 		view.setSilentMode(false);
 		view.activateWindow();
 		if (historyid_str) {
 			unsigned int id = atoi(historyid_str);
 			DM_LOGI("History Id from Failed noti[%s]", historyid_str);
-			view.clickedItemFromNoti(id);
+			view.clickedItemFromNoti(id, NOTIFICATION_TYPE::NOTI_FAILED);
 		} else {
 			DM_LOGE("Invalid history Id string");
 		}
@@ -265,16 +355,15 @@ static void __app_service(service_h s, void *data)
 		DM_LOGI("Fail to get extra data failed history ID[%d]", ret);
 	}
 
-	if (s_url.empty()) {
+	if (reqUrl.empty()) {
 		view.setSilentMode(false);
 		view.activateWindow();
 		return;
 	}
-	DownloadRequest request(s_url, s_cookie,
-			s_req_header_field, s_req_header_value, s_install_dir);
+	DownloadRequest request(reqUrl, reqHeaderField, reqHeaderValue,
+			reqInstallDir, reqFileName);
 	Item::create(request);
 	view.activateWindow();
-
 	return;
 }
 
@@ -289,12 +378,14 @@ EXPORT_API int main(int argc, char *argv[])
 		DM_LOGE("Fail to call calloc");
 		return ret;
 	}
+	if (DownloadHistoryDB::openDBConn() == true)
+		DM_LOGD("[Info] DB Connection opened");
 
 	evt_cb.create = __app_create;
 	evt_cb.terminate = __app_terminate;
 	evt_cb.pause = __app_pause;
 	evt_cb.resume = __app_resume;
-	evt_cb.service = __app_service;
+	evt_cb.app_control = __app_control;
 	evt_cb.low_memory = __low_memory_cb;
 	evt_cb.low_battery = NULL;
 	evt_cb.device_orientation = NULL;

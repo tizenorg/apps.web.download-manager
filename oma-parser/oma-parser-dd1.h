@@ -22,7 +22,7 @@
 #ifndef OMA_PARSER_DD1_H_
 #define OMA_PARSER_DD1_H_
 
-#include <expat.h>
+#include <libxml/parser.h>
 
 #include "oma-parser-common.h"
 
@@ -90,12 +90,13 @@ struct _dd1_Element_Info_table {
 	int element_inst_cnt;
 };
 
-int op_parse_dd1_file(XML_Parser parser, dd_oma1_t **dd);
+int op_parse_dd1_file(xmlSAXHandler *sHandlerPtr, op_parser_app_data_t **app_data);
 void op_free_dd1_info(dd_oma1_t *dd);
-int op_check_dd1_mandatory_tags(XML_Parser parser);
-void op_expat_startelement_dd1(void *userData, const XML_Char *name,
-                const XML_Char **atts);
-void op_expat_endelement_dd1(void *userData, const XML_Char *name);
-void op_expat_character_dd1(void *userData, const XML_Char *s, int len);
+int op_check_dd1_mandatory_tags(op_parser_app_data_t *app_data);
+
+void op_libxml_start_element_dd1(void *userData, const xmlChar *name,
+		const xmlChar **atts);
+void op_libxml_end_element_dd1(void *userData, const xmlChar *name);
+void op_libxml_characters_dd1(void *userData, const xmlChar *s, int len);
 
 #endif /* OMA_PARSER_DD1_H_ */

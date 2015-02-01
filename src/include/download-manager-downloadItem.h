@@ -62,9 +62,6 @@ public:
 	OmaItem(void);
 	OmaItem(dd_oma1_t *dd_info);
 	~OmaItem(void);
-	void sendInstallNotify(void);
-	void goNextUrl(void);
-	void getIconFromUri(void);
 	string getUserMessage(void);
 	string getObjectUri(void) { return objectUri; }
 	string getName(void) { return name; }
@@ -112,47 +109,67 @@ public:
 	DownloadItem(auto_ptr<DownloadRequest> request);
 	~DownloadItem();
 
-	void start(int id);
+	bool start(int id);
 	void cancel(void);
 #ifdef _ENABLE_OMA_DOWNLOAD
 	bool isNeededTocheckMimeTypeFromDD(const char *mimeType);
 	void cancelWithcontentTypeErr(void);
 #endif
-	void retry(int id);
+	bool retry(int id, unsigned long long fileSize);
 	void suspend(void);
 	void resume(void);
 	int createId(int id);
 	void destroyId(void);
 
-	inline int downloadId(void) { return m_download_id;}
+	inline int getDownloadId(void) { return m_download_id;}
 	inline void setDownloadId(int id) { m_download_id = id; }
 
-	inline unsigned long long receivedFileSize(void) { return m_receivedFileSize; }
+	inline unsigned long long getReceivedFileSize(void) { return m_receivedFileSize; }
 	inline void setReceivedFileSize(unsigned long long size) { m_receivedFileSize = size; }
 
-	inline unsigned long long fileSize(void) { return m_fileSize; }
+	inline unsigned long long getFileSize(void) { return m_fileSize; }
 	inline void setFileSize(unsigned long long size) { m_fileSize = size; }
 
-	inline string &filePath(void) { return m_filePath; }
-	inline void setFilePath(const char *path) { if (path) m_filePath = path; }
-	inline void setFilePath(string &path) { m_filePath = path; }
+	inline string &getFilePath(void) { return m_filePath; }
+	inline void setFilePath(const char *path) {
+		if (path) {
+			m_filePath = path;
+			m_aptr_request->setTempFilePath(path);
+		}
+	}
+	inline void setFilePath(string &path) {
+		m_filePath = path;
+		m_aptr_request->setTempFilePath(path);
+	}
 
-	inline string &contentName(void) { return m_contentName; }
+	inline string &getContentName(void) { return m_contentName; }
 	inline void setContentName(string &name) { m_contentName = name; }
 
-	inline string &registeredFilePath(void) { return m_registeredFilePath; }
+	inline string &getRegisteredFilePath(void) { return m_registeredFilePath; }
 	inline void setRegisteredFilePath(string &path) { m_registeredFilePath = path; }
 
-	inline string &mimeType(void) { return m_mimeType; }
+	inline string &getMimeType(void) { return m_mimeType; }
 	inline void setMimeType(const char *mime) { m_mimeType = mime; }
 	inline void setMimeType(string &mime) { m_mimeType = mime; }
 
-	inline DL_ITEM::STATE state(void) { return m_state; }
+	inline string &getEtag(void) { return m_etag; }
+	inline void setEtag(const char *etag)
+	{
+		m_etag = etag;
+		m_aptr_request->setEtag(etag);
+	}
+	inline void setEtag(string &etag)
+	{
+		m_etag = etag;
+		m_aptr_request->setEtag(etag);
+	}
+
+	inline DL_ITEM::STATE getState(void) { return m_state; }
 	inline void setState(DL_ITEM::STATE state) { m_state = state; }
 
-	inline ERROR::CODE errorCode(void) { return m_errorCode; }
+	inline ERROR::CODE getErrorCode(void) { return m_errorCode; }
 	inline void setErrorCode(ERROR::CODE err) { m_errorCode = err;	}
-	inline DL_TYPE::TYPE downloadType(void) { return m_downloadType; }
+	inline DL_TYPE::TYPE getDownloadType(void) { return m_downloadType; }
 	inline void setDownloadType(DL_TYPE::TYPE t) { m_downloadType = t;}
 
 	inline void notify(void) { m_subject.notify(); }
@@ -200,12 +217,12 @@ public:
 	bool isNotifyFiinished(void);
 	bool isOMAMime(void);
 #endif
-	inline string url(void) { return m_aptr_request->getUrl(); }
-	inline string cookie(void) { return m_aptr_request->getCookie(); }
-	inline string reqHeaderField(void) { return m_aptr_request->getReqHeaderField(); }
-	inline string reqHeaderValue(void) { return m_aptr_request->getReqHeaderValue(); }
-	inline string installDir(void) { return m_aptr_request->getInstallDir(); }
-	inline string sender(void) { return m_aptr_request->getSender(); }
+	inline string getUrl(void) { return m_aptr_request->getUrl(); }
+	inline string getReqHeaderField(void) { return m_aptr_request->getReqHeaderField(); }
+	inline string getReqHeaderValue(void) { return m_aptr_request->getReqHeaderValue(); }
+	inline string getInstallDir(void) { return m_aptr_request->getInstallDir(); }
+	inline string getFileName(void) { return m_aptr_request->getFileName(); }
+	inline string getSender(void) { return m_aptr_request->getSender(); }
 
 	ERROR::CODE _convert_error(int err);
 
@@ -232,6 +249,8 @@ private:
 	string m_contentName;
 	string m_registeredFilePath;
 	string m_mimeType;
+	string m_etag;
+	string m_tempPath;
 	DL_TYPE::TYPE m_downloadType;
 };
 

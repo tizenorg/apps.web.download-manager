@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Δεν έγινε λήψη του αρχείου. Επανάληψη λήψης;"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Το αρχείο δεν υπάρχει. Επανάληψη λήψης;"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Δεν υπάρχουν λήψεις"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Δεν υπάρχει αρκετή μνήμη. Διαγράψτε ορισμένα στοιχεία"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Η λήψη ολοκληρώθηκε"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Ειδοποίηση διακομιστή..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Διαχείριση λήψεων"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Επιλογή στοιχείων"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Τα στοιχεία θα εμφανιστούν εδώ, με τα τη λήψη τους."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Η λήψη ακυρώθηκε"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Αποτυχία λήψης"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Προετοιμασία για λήψη..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Προετοιμασία για λήψη..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Ο χώρος αποθήκευσης της συσκευής σας δεν επαρκεί. Μεταβείτε στις ρυθμίσεις %s για να διαγράψετε ορισμένα δεδομένα ή τοποθετήστε μια κάρτα SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Ο χώρος αποθήκευσης της συσκευής σας δεν επαρκεί. Μεταβείτε στις ρυθμίσεις %s για να ελευθερώσετε λίγο χώρο και, στη συνέχεια, δοκιμάστε ξανά."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Ο χώρος αποθήκευσης της κάρτας SD δεν επαρκεί. Μεταβείτε στις ρυθμίσεις %s, για να διαγράψετε ορισμένα δεδομένα ή αλλάξτε την προεπιλεγμένη θέση αποθήκευσης σε «Συσκευή»."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Ο χώρος αποθήκευσης της κάρτας SD δεν επαρκεί. Μεταβείτε στις ρυθμίσεις %s, για να διαγράψετε ορισμένα δεδομένα και, στη συνέχεια, δοκιμάστε ξανά."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Μτβ σε Χώρο αποθήκ."
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Αδύνατο το άνοιγμα αρχείου"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Να διαγραφούν %d αρχεία;"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Διαγραφή;"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Ο προεπιλεγμένος χώρος αποθήκευσης είναι πλήρης"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Παλαιότερα"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Διαγραφή αρχείου"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Αποθήκευση"
+

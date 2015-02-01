@@ -42,9 +42,9 @@ bool Items::isExistedHistoryId(unsigned int id)
 {
 	vector <Item *>::iterator it;
 	for (it = m_items.begin(); it != m_items.end(); ++it) {
-		if ((*it)->historyId() == id ) {
+		if ((*it)->getHistoryId() == id ) {
 			DM_SLOGD("historyId[%ld],title[%s]",
-				(*it)->historyId(), (*it)->title().c_str());
+				(*it)->getHistoryId(), (*it)->getTitle().c_str());
 			return true;
 		}
 	}
@@ -56,7 +56,7 @@ int Items::checkQueuedItem()
 	int count = 0;
 	vector <Item *>::iterator it;
 	for (it = m_items.begin(); it != m_items.end(); ++it) {
-		if ((*it)->state() == ITEM::QUEUED ) {
+		if ((*it)->getState() == ITEM::QUEUED ) {
 			(*it)->downloadFromQueuedState();
 			count++;
 		}

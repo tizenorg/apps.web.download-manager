@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ATŠAUKTI"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "Bus ištrinta elementų: %d."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Šis elementas bus ištrintas."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Ruošiama..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Nėra atsisiuntimų"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Atsisiuntus elementų, jie bus rodomi čia."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Atsisiuntimas atšauktas"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Atsisiuntimas baigtas"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Atsisiųsti nepavyko"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Atsisiuntimų tvarkyt."
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 elementas bus ištrintas."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Aktyvinamas DRM turinys..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Pranešama serveriui..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "Bus ištrinta elementų: %d."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Saugykla"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Bakstelėkite „Atsisiųsti“ ir bandykite dar kartą."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Šio failo nepavyko rasti. Jei norite jį pabandyti atsisiųsti dar kartą, bakstelėkite „Atsisiųsti“."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Nepavyksta rasti programos, kuria būtų galima atidaryti šį failą."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Atšaukti"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Atsisiųsti"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Eikite į saugyklą"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "Gerai"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Numatytoji saugykla pilna"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Senesni"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "Pasirinkta: %d"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Šiandien"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Vakar"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Rinktis viską"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Trinti"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "IŠTRINTI"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Įrenginio saugykloje nepakanka vietos. Eikite į %s nustatymus ir ištrinkite kai kuriuos duomenis arba įdėkite SD kortelę."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Įrenginio saugykloje nepakanka vietos. Eikite į %s nustatymus ir atlaisvinkite šiek tiek vietos, tada bandykite dar kartą."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Jūsų SD kortelėje nepakanka vietos. Eikite į %s nustatymus ir ištrinkite kai kuriuos duomenis arba pakeiskite numatytąją saugyklos vietą į įrenginį."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Jūsų SD kortelėje nepakanka vietos. Eikite į %s nustatymus ir ištrinkite kai kuriuos duomenis, tada bandykite dar kartą."
+

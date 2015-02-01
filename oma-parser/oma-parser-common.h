@@ -50,6 +50,8 @@
 #define OP_ERR_USER_RESPONSE_WAITING_TIME_OUT -230
 #define OP_ERR_INVALID_ATTRIBUTE    -240
 
+#define OP_INVALID_PATH_STRING ";\\\":*?<>|()"
+
 #ifdef DEBUG_USING_DLOG
 #include "dlog.h"
 #ifdef LOG_TAG

@@ -140,6 +140,8 @@ public:
 	~CbData() {}
 
 	void updateDownloadItem();
+	int updateStartedItem();
+	void updateCompletedItem();
 
 	inline void setType(DA_CB::TYPE type) { m_type = type; }
 	inline void setUserData(void *userData) { m_userData = userData; }
@@ -188,6 +190,232 @@ void DownloadEngine::deinitEngine(void)
 	}
 }
 
+int CbData::updateStartedItem()
+{
+	unsigned long long contentSize = 0;
+	char *contentName = NULL;
+	char *mimeType = NULL;
+	char *tempPath = NULL;
+	char *etag = NULL;
+	string name;
+	int ret = 0;
+	DownloadItem *downloadItem = static_cast<DownloadItem*>(m_userData);
+
+	downloadItem->setState(DL_ITEM::STARTED);
+	ret = download_get_content_size(m_download_id, &contentSize);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		DM_LOGE("Fail to get content size:id[%d] err[%s]",
+			m_download_id, __convertErrToString(ret));
+		downloadItem->setState(DL_ITEM::FAILED);
+		downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
+		download_cancel(m_download_id);
+		return -1;
+	}
+	DM_SLOGI("content size[%llu]", contentSize);
+	/* In case of second download of OMA download, the size form server may be not set
+	 * At that case, the size from dd file should not changed.*/
+	if (contentSize > 0)
+		downloadItem->setFileSize((unsigned long long)contentSize);
+	ret = download_get_content_name(m_download_id, &contentName);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		if (ret == DOWNLOAD_ERROR_NO_DATA) {
+			DM_LOGI("No content name. Set default name.");
+			name = string(DM_BODY_TEXT_NO_NAME);
+		} else {
+			DM_LOGE("Fail to get content name:id[%d] err[%s]",
+				m_download_id, __convertErrToString(ret));
+			downloadItem->setState(DL_ITEM::FAILED);
+			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
+			download_cancel(m_download_id);
+			free(contentName);
+			return -1;
+		}
+	}
+	if (contentName)
+		name = string(contentName);
+	DM_SLOGI("content name[%s]", contentName);
+	downloadItem->setContentName(name);
+	free(contentName);
+	ret = download_get_mime_type(m_download_id, &mimeType);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		if (ret == DOWNLOAD_ERROR_NO_DATA) {
+			DM_LOGI("Allow empty content type");
+		} else {
+			DM_LOGE("Fail to get mime type:id[%d] err[%s]",
+				m_download_id, __convertErrToString(ret));
+			downloadItem->setState(DL_ITEM::FAILED);
+			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
+			download_cancel(m_download_id);
+			free(mimeType);
+		}
+		return -1;
+	}
+	if (mimeType) {
+		string mime = string(mimeType);
+		DM_SLOGI("mime type[%s]", mimeType);
+		downloadItem->setMimeType(mime);
+#ifdef _ENABLE_OMA_DOWNLOAD
+		if (downloadItem->isOMADownloadCase()) {
+			DM_SLOGI("mime type from dd[%s]",
+					downloadItem->getMimeFromOmaItem().c_str());
+			if (downloadItem->isNeededTocheckMimeTypeFromDD(mimeType)) {
+				if (downloadItem->getMimeFromOmaItem().compare(mimeType))
+					downloadItem->cancelWithcontentTypeErr();
+			}
+		}
+#endif
+		free(mimeType);
+	}
+	ret = download_get_temp_path(m_download_id, &tempPath);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		DM_LOGE("Fail to get temp path:id[%d] err[%s]",
+			m_download_id, __convertErrToString(ret));
+		downloadItem->setState(DL_ITEM::FAILED);
+		downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
+		download_cancel(m_download_id);
+		free(tempPath);
+		return -1;
+	}
+	if (tempPath) {
+		DM_SLOGI("temp path[%s]", tempPath);
+		downloadItem->setFilePath(tempPath);
+		free(tempPath);
+	}
+	ret = download_get_etag(m_download_id, &etag);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		DM_LOGE("Fail to get etag :id[%d] err[%s]",
+			m_download_id, __convertErrToString(ret));
+	}
+	if (etag) {
+		DM_LOGD("etag[%s]", etag);
+		downloadItem->setEtag(etag);
+		free(etag);
+	}
+#ifdef _ENABLE_OMA_DOWNLOAD
+			if (downloadItem->isOMAMime())
+				return -2;
+#endif
+	return 0;
+}
+
+void CbData::updateCompletedItem()
+{
+	int status = 0;
+	char *savedPath = NULL;
+	int ret = 0;
+	DownloadItem *downloadItem = static_cast<DownloadItem*>(m_userData);
+
+	downloadItem->setState(DL_ITEM::FINISHED);
+	ret = download_get_downloaded_file_path(m_download_id, &savedPath);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		DM_LOGE("Fail to get downloaded file path:id[%d] err[%s]",
+			m_download_id, __convertErrToString(ret));
+		downloadItem->setState(DL_ITEM::FAILED);
+		downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
+		if (savedPath)
+			free(savedPath);
+		return;
+	}
+	ret = download_get_http_status(m_download_id, &status);
+	if (ret != DOWNLOAD_ERROR_NONE) {
+		DM_LOGE("Fail to get downloaded status:id[%d] err[%s]",
+			m_download_id, __convertErrToString(ret));
+		downloadItem->setState(DL_ITEM::FAILED);
+		downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
+		if (savedPath)
+			free(savedPath);
+		return;
+	}
+	DM_SLOGI("http status code [%d]", status);
+	if (savedPath) {
+		string path = string(savedPath);
+		DM_SLOGI("saved path[%s]", savedPath);
+		downloadItem->setRegisteredFilePath(path);
+		free(savedPath);
+	}
+#ifdef _ENABLE_OMA_DOWNLOAD
+	if (downloadItem->isOMAMime()) {
+		int ret = 0;
+		int err = 0;
+		dd_oma1_t *dd_info = NULL;
+		FileUtility fileObj;
+		string  registeredFilePath = downloadItem->getRegisteredFilePath();
+		ret = op_parse_dd_file(registeredFilePath.c_str(),
+				(void **)&dd_info, &err);
+		if (ret != OP_TRUE || dd_info == NULL) {
+			downloadItem->setState(DL_ITEM::FAILED);
+			downloadItem->setErrorCode(ERROR::PARSING_FAIL);
+			DM_LOGE("Fail to parsing dd:err[%d]", err);
+			if (dd_info) {
+				/* When parsing dd is failed, if the install notify url is existed,
+				 *	it shoud send the result to the server*/
+				if (dd_info->install_notify_uri) {
+					auto_ptr<OmaItem> omaItem;
+					omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
+					downloadItem->setOmaItem(omaItem);
+					downloadItem->sendInstallNotification(906);
+				}
+				op_free_dd_info(dd_info);
+			}
+			if (fileObj.deleteFile(registeredFilePath))
+				DM_LOGD("The dd file deleted successfully.");
+			downloadItem->destroyId();
+		}
+		else if (!fileObj.checkAvailableMemory(dd_info->size)) {
+			downloadItem->setState(DL_ITEM::FAILED);
+			downloadItem->setErrorCode(ERROR::NOT_ENOUGH_MEMORY);
+			if (dd_info->install_notify_uri) {
+				auto_ptr<OmaItem> omaItem;
+				omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
+				downloadItem->setOmaItem(omaItem);
+				downloadItem->sendInstallNotification(901);
+			}
+			op_free_dd_info(dd_info);
+			if (fileObj.deleteFile(registeredFilePath))
+				DM_LOGD("The dd file deleted successfully.");
+			downloadItem->destroyId();
+		} else {
+			if (dd_info->major_version > 1) {
+				downloadItem->setState(DL_ITEM::FAILED);
+				downloadItem->setErrorCode(ERROR::PARSING_FAIL);
+				if (dd_info->install_notify_uri) {
+					auto_ptr<OmaItem> omaItem;
+					omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
+					downloadItem->setOmaItem(omaItem);
+					downloadItem->sendInstallNotification(951);
+				}
+				op_free_dd_info(dd_info);
+				return;
+			}
+			downloadItem->setState(DL_ITEM::REQUEST_USER_CONFIRM);
+			if (strlen(dd_info->type) > 0)
+				downloadItem->setMimeType(dd_info->type);
+			if (strlen(dd_info->name) > 0) {
+				string name = string(dd_info->name);
+				downloadItem->setContentName(name);
+			}
+			downloadItem->setFileSize(dd_info->size);
+			auto_ptr<OmaItem> omaItem;
+			omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
+			downloadItem->setOmaItem(omaItem);
+			/* for extracting title */
+			downloadItem->setReceivedFileSize(0);
+			if (unlink(registeredFilePath.c_str()) < 0)
+				DM_LOGE("Fail to unlink the dd file:err[%s]",
+						strerror(errno));
+			string emptyStr = string();
+			downloadItem->setRegisteredFilePath(emptyStr);
+			op_free_dd_info(dd_info);
+		}
+	} else {
+		if (downloadItem->isOMADownloadCase()) {
+			downloadItem->setState(DL_ITEM::NOTIFYING);
+		}
+	}
+#endif
+	downloadItem->destroyId();
+}
+
 void CbData::updateDownloadItem()
 {
 	int ret = 0;
@@ -198,8 +426,15 @@ void CbData::updateDownloadItem()
 	}
 
 	DownloadItem *downloadItem = static_cast<DownloadItem*>(m_userData);
-	if (downloadItem->state() == DL_ITEM::FAILED) {
+	if (downloadItem->getState() == DL_ITEM::FAILED) {
 		DM_LOGE("Fail to get download item");
+#ifdef _ENABLE_OMA_DOWNLOAD
+               if (downloadItem->isOMADownloadCase()) {
+			FileUtility fileObj;
+			if (!fileObj.deleteFile(downloadItem->getFilePath()))
+				DM_SLOGE("Failed to remove[%s]", downloadItem->getFilePath().c_str());
+		}
+#endif
 		return;
 	}
 	downloadItem->setDownloadId(m_download_id);
@@ -207,98 +442,12 @@ void CbData::updateDownloadItem()
 	switch(m_type) {
 	case DA_CB::STARTED:
 	{
-		downloadItem->setState(DL_ITEM::STARTED);
-		unsigned long long contentSize = 0;
-		char *contentName = NULL;
-		char *mimeType = NULL;
-		char *tempPath = NULL;
-		string name;
-		ret = download_get_content_size(m_download_id, &contentSize);
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			DM_LOGE("Fail to get content size:id[%d] err[%s]",
-				m_download_id, __convertErrToString(ret));
-			downloadItem->setState(DL_ITEM::FAILED);
-			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
-			download_cancel(m_download_id);
-			break;
-		}
-		DM_SLOGI("content size[%llu]", contentSize);
-		/* In case of second download of OMA download, the size form server may be not set
-		 * At that case, the size from dd file should not changed.*/
-		if (contentSize > 0)
-			downloadItem->setFileSize((unsigned long long)contentSize);
-		ret = download_get_content_name(m_download_id, &contentName);
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			if (ret == DOWNLOAD_ERROR_NO_DATA) {
-				DM_LOGI("No content name. Set default name.");
-				name = string(S_("IDS_COM_BODY_NO_NAME"));
-			} else {
-				DM_LOGE("Fail to get content name:id[%d] err[%s]",
-					m_download_id, __convertErrToString(ret));
-				downloadItem->setState(DL_ITEM::FAILED);
-				downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
-				download_cancel(m_download_id);
-				free(contentName);
-				break;
-			}
-		}
-		if (contentName)
-			name = string(contentName);
-		DM_SLOGI("content name[%s]", contentName);
-		downloadItem->setContentName(name);
-		free(contentName);
-		ret = download_get_mime_type(m_download_id, &mimeType);
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			if (ret == DOWNLOAD_ERROR_NO_DATA) {
-				DM_LOGI("Allow empty content type");
-			} else {
-				DM_LOGE("Fail to get mime type:id[%d] err[%s]",
-					m_download_id, __convertErrToString(ret));
-				downloadItem->setState(DL_ITEM::FAILED);
-				downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
-				download_cancel(m_download_id);
-				free(mimeType);
-			}
-			break;
-		}
-		if (mimeType) {
-			string mime = string(mimeType);
-			DM_SLOGI("mime type[%s]", mimeType);
-			downloadItem->setMimeType(mime);
-#ifdef _ENABLE_OMA_DOWNLOAD
-			if (downloadItem->isOMADownloadCase()) {
-				DM_SLOGI("mime type from dd[%s]",
-						downloadItem->getMimeFromOmaItem().c_str());
-				if (downloadItem->isNeededTocheckMimeTypeFromDD(mimeType)) {
-					if (downloadItem->getMimeFromOmaItem().compare(mimeType))
-						downloadItem->cancelWithcontentTypeErr();
-				}
-			}
-#endif
-			free(mimeType);
-		}
-		ret = download_get_temp_path(m_download_id, &tempPath);
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			DM_LOGE("Fail to get temp path:id[%d] err[%s]",
-				m_download_id, __convertErrToString(ret));
-			downloadItem->setState(DL_ITEM::FAILED);
-			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
-			download_cancel(m_download_id);
-			free(tempPath);
-			break;
-		}
-		if (tempPath) {
-			DM_SLOGI("temp path[%s]", tempPath);
-			downloadItem->setFilePath(tempPath);
-			free(tempPath);
-		}
-#ifdef _ENABLE_OMA_DOWNLOAD
-		if (downloadItem->isOMAMime())
+		if(updateStartedItem() == -2)
 			return;
-#endif
 		break;
 	}
 	case DA_CB::PROGRESS:
+	{
 		downloadItem->setState(DL_ITEM::UPDATING);
 		downloadItem->setReceivedFileSize(m_receivedFileSize);
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -306,107 +455,15 @@ void CbData::updateDownloadItem()
 			return;
 #endif
 		break;
+	}
 	case DA_CB::PAUSED:
+	{
 		downloadItem->setState(DL_ITEM::SUSPENDED);
 		break;
+	}
 	case DA_CB::COMPLETED:
 	{
-		int status = 0;
-		char *savedPath = NULL;
-		downloadItem->setState(DL_ITEM::FINISHED);
-		ret = download_get_downloaded_file_path(m_download_id, &savedPath);
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			DM_LOGE("Fail to get downloaded file path:id[%d] err[%s]",
-				m_download_id, __convertErrToString(ret));
-			downloadItem->setState(DL_ITEM::FAILED);
-			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
-			if (savedPath)
-				free(savedPath);
-			break;
-		}
-		ret = download_get_http_status(m_download_id, &status);
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			DM_LOGE("Fail to get downloaded status:id[%d] err[%s]",
-				m_download_id, __convertErrToString(ret));
-			downloadItem->setState(DL_ITEM::FAILED);
-			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
-			if (savedPath)
-				free(savedPath);
-			break;
-		}
-		DM_SLOGI("http status code [%d]", status);
-		if (savedPath) {
-			string path = string(savedPath);
-			DM_SLOGI("saved path[%s]", savedPath);
-			downloadItem->setRegisteredFilePath(path);
-			free(savedPath);
-		}
-#ifdef _ENABLE_OMA_DOWNLOAD
-		if (downloadItem->isOMAMime()) {
-			int ret = 0;
-			int err = 0;
-			dd_oma1_t *dd_info = NULL;
-			ret = op_parse_dd_file(downloadItem->registeredFilePath().c_str(),
-					(void **)&dd_info, &err);
-			if (ret != OP_TRUE || dd_info == NULL) {
-				downloadItem->setState(DL_ITEM::FAILED);
-				downloadItem->setErrorCode(ERROR::PARSING_FAIL);
-				DM_LOGE("Fail to parsing dd:err[%d]", err);
-				if (dd_info) {
-					/* When parsing dd is failed, if the install notify url is existed,
-					 *	it shoud send the result to the server*/
-					if (dd_info->install_notify_uri) {
-						auto_ptr<OmaItem> omaItem;
-						omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
-						downloadItem->setOmaItem(omaItem);
-						downloadItem->sendInstallNotification(906);
-					}
-					op_free_dd_info(dd_info);
-				}
-				if (unlink(downloadItem->registeredFilePath().c_str()) < 0)
-					DM_LOGE("Fail to unlink the dd file:err[%s]",
-							strerror(errno));
-				downloadItem->destroyId();
-			} else {
-				if (dd_info->major_version > 1) {
-					downloadItem->setState(DL_ITEM::FAILED);
-					downloadItem->setErrorCode(ERROR::PARSING_FAIL);
-					if (dd_info->install_notify_uri) {
-						auto_ptr<OmaItem> omaItem;
-						omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
-						downloadItem->setOmaItem(omaItem);
-						downloadItem->sendInstallNotification(951);
-					}
-					op_free_dd_info(dd_info);
-					break;
-				}
-				downloadItem->setState(DL_ITEM::REQUEST_USER_CONFIRM);
-				if (strlen(dd_info->type) > 0)
-					downloadItem->setMimeType(dd_info->type);
-				if (strlen(dd_info->name) > 0) {
-					string name = string(dd_info->name);
-					downloadItem->setContentName(name);
-				}
-				downloadItem->setFileSize(dd_info->size);
-				auto_ptr<OmaItem> omaItem;
-				omaItem = auto_ptr<OmaItem> (new OmaItem(dd_info));
-				downloadItem->setOmaItem(omaItem);
-				/* for extracting title */
-				downloadItem->setReceivedFileSize(0);
-				if (unlink(downloadItem->registeredFilePath().c_str()) < 0)
-					DM_LOGE("Fail to unlink the dd file:err[%s]",
-							strerror(errno));
-				string emptyStr = string();
-				downloadItem->setRegisteredFilePath(emptyStr);
-				op_free_dd_info(dd_info);
-			}
-		} else {
-			if (downloadItem->isOMADownloadCase()) {
-				downloadItem->setState(DL_ITEM::NOTIFYING);
-			}
-		}
-#endif
-		downloadItem->destroyId();
+		updateCompletedItem();
 		break;
 	}
 	case DA_CB::CANCELED:
@@ -415,6 +472,9 @@ void CbData::updateDownloadItem()
 #ifdef _ENABLE_OMA_DOWNLOAD
 		if (downloadItem->isOMADownloadCase()) {
 			downloadItem->sendInstallNotification(902);
+			FileUtility fileObj;
+			if (!fileObj.deleteFile(downloadItem->getFilePath()))
+				DM_SLOGE("Failed to remove[%s]", downloadItem->getFilePath().c_str());
 		}
 #endif
 		ret = download_get_error(m_download_id, &error);
@@ -425,7 +485,7 @@ void CbData::updateDownloadItem()
 			downloadItem->setErrorCode(ERROR::ENGINE_FAIL);
 			break;
 		}
-		if (downloadItem->state() == DL_ITEM::CANCELED) {
+		if (downloadItem->getState() == DL_ITEM::CANCELED) {
 			DM_LOGI("Already update cancel UI");
 			downloadItem->destroyId();
 			return;
@@ -460,6 +520,9 @@ void CbData::updateDownloadItem()
 			if (downloadItem->isOMADownloadCase()) {
 				int status = downloadItem->convertInstallStatus(error);
 				downloadItem->sendInstallNotification(status);
+				FileUtility fileObj;
+				if (!fileObj.deleteFile(downloadItem->getFilePath()))
+					DM_SLOGE("Failed to remove[%s]", downloadItem->getFilePath().c_str());
 			}
 #endif
 		} else {
@@ -598,7 +661,7 @@ void DownloadItem::progress_cb(int download_id, unsigned long long received,
 	ecore_pipe_write(ecore_pipe, &pipe_data, sizeof(pipe_data_t));
 }
 
-void DownloadItem::start(int id)
+bool DownloadItem::start(int id)
 {
 	int ret = 0;
 	string url;
@@ -615,7 +678,7 @@ void DownloadItem::start(int id)
 			m_errorCode = ERROR::ENGINE_FAIL;
 		}
 		notify();
-		return;
+		return false;
 	}
 
 #ifdef _ENABLE_OMA_DOWNLOAD
@@ -632,18 +695,7 @@ void DownloadItem::start(int id)
 		m_state = DL_ITEM::FAILED;
 		m_errorCode = ERROR::ENGINE_FAIL;
 		notify();
-		return;
-	}
-	if (!m_aptr_request->getCookie().empty()) {
-		ret = download_add_http_header_field(m_download_id,
-				"Cookie", m_aptr_request->getCookie().c_str());
-		if (ret != DOWNLOAD_ERROR_NONE) {
-			DM_LOGE("Fail to set cookie:[%s]", __convertErrToString(ret));
-			m_state = DL_ITEM::FAILED;
-			m_errorCode = ERROR::ENGINE_FAIL;
-			notify();
-			return;
-		}
+		return false;
 	}
 	if (!m_aptr_request->getReqHeaderField().empty() &&
 			!m_aptr_request->getReqHeaderValue().empty()) {
@@ -655,23 +707,67 @@ void DownloadItem::start(int id)
 			m_state = DL_ITEM::FAILED;
 			m_errorCode = ERROR::ENGINE_FAIL;
 			notify();
-			return;
+			return false;
 		}
 	}
-	if (!m_aptr_request->getInstallDir().empty()) {
-		string tempDir = m_aptr_request->getInstallDir();
-		tempDir.append(DM_TEMP_DIR_NAME);
-		ret = download_set_destination(m_download_id, tempDir.c_str());
+	string eTag = m_aptr_request->getEtag();
+	string path = m_aptr_request->getTempFilePath();
+	FileUtility fileUtilityObj;
+
+	//The case is for retry of old download
+	if(id > -1 && !eTag.empty() &&
+			!path.empty() &&
+			fileUtilityObj.isExistedFile(path, false)) {
+		char downloaded_data_size_to_str[32] = { 0, };
+		long size = 0;
+
+		download_set_temp_file_path(m_download_id, (char *)path.c_str());
+		size = FileUtility::getFileSize(path);
+		snprintf(downloaded_data_size_to_str, sizeof(downloaded_data_size_to_str),
+			"bytes=%ld-", size);
+		DM_SLOGD("etag = %s, Temp file path = %s, downloaded size = %s",
+			eTag.c_str(), path.c_str(), downloaded_data_size_to_str);
+
+		int ret = download_add_http_header_field(m_download_id,
+				"If-Range", eTag.c_str());
+		if (ret != DOWNLOAD_ERROR_NONE)
+			DM_LOGE("download_add_http_header_field() call failed");
+
+		ret = download_add_http_header_field(m_download_id,
+				"Range", downloaded_data_size_to_str);
+		if (ret != DOWNLOAD_ERROR_NONE)
+			DM_LOGE("download_add_http_header_field() call failed");
 	} else {
-		string dirPath = FileUtility::getDefaultPath(true);
-		ret = download_set_destination(m_download_id, dirPath.c_str());
-	}
-	if (ret != DOWNLOAD_ERROR_NONE) {
-		DM_LOGE("Fail to set destination[%s]", __convertErrToString(ret));
-		m_state = DL_ITEM::FAILED;
-		m_errorCode = ERROR::ENGINE_FAIL;
-		notify();
-		return;
+		if(!path.empty() && fileUtilityObj.isExistedFile(path, false)) {
+			fileUtilityObj.deleteFile(path);
+		}
+		if (!m_aptr_request->getInstallDir().empty()) {
+			string tempDir = m_aptr_request->getInstallDir();
+			tempDir.append(DM_TEMP_DIR_NAME);
+			ret = download_set_destination(m_download_id, tempDir.c_str());
+		} else {
+			string dirPath = FileUtility::getDefaultPath(true);
+			ret = download_set_destination(m_download_id, dirPath.c_str());
+		}
+		if (ret != DOWNLOAD_ERROR_NONE) {
+			DM_LOGE("Fail to set destination[%s]", __convertErrToString(ret));
+			m_state = DL_ITEM::FAILED;
+			m_errorCode = ERROR::ENGINE_FAIL;
+			notify();
+			return false;
+		}
+
+		if (!m_aptr_request->getFileName().empty()) {
+			string userWantedFileName = m_aptr_request->getFileName();
+			ret = download_set_file_name(m_download_id, userWantedFileName.c_str());
+		}
+		if (ret != DOWNLOAD_ERROR_NONE) {
+			DM_LOGE("Fail to set destination[%s]", __convertErrToString(ret));
+			m_state = DL_ITEM::FAILED;
+			m_errorCode = ERROR::ENGINE_FAIL;
+			notify();
+			return false;
+		}
 	}
 
 	ret = download_start(m_download_id);
@@ -683,7 +779,9 @@ void DownloadItem::start(int id)
 		m_state = DL_ITEM::FAILED;
 		m_errorCode = ERROR::ENGINE_FAIL;
 		notify();
+		return false;
 	}
+	return true;
 }
 
 ERROR::CODE DownloadItem::_convert_error(int err)
@@ -784,9 +882,22 @@ void DownloadItem::cancelWithcontentTypeErr()
 }
 #endif
 
-void DownloadItem::retry(int id)
+bool DownloadItem::retry(int id, unsigned long long fileSize)
 {
 	DM_LOGD("");
+	FileUtility util;
+	string path = m_aptr_request->getTempFilePath();
+	unsigned long long tempFileSize = 0;
+	if (util.isExistedFile(path, false))
+		tempFileSize =  util.getFileSize(path);
+	if (tempFileSize != 0 && tempFileSize == fileSize) {
+		DM_LOGI("Download was finished last time before cancel");
+		setRegisteredFilePath(path);
+		m_state = DL_ITEM::FINISHED;
+		m_errorCode = ERROR::NONE;
+		notify();
+		return false;
+	}
 	m_state = DL_ITEM::IGNORE;
 	m_errorCode = ERROR::NONE;
 	m_receivedFileSize = 0;
@@ -798,7 +909,7 @@ void DownloadItem::retry(int id)
 	if (m_oma_item.get())
 		m_oma_item.release();
 #endif
-	start(id);
+	return start(id);
 }
 
 void DownloadItem::suspend()
@@ -906,18 +1017,6 @@ OmaItem::~OmaItem()
 		ecore_thread_cancel(th);
 }
 
-void OmaItem::sendInstallNotify()
-{
-}
-
-void OmaItem::goNextUrl()
-{
-}
-
-void OmaItem::getIconFromUri()
-{
-}
-
 string OmaItem::getUserMessage()
 {
 	string buf = string();
@@ -950,8 +1049,14 @@ string OmaItem::getUserMessage()
 		buf.append("<br>");
 		buf.append("Description : ");
 		buf.append(description);
-		buf.append("<br>");
 	}
+#ifdef _ENABLE_OMA_UNSUPPROTED_CONTENT
+	DownloadUtil &utilObj = DownloadUtil::getInstance();
+	if (!contentType.empty() && !utilObj.isSupportedMIMEType(contentType)) {
+		buf.append("<br>");
+		buf.append(DM_BODY_TEXT_UNSUPPORTED_FILE_TYPE);
+	}
+#endif
 	return buf;
 }
 

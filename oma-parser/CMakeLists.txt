@@ -17,6 +17,7 @@ ENDIF("${CMAKE_BUILD_TYPE}" STREQUAL "")
 INCLUDE(FindPkgConfig)
 pkg_check_modules(op-pkgs REQUIRED
 	dlog
+	libxml-2.0
 )
 
 FOREACH(flag ${op-pkgs_CFLAGS})

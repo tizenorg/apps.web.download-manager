@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChangeableColorTables>
+	<ChangeableColorTable num="1">
+		<Theme style="Dark">
+			<ChangeableColorInfo id="87A1L" inputColor="87A1L" hue="871" saturation="871" value="871" alpha="871" minHue="871" minSaturation="871" minValue="871" maxHue="871" maxSaturation="871" maxValue="871" />
+			<ChangeableColorInfo id="99F2" inputColor="99F2" hue="992" saturation="992" value="992" alpha="992" minHue="992" minSaturation="992" minValue="992" maxHue="992" maxSaturation="992" maxValue="992" />
+			<ChangeableColorInfo id="C9" inputColor="C9" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="D0LEEbC2E" inputColor="D0LEEbC2E" hue="02" saturation="02" value="02" alpha="02" minHue="02" minSaturation="02" minValue="02" maxHue="02" maxSaturation="02" maxValue="02" />
+			<ChangeableColorInfo id="D6CAC4" inputColor="D6CAC4" hue="64" saturation="64" value="64" alpha="64" minHue="64" minSaturation="64" minValue="64" maxHue="64" maxSaturation="64" maxValue="64" />
+			<ChangeableColorInfo id="C8" inputColor="C8" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="9E9" inputColor="9E9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="8A" inputColor="8A" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="82FBa" inputColor="82FBa" hue="82" saturation="82" value="82" alpha="82" minHue="82" minSaturation="82" minValue="82" maxHue="82" maxSaturation="82" maxValue="82" />
+			<ChangeableColorInfo id="89Y" inputColor="89Y" hue="89" saturation="89" value="89" alpha="89" minHue="89" minSaturation="89" minValue="89" maxHue="89" maxSaturation="89" maxValue="89" />
+			<ChangeableColorInfo id="J98FEDAvE1KF6" inputColor="J98FEDAvE1KF6" hue="9816" saturation="9816" value="9816" alpha="9816" minHue="9816" minSaturation="9816" minValue="9816" maxHue="9816" maxSaturation="9816" maxValue="9816" />
+			<ChangeableColorInfo id="HvEA9FMT" inputColor="HvEA9FMT" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="C3" inputColor="C3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="9DD9" inputColor="9DD9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="fA986A84" inputColor="fA986A84" hue="98684" saturation="98684" value="98684" alpha="98684" minHue="98684" minSaturation="98684" minValue="98684" maxHue="98684" maxSaturation="98684" maxValue="98684" />
+			<ChangeableColorInfo id="D9EE9" inputColor="D9EE9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="HBAF0q80c" inputColor="HBAF0q80c" hue="080" saturation="080" value="080" alpha="080" minHue="080" minSaturation="080" minValue="080" maxHue="080" maxSaturation="080" maxValue="080" />
+			<ChangeableColorInfo id="96" inputColor="96" hue="96" saturation="96" value="96" alpha="96" minHue="96" minSaturation="96" minValue="96" maxHue="96" maxSaturation="96" maxValue="96" />
+			<ChangeableColorInfo id="B85B1" inputColor="B85B1" hue="851" saturation="851" value="851" alpha="851" minHue="851" minSaturation="851" minValue="851" maxHue="851" maxSaturation="851" maxValue="851" />
+			<ChangeableColorInfo id="93" inputColor="93" hue="93" saturation="93" value="93" alpha="93" minHue="93" minSaturation="93" minValue="93" maxHue="93" maxSaturation="93" maxValue="93" />
+			<ChangeableColorInfo id="D0EE" inputColor="D0EE" hue="0" saturation="0" value="0" alpha="0" minHue="0" minSaturation="0" minValue="0" maxHue="0" maxSaturation="0" maxValue="0" />
+			<ChangeableColorInfo id="B3" inputColor="B3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="D78u84DBF1JE2" inputColor="D78u84DBF1JE2" hue="788412" saturation="788412" value="788412" alpha="788412" minHue="788412" minSaturation="788412" minValue="788412" maxHue="788412" maxSaturation="788412" maxValue="788412" />
+			<ChangeableColorInfo id="9F" inputColor="9F" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+		</Theme>
+		<Theme style="Light">
+			<ChangeableColorInfo id="87A1L" inputColor="87A1L" hue="871" saturation="871" value="871" alpha="871" minHue="871" minSaturation="871" minValue="871" maxHue="871" maxSaturation="871" maxValue="871" />
+			<ChangeableColorInfo id="99F2" inputColor="99F2" hue="992" saturation="992" value="992" alpha="992" minHue="992" minSaturation="992" minValue="992" maxHue="992" maxSaturation="992" maxValue="992" />
+			<ChangeableColorInfo id="C9" inputColor="C9" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="D0LEEbC2E" inputColor="D0LEEbC2E" hue="02" saturation="02" value="02" alpha="02" minHue="02" minSaturation="02" minValue="02" maxHue="02" maxSaturation="02" maxValue="02" />
+			<ChangeableColorInfo id="D6CAC4" inputColor="D6CAC4" hue="64" saturation="64" value="64" alpha="64" minHue="64" minSaturation="64" minValue="64" maxHue="64" maxSaturation="64" maxValue="64" />
+			<ChangeableColorInfo id="C8" inputColor="C8" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="9E9" inputColor="9E9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="8A" inputColor="8A" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="82FBa" inputColor="82FBa" hue="82" saturation="82" value="82" alpha="82" minHue="82" minSaturation="82" minValue="82" maxHue="82" maxSaturation="82" maxValue="82" />
+			<ChangeableColorInfo id="89Y" inputColor="89Y" hue="89" saturation="89" value="89" alpha="89" minHue="89" minSaturation="89" minValue="89" maxHue="89" maxSaturation="89" maxValue="89" />
+			<ChangeableColorInfo id="J98FEDAvE1KF6" inputColor="J98FEDAvE1KF6" hue="9816" saturation="9816" value="9816" alpha="9816" minHue="9816" minSaturation="9816" minValue="9816" maxHue="9816" maxSaturation="9816" maxValue="9816" />
+			<ChangeableColorInfo id="HvEA9FMT" inputColor="HvEA9FMT" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="C3" inputColor="C3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="9DD9" inputColor="9DD9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="fA986A84" inputColor="fA986A84" hue="98684" saturation="98684" value="98684" alpha="98684" minHue="98684" minSaturation="98684" minValue="98684" maxHue="98684" maxSaturation="98684" maxValue="98684" />
+			<ChangeableColorInfo id="D9EE9" inputColor="D9EE9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="HBAF0q80c" inputColor="HBAF0q80c" hue="080" saturation="080" value="080" alpha="080" minHue="080" minSaturation="080" minValue="080" maxHue="080" maxSaturation="080" maxValue="080" />
+			<ChangeableColorInfo id="96" inputColor="96" hue="96" saturation="96" value="96" alpha="96" minHue="96" minSaturation="96" minValue="96" maxHue="96" maxSaturation="96" maxValue="96" />
+			<ChangeableColorInfo id="B85B1" inputColor="B85B1" hue="851" saturation="851" value="851" alpha="851" minHue="851" minSaturation="851" minValue="851" maxHue="851" maxSaturation="851" maxValue="851" />
+			<ChangeableColorInfo id="93" inputColor="93" hue="93" saturation="93" value="93" alpha="93" minHue="93" minSaturation="93" minValue="93" maxHue="93" maxSaturation="93" maxValue="93" />
+			<ChangeableColorInfo id="D0EE" inputColor="D0EE" hue="0" saturation="0" value="0" alpha="0" minHue="0" minSaturation="0" minValue="0" maxHue="0" maxSaturation="0" maxValue="0" />
+			<ChangeableColorInfo id="B3" inputColor="B3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="D78u84DBF1JE2" inputColor="D78u84DBF1JE2" hue="788412" saturation="788412" value="788412" alpha="788412" minHue="788412" minSaturation="788412" minValue="788412" maxHue="788412" maxSaturation="788412" maxValue="788412" />
+			<ChangeableColorInfo id="9F" inputColor="9F" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+		</Theme>
+	</ChangeableColorTable>
+	<ChangeableColorTable num="2">
+		<Theme style="Dark">
+			<ChangeableColorInfo id="87A1L" inputColor="87A1L" hue="871" saturation="871" value="871" alpha="871" minHue="871" minSaturation="871" minValue="871" maxHue="871" maxSaturation="871" maxValue="871" />
+			<ChangeableColorInfo id="99F2" inputColor="99F2" hue="992" saturation="992" value="992" alpha="992" minHue="992" minSaturation="992" minValue="992" maxHue="992" maxSaturation="992" maxValue="992" />
+			<ChangeableColorInfo id="C9" inputColor="C9" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="D0LEEbC2E" inputColor="D0LEEbC2E" hue="02" saturation="02" value="02" alpha="02" minHue="02" minSaturation="02" minValue="02" maxHue="02" maxSaturation="02" maxValue="02" />
+			<ChangeableColorInfo id="D6CAC4" inputColor="D6CAC4" hue="64" saturation="64" value="64" alpha="64" minHue="64" minSaturation="64" minValue="64" maxHue="64" maxSaturation="64" maxValue="64" />
+			<ChangeableColorInfo id="C8" inputColor="C8" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="9E9" inputColor="9E9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="8A" inputColor="8A" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="82FBa" inputColor="82FBa" hue="82" saturation="82" value="82" alpha="82" minHue="82" minSaturation="82" minValue="82" maxHue="82" maxSaturation="82" maxValue="82" />
+			<ChangeableColorInfo id="89Y" inputColor="89Y" hue="89" saturation="89" value="89" alpha="89" minHue="89" minSaturation="89" minValue="89" maxHue="89" maxSaturation="89" maxValue="89" />
+			<ChangeableColorInfo id="J98FEDAvE1KF6" inputColor="J98FEDAvE1KF6" hue="9816" saturation="9816" value="9816" alpha="9816" minHue="9816" minSaturation="9816" minValue="9816" maxHue="9816" maxSaturation="9816" maxValue="9816" />
+			<ChangeableColorInfo id="HvEA9FMT" inputColor="HvEA9FMT" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="C3" inputColor="C3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="9DD9" inputColor="9DD9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="fA986A84" inputColor="fA986A84" hue="98684" saturation="98684" value="98684" alpha="98684" minHue="98684" minSaturation="98684" minValue="98684" maxHue="98684" maxSaturation="98684" maxValue="98684" />
+			<ChangeableColorInfo id="D9EE9" inputColor="D9EE9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="HBAF0q80c" inputColor="HBAF0q80c" hue="080" saturation="080" value="080" alpha="080" minHue="080" minSaturation="080" minValue="080" maxHue="080" maxSaturation="080" maxValue="080" />
+			<ChangeableColorInfo id="96" inputColor="96" hue="96" saturation="96" value="96" alpha="96" minHue="96" minSaturation="96" minValue="96" maxHue="96" maxSaturation="96" maxValue="96" />
+			<ChangeableColorInfo id="B85B1" inputColor="B85B1" hue="851" saturation="851" value="851" alpha="851" minHue="851" minSaturation="851" minValue="851" maxHue="851" maxSaturation="851" maxValue="851" />
+			<ChangeableColorInfo id="93" inputColor="93" hue="93" saturation="93" value="93" alpha="93" minHue="93" minSaturation="93" minValue="93" maxHue="93" maxSaturation="93" maxValue="93" />
+			<ChangeableColorInfo id="D0EE" inputColor="D0EE" hue="0" saturation="0" value="0" alpha="0" minHue="0" minSaturation="0" minValue="0" maxHue="0" maxSaturation="0" maxValue="0" />
+			<ChangeableColorInfo id="B3" inputColor="B3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="D78u84DBF1JE2" inputColor="D78u84DBF1JE2" hue="788412" saturation="788412" value="788412" alpha="788412" minHue="788412" minSaturation="788412" minValue="788412" maxHue="788412" maxSaturation="788412" maxValue="788412" />
+			<ChangeableColorInfo id="9F" inputColor="9F" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+		</Theme>
+		<Theme style="Light">
+			<ChangeableColorInfo id="87A1L" inputColor="87A1L" hue="871" saturation="871" value="871" alpha="871" minHue="871" minSaturation="871" minValue="871" maxHue="871" maxSaturation="871" maxValue="871" />
+			<ChangeableColorInfo id="99F2" inputColor="99F2" hue="992" saturation="992" value="992" alpha="992" minHue="992" minSaturation="992" minValue="992" maxHue="992" maxSaturation="992" maxValue="992" />
+			<ChangeableColorInfo id="C9" inputColor="C9" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="D0LEEbC2E" inputColor="D0LEEbC2E" hue="02" saturation="02" value="02" alpha="02" minHue="02" minSaturation="02" minValue="02" maxHue="02" maxSaturation="02" maxValue="02" />
+			<ChangeableColorInfo id="D6CAC4" inputColor="D6CAC4" hue="64" saturation="64" value="64" alpha="64" minHue="64" minSaturation="64" minValue="64" maxHue="64" maxSaturation="64" maxValue="64" />
+			<ChangeableColorInfo id="C8" inputColor="C8" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="9E9" inputColor="9E9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="8A" inputColor="8A" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="82FBa" inputColor="82FBa" hue="82" saturation="82" value="82" alpha="82" minHue="82" minSaturation="82" minValue="82" maxHue="82" maxSaturation="82" maxValue="82" />
+			<ChangeableColorInfo id="89Y" inputColor="89Y" hue="89" saturation="89" value="89" alpha="89" minHue="89" minSaturation="89" minValue="89" maxHue="89" maxSaturation="89" maxValue="89" />
+			<ChangeableColorInfo id="J98FEDAvE1KF6" inputColor="J98FEDAvE1KF6" hue="9816" saturation="9816" value="9816" alpha="9816" minHue="9816" minSaturation="9816" minValue="9816" maxHue="9816" maxSaturation="9816" maxValue="9816" />
+			<ChangeableColorInfo id="HvEA9FMT" inputColor="HvEA9FMT" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="C3" inputColor="C3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="9DD9" inputColor="9DD9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="fA986A84" inputColor="fA986A84" hue="98684" saturation="98684" value="98684" alpha="98684" minHue="98684" minSaturation="98684" minValue="98684" maxHue="98684" maxSaturation="98684" maxValue="98684" />
+			<ChangeableColorInfo id="D9EE9" inputColor="D9EE9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="HBAF0q80c" inputColor="HBAF0q80c" hue="080" saturation="080" value="080" alpha="080" minHue="080" minSaturation="080" minValue="080" maxHue="080" maxSaturation="080" maxValue="080" />
+			<ChangeableColorInfo id="96" inputColor="96" hue="96" saturation="96" value="96" alpha="96" minHue="96" minSaturation="96" minValue="96" maxHue="96" maxSaturation="96" maxValue="96" />
+			<ChangeableColorInfo id="B85B1" inputColor="B85B1" hue="851" saturation="851" value="851" alpha="851" minHue="851" minSaturation="851" minValue="851" maxHue="851" maxSaturation="851" maxValue="851" />
+			<ChangeableColorInfo id="93" inputColor="93" hue="93" saturation="93" value="93" alpha="93" minHue="93" minSaturation="93" minValue="93" maxHue="93" maxSaturation="93" maxValue="93" />
+			<ChangeableColorInfo id="D0EE" inputColor="D0EE" hue="0" saturation="0" value="0" alpha="0" minHue="0" minSaturation="0" minValue="0" maxHue="0" maxSaturation="0" maxValue="0" />
+			<ChangeableColorInfo id="B3" inputColor="B3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="D78u84DBF1JE2" inputColor="D78u84DBF1JE2" hue="788412" saturation="788412" value="788412" alpha="788412" minHue="788412" minSaturation="788412" minValue="788412" maxHue="788412" maxSaturation="788412" maxValue="788412" />
+			<ChangeableColorInfo id="9F" inputColor="9F" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+		</Theme>
+	</ChangeableColorTable>
+	<ChangeableColorTable num="3">
+		<Theme style="Dark">
+			<ChangeableColorInfo id="87A1L" inputColor="87A1L" hue="871" saturation="871" value="871" alpha="871" minHue="871" minSaturation="871" minValue="871" maxHue="871" maxSaturation="871" maxValue="871" />
+			<ChangeableColorInfo id="99F2" inputColor="99F2" hue="992" saturation="992" value="992" alpha="992" minHue="992" minSaturation="992" minValue="992" maxHue="992" maxSaturation="992" maxValue="992" />
+			<ChangeableColorInfo id="C9" inputColor="C9" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="D0LEEbC2E" inputColor="D0LEEbC2E" hue="02" saturation="02" value="02" alpha="02" minHue="02" minSaturation="02" minValue="02" maxHue="02" maxSaturation="02" maxValue="02" />
+			<ChangeableColorInfo id="D6CAC4" inputColor="D6CAC4" hue="64" saturation="64" value="64" alpha="64" minHue="64" minSaturation="64" minValue="64" maxHue="64" maxSaturation="64" maxValue="64" />
+			<ChangeableColorInfo id="C8" inputColor="C8" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="9E9" inputColor="9E9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="8A" inputColor="8A" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="82FBa" inputColor="82FBa" hue="82" saturation="82" value="82" alpha="82" minHue="82" minSaturation="82" minValue="82" maxHue="82" maxSaturation="82" maxValue="82" />
+			<ChangeableColorInfo id="89Y" inputColor="89Y" hue="89" saturation="89" value="89" alpha="89" minHue="89" minSaturation="89" minValue="89" maxHue="89" maxSaturation="89" maxValue="89" />
+			<ChangeableColorInfo id="J98FEDAvE1KF6" inputColor="J98FEDAvE1KF6" hue="9816" saturation="9816" value="9816" alpha="9816" minHue="9816" minSaturation="9816" minValue="9816" maxHue="9816" maxSaturation="9816" maxValue="9816" />
+			<ChangeableColorInfo id="HvEA9FMT" inputColor="HvEA9FMT" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="C3" inputColor="C3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="9DD9" inputColor="9DD9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="fA986A84" inputColor="fA986A84" hue="98684" saturation="98684" value="98684" alpha="98684" minHue="98684" minSaturation="98684" minValue="98684" maxHue="98684" maxSaturation="98684" maxValue="98684" />
+			<ChangeableColorInfo id="D9EE9" inputColor="D9EE9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="HBAF0q80c" inputColor="HBAF0q80c" hue="080" saturation="080" value="080" alpha="080" minHue="080" minSaturation="080" minValue="080" maxHue="080" maxSaturation="080" maxValue="080" />
+			<ChangeableColorInfo id="96" inputColor="96" hue="96" saturation="96" value="96" alpha="96" minHue="96" minSaturation="96" minValue="96" maxHue="96" maxSaturation="96" maxValue="96" />
+			<ChangeableColorInfo id="B85B1" inputColor="B85B1" hue="851" saturation="851" value="851" alpha="851" minHue="851" minSaturation="851" minValue="851" maxHue="851" maxSaturation="851" maxValue="851" />
+			<ChangeableColorInfo id="93" inputColor="93" hue="93" saturation="93" value="93" alpha="93" minHue="93" minSaturation="93" minValue="93" maxHue="93" maxSaturation="93" maxValue="93" />
+			<ChangeableColorInfo id="D0EE" inputColor="D0EE" hue="0" saturation="0" value="0" alpha="0" minHue="0" minSaturation="0" minValue="0" maxHue="0" maxSaturation="0" maxValue="0" />
+			<ChangeableColorInfo id="B3" inputColor="B3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="D78u84DBF1JE2" inputColor="D78u84DBF1JE2" hue="788412" saturation="788412" value="788412" alpha="788412" minHue="788412" minSaturation="788412" minValue="788412" maxHue="788412" maxSaturation="788412" maxValue="788412" />
+			<ChangeableColorInfo id="9F" inputColor="9F" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+		</Theme>
+		<Theme style="Light">
+			<ChangeableColorInfo id="87A1L" inputColor="87A1L" hue="871" saturation="871" value="871" alpha="871" minHue="871" minSaturation="871" minValue="871" maxHue="871" maxSaturation="871" maxValue="871" />
+			<ChangeableColorInfo id="99F2" inputColor="99F2" hue="992" saturation="992" value="992" alpha="992" minHue="992" minSaturation="992" minValue="992" maxHue="992" maxSaturation="992" maxValue="992" />
+			<ChangeableColorInfo id="C9" inputColor="C9" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="D0LEEbC2E" inputColor="D0LEEbC2E" hue="02" saturation="02" value="02" alpha="02" minHue="02" minSaturation="02" minValue="02" maxHue="02" maxSaturation="02" maxValue="02" />
+			<ChangeableColorInfo id="D6CAC4" inputColor="D6CAC4" hue="64" saturation="64" value="64" alpha="64" minHue="64" minSaturation="64" minValue="64" maxHue="64" maxSaturation="64" maxValue="64" />
+			<ChangeableColorInfo id="C8" inputColor="C8" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="9E9" inputColor="9E9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="8A" inputColor="8A" hue="8" saturation="8" value="8" alpha="8" minHue="8" minSaturation="8" minValue="8" maxHue="8" maxSaturation="8" maxValue="8" />
+			<ChangeableColorInfo id="82FBa" inputColor="82FBa" hue="82" saturation="82" value="82" alpha="82" minHue="82" minSaturation="82" minValue="82" maxHue="82" maxSaturation="82" maxValue="82" />
+			<ChangeableColorInfo id="89Y" inputColor="89Y" hue="89" saturation="89" value="89" alpha="89" minHue="89" minSaturation="89" minValue="89" maxHue="89" maxSaturation="89" maxValue="89" />
+			<ChangeableColorInfo id="J98FEDAvE1KF6" inputColor="J98FEDAvE1KF6" hue="9816" saturation="9816" value="9816" alpha="9816" minHue="9816" minSaturation="9816" minValue="9816" maxHue="9816" maxSaturation="9816" maxValue="9816" />
+			<ChangeableColorInfo id="HvEA9FMT" inputColor="HvEA9FMT" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+			<ChangeableColorInfo id="C3" inputColor="C3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="9DD9" inputColor="9DD9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="fA986A84" inputColor="fA986A84" hue="98684" saturation="98684" value="98684" alpha="98684" minHue="98684" minSaturation="98684" minValue="98684" maxHue="98684" maxSaturation="98684" maxValue="98684" />
+			<ChangeableColorInfo id="D9EE9" inputColor="D9EE9" hue="99" saturation="99" value="99" alpha="99" minHue="99" minSaturation="99" minValue="99" maxHue="99" maxSaturation="99" maxValue="99" />
+			<ChangeableColorInfo id="HBAF0q80c" inputColor="HBAF0q80c" hue="080" saturation="080" value="080" alpha="080" minHue="080" minSaturation="080" minValue="080" maxHue="080" maxSaturation="080" maxValue="080" />
+			<ChangeableColorInfo id="96" inputColor="96" hue="96" saturation="96" value="96" alpha="96" minHue="96" minSaturation="96" minValue="96" maxHue="96" maxSaturation="96" maxValue="96" />
+			<ChangeableColorInfo id="B85B1" inputColor="B85B1" hue="851" saturation="851" value="851" alpha="851" minHue="851" minSaturation="851" minValue="851" maxHue="851" maxSaturation="851" maxValue="851" />
+			<ChangeableColorInfo id="93" inputColor="93" hue="93" saturation="93" value="93" alpha="93" minHue="93" minSaturation="93" minValue="93" maxHue="93" maxSaturation="93" maxValue="93" />
+			<ChangeableColorInfo id="D0EE" inputColor="D0EE" hue="0" saturation="0" value="0" alpha="0" minHue="0" minSaturation="0" minValue="0" maxHue="0" maxSaturation="0" maxValue="0" />
+			<ChangeableColorInfo id="B3" inputColor="B3" hue="3" saturation="3" value="3" alpha="3" minHue="3" minSaturation="3" minValue="3" maxHue="3" maxSaturation="3" maxValue="3" />
+			<ChangeableColorInfo id="D78u84DBF1JE2" inputColor="D78u84DBF1JE2" hue="788412" saturation="788412" value="788412" alpha="788412" minHue="788412" minSaturation="788412" minValue="788412" maxHue="788412" maxSaturation="788412" maxValue="788412" />
+			<ChangeableColorInfo id="9F" inputColor="9F" hue="9" saturation="9" value="9" alpha="9" minHue="9" minSaturation="9" minValue="9" maxHue="9" maxSaturation="9" maxValue="9" />
+		</Theme>
+	</ChangeableColorTable>
+</ChangeableColorTables>

@@ -19,7 +19,6 @@
  * @author		Jungki Kwak(jungki.kwak@samsung.com)
  */
 
-#include <expat.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -49,16 +48,32 @@ static dd1_Element_Info_table dd_element_table[DD_ELEMENT_COUNT_MAX] =
 #define OPEN_ELEMENT(INDEX)		(dd_element_table[INDEX].element_inst_cnt = 0)
 #define CONTINUE_ELEMENT(INDEX)		(dd_element_table[INDEX].element_inst_cnt++)
 
-int op_parse_dd1_file(XML_Parser parser, dd_oma1_t **dd)
+/* Warnings / Errors Logging Functions */
+static void op_parse_warning(void *userData, const char *msg, ...)
+{
+    OP_LOGD("Warning : %s", msg);
+}
+
+static void op_parse_error(void *userData, const char *msg, ...)
+{
+    OP_LOGE("Error: %s", msg);
+}
+
+static void op_parse_fatal_error(void *userData, const char *msg, ...)
+{
+    OP_LOGE("Fatal Error : %s", msg);
+}
+
+int op_parse_dd1_file(xmlSAXHandler *sHandlerPtr, op_parser_app_data_t **app_data)
 {
 	int ret = OP_RESULT_OK;
 	dd1_cntx *cntx = OP_NULL;
 	dd_oma1_t *dd1 = OP_NULL;
-	op_parser_app_data_t *app_data = OP_NULL;
+	op_parser_app_data_t *app_data_local = OP_NULL;
 
 	OP_LOGD("");
 
-	app_data = (op_parser_app_data_t *)calloc(1,
+	app_data_local = (op_parser_app_data_t *)calloc(1,
 	        sizeof(op_parser_app_data_t));
 	if (OP_NULL == app_data) {
 		OP_LOGE("MEMORY ALLOCATION FAIL");
@@ -80,26 +95,24 @@ int op_parse_dd1_file(XML_Parser parser, dd_oma1_t **dd)
 		goto ERR;
 	}
 
-	*dd = dd1;
+	*app_data = app_data_local;
 	cntx->dd1 = dd1;
-	app_data->parseError = OP_RESULT_OK;
-	app_data->data = (void *)cntx;
+	app_data_local->parseError = OP_RESULT_OK;
+	app_data_local->data = (void *)cntx;
 
-	XML_SetUserData(parser, (void *)app_data);
-
-	XML_SetElementHandler(parser,
-	        (XML_StartElementHandler)op_expat_startelement_dd1,
-	        op_expat_endelement_dd1);
-
-	XML_SetCharacterDataHandler(parser,
-	        (XML_CharacterDataHandler)op_expat_character_dd1);
+	sHandlerPtr->startElement = op_libxml_start_element_dd1;
+	sHandlerPtr->endElement = op_libxml_end_element_dd1;
+	sHandlerPtr->characters = op_libxml_characters_dd1;
+	/* warnings / error logging functions */
+	sHandlerPtr->error = op_parse_error;
+	sHandlerPtr->warning = op_parse_warning;
+	sHandlerPtr->fatalError = op_parse_fatal_error;
 
 ERR:
 	if (OP_RESULT_OK != ret) {
 		free(cntx);
-		free(app_data);
+		free(app_data_local);
 		free(dd1);
-		*dd = OP_NULL;
 	}
 
 	return ret;
@@ -162,14 +175,12 @@ void op_free_dd1_info(dd_oma1_t *dd_info)
 	return;
 }
 
-int op_check_dd1_mandatory_tags(XML_Parser parser)
+int op_check_dd1_mandatory_tags(op_parser_app_data_t *app_data)
 {
 	int count = 0;
 
 	OP_LOGD("");
 
-	op_parser_app_data_t *app_data =
-	        (op_parser_app_data_t *)XML_GetUserData(parser);
 	dd1_cntx *cntx = (dd1_cntx*)app_data->data;
 
 	while (count < DD_ELEMENT_MANOPT_COUNT) {
@@ -185,10 +196,10 @@ int op_check_dd1_mandatory_tags(XML_Parser parser)
 	return OP_TRUE;
 }
 
-void op_expat_startelement_dd1(
+void op_libxml_start_element_dd1(
         void *userData,
-        const XML_Char *name,
-        const XML_Char **atts)
+        const xmlChar *name,
+        const xmlChar **atts)
 {
 	op_parser_app_data_t *app_data = OP_NULL;
 	int index = 0;
@@ -206,8 +217,8 @@ void op_expat_startelement_dd1(
 	}
 
 	for (index = 0; index < DD_ELEMENT_COUNT_MAX; index++) {
-		if (0 == strcmp(name,
-		        (const XML_Char *)(dd_element_table[index].element_str))) {
+		if (0 == xmlStrcmp(name,
+		        (const xmlChar *)(dd_element_table[index].element_str))) {
 			OP_LOGD("Element matches with listed's. Index[%d]",
 					dd_element_table[index].element_index);
 			app_data->element_index
@@ -227,7 +238,7 @@ ERR:
 	return;
 }
 
-void op_expat_endelement_dd1(void *userData, const XML_Char *name)
+void op_libxml_end_element_dd1(void *userData, const xmlChar *name)
 {
 	op_parser_app_data_t *app_data = OP_NULL;
 	int index = 0;
@@ -244,8 +255,8 @@ void op_expat_endelement_dd1(void *userData, const XML_Char *name)
 	}
 
 	for (index = 0; index < DD_ELEMENT_COUNT_MAX; index++) {
-		if (0 == strcmp(name,
-		        (char *)(dd_element_table[index].element_str))) {
+		if (0 == xmlStrcmp(name,
+		        (const xmlChar *)(dd_element_table[index].element_str))) {
 			if (!IS_ELEMENT_OPEN(index)) {
 				app_data->parseError
 				        = OP_PARSER_ERR_INTERNAL_PARSING;
@@ -268,7 +279,7 @@ ERR:
 	return;
 }
 
-void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
+void op_libxml_characters_dd1(void *userData, const xmlChar *s, int len)
 {
 	dd_oma1_t *dd_info = OP_NULL;
 	dd1_cntx *cntxt = OP_NULL;
@@ -330,6 +341,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 
 				strncpy(dd_info->type, ch_str,
 				        OP_MAX_MIME_STR_LEN - 1);
+				dd_info->type[OP_MAX_MIME_STR_LEN - 1] = '\0';
 				OP_SLOG("dd_info->type:[%s]", dd_info->type);
 			} else {
 				more_type_info_t *temp_type = OP_NULL;
@@ -345,6 +357,7 @@ void op_expat_character_dd1(void *userData, const XML_Char *s, int len)
 				temp_type->next = OP_NULL;
 				strncpy((char*)(temp_type->type), ch_str,
 				        OP_MAX_MIME_STR_LEN - 1);
+				temp_type->type[OP_MAX_MIME_STR_LEN - 1] = '\0';
 				OP_SLOG("dd_infoerror:->type[other]:[%s]", temp_type->type);
 
 				if (dd_info->other_type_info == OP_NULL) {

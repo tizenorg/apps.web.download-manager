@@ -30,34 +30,36 @@ using namespace std;
 class DownloadRequest
 {
 public:
-	DownloadRequest(string url, string cookie,
-			string reqHeaderField, string reqHeaderValue, string installDir);
+	DownloadRequest(string url,	string reqHeaderField, string reqHeaderValue,
+			string installDir, string fileName);
 	DownloadRequest(DownloadRequest &rRequest);
 	~DownloadRequest(void);
 
 	string getUrl(void);
-	string getCookie(void);
 	string getReqHeaderField(void);
 	string getReqHeaderValue(void);
 	string getInstallDir(void);
 	string getSender(void);
-	bool isUrlEmpty(void);
-	bool isCookieEmpty(void);
-	bool isReqHeaderEmpty(void);
-	bool isInstallDir(void);
+	string getFileName(void);
+	string getTempFilePath(void);
+	string getEtag(void);
 	void setUrl(string url);
-	void setCookie(string cookie);
 	void setReqHeaderField(string reqHeaderField);
 	void setReqHeaderValue(string reqHeaderValue);
 	void setInstallDir(string installDir);
+	void setFileName(string fileName);
+	void setTempFilePath(string tempFilePath);
+	void setEtag(string etag);
 private:
 	void extractSenderName(void);
 	string m_url;
-	string m_cookie;
 	string m_sender;
 	string m_reqHeaderField;
 	string m_reqHeaderValue;
 	string m_installDir;
+	string m_fileName;
+	string m_tempFilePath;
+	string m_etag;
 };
 
 #endif /* DOWNLOAD_MANAGER_DOWNLOAD_REQUEST_H */

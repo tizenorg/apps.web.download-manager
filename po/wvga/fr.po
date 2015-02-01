@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ANNULER"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "%d éléments seront supprimés."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Cet élément va être supprimé."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Préparation..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Aucun téléchargement"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Les éléments téléchargés seront affichés ici."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Téléchargement annulé"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Téléchargement terminé"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Echec du téléchargement"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Gestionnaire téléch."
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 élément va être supprimé."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Activation du contenu DRM..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Notification au serveur en cours..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d éléments vont être supprimés."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Stockage"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Appuyez sur Télécharger pour réessayer."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Ce fichier est introuvable. Appuyez sur Télécharger pour essayer de le télécharger à nouveau."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Impossible de trouver une application permettant d'ouvrir ce fichier."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Annuler"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Télécharger"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Accéder au stockage"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Stockage par défaut saturé"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Ancien"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "Sélection : %d"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Aujourd'hui"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Hier"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Sélectionner tout"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Supprimer"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "SUPPRIMER"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Espace insuffisant sur votre appareil. Accédez aux paramètres %s pour supprimer des données ou insérez une carte SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Espace insuffisant sur votre appareil. Accédez aux paramètres %s pour libérer de l'espace, puis réessayez."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Espace insuffisant sur votre carte SD. Accédez aux paramètres %s pour supprimer des données ou définissez votre appareil comme espace de stockage par défaut."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Espace insuffisant sur votre carte SD. Accédez aux paramètres %s pour supprimer des données, puis réessayez."
+

@@ -38,9 +38,12 @@ public:
 	void openMyFilesApp(void);
 	bool isExistedFile(string path, bool isDir);
 	bool renameFile(string from, string to);
+	bool deleteFile(string filePath);
+	bool checkAvailableMemory(unsigned long long size);
 	bool copyFile(string from, string to);
 	void cleanTempDir(void);
 	static string getDefaultPath(bool optionTempDir);
+	static unsigned long long getFileSize(string filePath);
 };
 
 class DownloadUtil
@@ -55,11 +58,30 @@ public:
 	bool registerContent(string filePath, string &thumbnailPath);
 	string saveContent(string filePath, string userInstallDir);
 	string getUserAgent(void);
+#ifdef _ENABLE_OMA_UNSUPPROTED_CONTENT
+	bool isSupportedMIMEType(string mime);
+#endif
 
 private:
 	DownloadUtil(void);
 	~DownloadUtil(void) {}
 	bool isAmbiguousMIMEType(const char *mimeType);
 };
+
+#ifdef _ENABLE_WAITING_RO
+class DownloadDrm
+{
+public:
+	static DownloadDrm& getInstance(void) {
+		static DownloadDrm inst;
+		return inst;
+	}
+
+	bool validRo(const char *filePath);
+private:
+	DownloadDrm(void) {}
+	~DownloadDrm(void) {}
+};
+#endif
 
 #endif//DOWNLOAD_MANAGER_UTIL_H
