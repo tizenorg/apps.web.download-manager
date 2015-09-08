@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Ֆայլը չի ստացվել. ներբեռնե՞լ նորից:"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Ֆայլը գոյություն չունի. ներբեռնե՞լ նորից:"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Ներբեռնումներ չկան"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Հիշողությունը չի բավարարում: Ջնջեք որոշ տարրեր"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Ներբեռնումն ավարտվեց"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Սերվերը ծանուցվում է..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Ներբեռնման կառավարիչ"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Ընտրել տարրեր"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Ապրանքներ ներբեռնելուց հետո դրանք կցուցադրվեն այստեղ:"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Ներբեռնումը դադարեցված է"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Ներբեռնումը ձախողվեց"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Պատրաստվում է ներբեռնել..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Պատրաստվում է ներբեռնել..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Ձեր սարքի պահոցում բավարար տեղ չկա: Գնացեք %s դրվածքներ՝ որոշ տվյալներ վերացնելու համար, կամ մտցրեք SD քարտ:"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Ձեր սարքի պահոցում բավարար տեղ չկա: Գնացեք %s դրվածքներ՝ որոշ հիշողության տիրույթ ազատելու համար, հետո նորից փորձեք:"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Ձեր SD քարտում բավարար տեղ չկա: Գնացեք %s դրվածքներ՝ որոշ տվյալներ վերացնելու համար, կամ կանխադրված պահման տեղը փոխեք «Սարք»-ի:"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Ձեր SD քարտում բավարար տեղ չկա: Գնացեք %s դրվածքներ՝ որոշ տվյալներ վերացնելու համար, հետո նորից փորձեք:"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Գնալ Պահոց"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Անհնար է բացել ֆայլը"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Վերացնե՞լ %d ֆայլ:"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Ջնջե՞լ"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Կանխադրված պահոցը լիքն է"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Ավելի հին"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Վերացնել ֆայլ"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Պահոց"
+

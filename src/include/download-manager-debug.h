@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,45 +32,36 @@
 #undef LOG_TAG
 #endif
 
-#define LOG_TAG "DownloadManager"
+#define LOG_TAG "DOWNLOAD_MANAGER"
 
-#define DP_LOG(format, args...) LOGI("[%s] "format, __func__, ##args)
-#define DP_LOGD(format, args...) LOGD("[%s] "format, __func__, ##args)
-#define DP_LOG_START(msg) LOGI("<<= [%s] Start =>>\n",msg)
-#define DP_LOG_FUNC() LOGI("<<= [%s]=>>\n",__func__)
-#define DP_LOGD_FUNC() LOGD("<<= [%s]=>>\n",__func__)
-#define DP_LOG_END(msg) LOGI("<<= [%s] End [%d] =>>\n",msg)
-#define DP_LOGE(format, args...) LOGE("[%s][ERR] "format, __func__, ##args)
-#define DP_LOG_TEST(format, args...) LOGI("####TEST####[%s] "format, __func__, ##args)
+#define DM_LOGV(format, ...) ;//LOGD(format, ##__VA_ARGS__)
+#define DM_LOGD(format, ...) LOGD(format, ##__VA_ARGS__)
+#define DM_LOGI(format, ...) LOGI(format, ##__VA_ARGS__)
+#define DM_LOGE(format, ...) LOGE(format, ##__VA_ARGS__)
+#define DM_SLOGD(format, ...) SECURE_LOGD(format, ##__VA_ARGS__)
+#define DM_SLOGI(format, ...) SECURE_LOGI(format, ##__VA_ARGS__)
+#define DM_SLOGE(format, ...) SECURE_LOGE(format, ##__VA_ARGS__)
+#define DM_LOGTEST(format, ...) ;//LOGD("[TEST]"format, ##__VA_ARGS__)
 
 #else
 
 #include <stdio.h>
 #include <pthread.h>
 
-#define DP_LOG(args...) do {\
-		printf("[DP:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
-		printf(args);printf("\n"); }while(0)
-#define DP_LOGD(args...) do {\
-		printf("[DP_D:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
+#define DM_LOGD(args...) do {\
+		printf("[D:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
 		printf(args);printf("\n");}while(0)
-#define DP_LOGE(args...) do {\
-		printf("[DP_ERR:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
+#define DM_LOGI(args...) do {\
+		printf("[I:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
 		printf(args);printf("\n");}while(0)
-#define DP_LOG_FUNC() do {\
-		printf("<<==[DP:%s][LN:%d][%lu] ==>> \n",__func__,__LINE__,pthread_self());\
-		}while(0)
-#define DP_LOGD_FUNC() do {\
-		printf("<<==[DP_D:%s][LN:%d][%lu] ==>> \n",__func__,__LINE__,pthread_self());\
-		}while(0)
-#define DP_LOG_START(msg) do {\
-		printf("<<==[DP:%s][LN:%d][%lu] Start ==>> \n",\
-		__FUNCTION__,__LINE__,pthread_self());\
-		}while(0)
-#define DP_LOG_END(msg) do {\
-		printf("<<==[DP:%s][LN:%d][%lu] End  ==>> \n",\
-		__FUNCTION__,__LINE__,pthread_self());\
-		}while(0)
+#define DM_LOGE(args...) do {\
+		printf("[ERR:%s][LN:%d][%lu]",__func__,__LINE__,pthread_self());\
+		printf(args);printf("\n");}while(0)
+#define DM_SLOGD DM_LOGD
+#define DM_SLOGI DM_LOGI
+#define DM_SLOGE DM_LOGE
+#define DM_LOGTEST
+#define DM_LOGV ;
 #endif /*_USE_DLOG*/
 
 #endif /* DOWNLOAD_MANAGER_DEBUG_H */

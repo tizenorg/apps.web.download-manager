@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,31 +25,63 @@
 
 #include <string>
 #include <queue>
-#include <db-util.h>
+#include <sqlite3.h>
 #include "download-manager-item.h"
 extern "C" {
 #include <unicode/utypes.h>
 }
+#define  REBUILD_QUERY "CREATE TABLE IF NOT EXISTS history( \
+id INTEGER PRIMARY KEY AUTOINCREMENT, \
+downloadid INTEGER, \
+historyid INTEGER, \
+downloadtype INTEGER, \
+contenttype INTEGER, \
+state INTEGER, \
+err INTEGER, \
+name, \
+path, \
+url, \
+filename, \
+headerfield, \
+headervalue, \
+installdir, \
+installnotifyurl, \
+etag, \
+tempfilepath, \
+date datetime, \
+filesize UNSIGNED BIG INT DEFAULT 0);"
+#define  REBUILD_QUERY_INDEX "CREATE INDEX history_date_index on history (date);"
 
 using namespace std;
 
 class DownloadHistoryDB
 {
 public:
-	static bool addToHistoryDB(Item *item);
+	static bool updateHistoryToDB(Item *item);
+	static bool updateCanceledItemToDB(Item *item);
+	static bool createItemToDB(Item *item);
+	static bool updateStateToDB(Item *item);
+	static bool updateDownloadInfoToDB(Item *item);
+	static bool updateDownloadIdToDB(Item *item);
+#ifdef _ENABLE_OMA_DOWNLOAD
+	static bool updateNotiUrlToHistoryDB(Item *item);
+#endif
 	static bool createRemainedItemsFromHistoryDB(int limit, int offset);
 	static bool createItemsFromHistoryDB(void);
 	static bool deleteItem(unsigned int historyId);
 	static bool deleteMultipleItem(queue <unsigned int> &q);
 	static bool clearData(void);
 	static bool getCountOfHistory(int *count);
+	static bool openDBConn(void) { return openDB(); }
+	static void closeDBConn(void) { closeDB(); }
 private:
 	DownloadHistoryDB(void);
 	~DownloadHistoryDB(void);
-	static sqlite3* historyDb;
-	static bool open(void);
+	static sqlite3 *historyDb;
+	static bool openDB(void);
 	static bool isOpen(void) { return historyDb ? true : false; }
-	static void close(void);
+	static void closeDB(void);
+	static bool loadSqlSchema(void);
 };
 
 #endif	/* DOWNLOAD_MANAGER_HISTORY_DB_H */

@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "रद्द करें"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "%d मदें हटाई जाएँगी।"
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "यह मद हटाई जाएगी।"
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "तैयार हो रहा है..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "कोई डाउनलोड नहीं"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "आपके द्वारा मदें डाउनलोड करने के बाद, वे यहाँ दिखाई जाएँगी"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "डाउनलोड रद्द किया गया"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "डाउनलोड पूर्ण"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "डाउनलोड विफल"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "डाउनलोड प्रबंधक"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 मद हटाया जाएगा।"
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "DRM सामग्री सक्रिय की जा रही है..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "सर्वर सूचित हो रहा है..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d मदें हटाई जाएँगी।"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "स्टोरेज"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "फिर से प्रयास करने के लिए डाउनलोड करें टैप करें।"
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "यह फाइल नहीं मिल सकती। इसे फिर से डाउनलोड करने का प्रयास करने के लिए डाउनलोड करें टैप करें।"
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "यह फाइल खोलने के लिए एक एप्लीकेशन ढूँढने में असमर्थ।"
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "रद्द करें"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "डाउनलोड करें"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "स्टोरेज पर जाएँ"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "ओके"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "डिफ़ॉल्ट स्टोरेज पूर्ण"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "अधिक पुराना"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d चयनित"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "आज"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "बीता हुआ कल"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "सभी चुनें"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "हटाएँ"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "हटाएँ"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "आपकी डिवाइस स्टोरेज में पर्याप्त स्थान नहीं है। कुछ डाटा हटाने या कोई SD कार्ड डालने के लिए %s सेटिंग्स में जाएँ।"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "आपकी डिवाइस स्टोरेज में पर्याप्त स्थान नहीं है। कुछ स्टोरेज स्थान रिक्त करने के लिए %s सेटिंग्स में जाएँ, फिर दोबारा प्रयास करें।"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "आपके SD कार्ड में पर्याप्त स्थान नहीं है। कुछ डाटा हटाने के लिए %s सेटिंग्स में जाएँ, या डिफॉल्ट स्टोरेज स्‍थान को डिवाइस में बदलें।"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "आपके SD कार्ड में पर्याप्त स्थान नहीं है। कुछ डाटा हटाने के लिए %s सेटिंग्स में जाएँ, फिर दोबारा प्रयास करें।"
+

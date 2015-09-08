@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ZRUŠIŤ"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "Vykoná sa odstr. %d položiek."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Táto položka sa odstráni."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Príprava..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Žiadne sťahovania"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Po stiahnutí položiek sa zobrazia tu."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Sťahovanie bolo zrušené"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Sťahovanie je dokončené"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Sťahovanie zlyhalo"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Správca sťahovaní"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 položka sa vymaže."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Aktivuje sa obsah DRM..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Oznamuje sa serveru..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d položky sa vymažú."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Úložisko"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Ťuknutím na tlačidlo Stiahnuť to skúste znova."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Tento súbor sa nedá nájsť. Ťuknutím na tlačidlo Stiahnuť ho skúste stiahnuť znova."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Nedá sa nájsť aplikácia na otvorenie tohto súboru."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Zrušiť"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Stiahnuť"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Prejsť do úložiska"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Predvolený úložný priestor je plný"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Staršie"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "Vybraté: %d"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Dnes"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Včera"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Vybrať všetko"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Odstrániť"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "ODSTRÁNIŤ"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "V úložisku zariadenia nie je dostatok miesta. Prejdite do menu %s a odstráňte niektoré údaje, alebo vložte kartu SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "V úložisku zariadenia nie je dostatok miesta. Prejdite do menu %s, uvoľnite miesto v úložisku a potom to skúste znova."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Na karte SD nie je dostatok miesta. Prejdite do menu %s a odstráňte niektoré údaje, alebo zmeňte predvolené umiestnenie úložiska na Zariadenie."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Na karte SD nie je dostatok miesta. Prejdite do menu %s, odstráňte niektoré údaje a potom to skúste znova."
+

@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Soubor nebyl přijat. Chcete ho stáhnout znovu?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Soubor neexistuje. Chcete ho stáhnout znovu?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Žádné stažené položky"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Nedostatek paměti. Odstraňte některé položky"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Stahování dokončeno"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Oznamování serveru..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Správce stahování"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Vyberte položky"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Až stáhnete položky, zobrazí se zde."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Stahování bylo zrušeno"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Stažení se nezdařilo"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Probíhá příprava na stahování..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Probíhá příprava na stahování..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "V paměti zařízení není dostatek volného místa. Přejděte na nastavení %s a odstraňte některá data nebo vložte SD kartu."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "V paměti zařízení není dostatek volného místa. Přejděte na nastavení %s a uvolněte místo. Potom opakujte akci."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Na SD kartě není dostatek volného místa. Přejděte na nastavení %s a odstraňte některá data, nebo změňte výchozí úložiště na Zařízení."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Na SD kartě není dostatek volného místa. Přejděte na nastavení %s a odstraňte některá data, a potom opakujte akci."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Přejít na Úložiště"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Soubor nelze otevřít"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Odstranit %d souborů?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Odstranit?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Výchozí paměť je plná"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Starší"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Odstranit soubor"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Úložiště"
+

@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "CUIR AR CEAL"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "Scriosfar %d mír."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Scriosfar an mhír seo."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Á ullmhú..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Níl íoslódálacha ann"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Tar éis duit míreanna a íoslódáil, taispeánfar anseo iad"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Íoslódáil curtha ar ceal"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Íoslódáilte"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Theip ar íoslódáil"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Bainisteoir íoslódála"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "Scriosfar 1 mhír"
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Inneachar DRM á chur i ngníomh..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Á chur in iúl d'fhreastalaí..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "Scriosfar %d mír"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Stóras"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Tapáil Íoslódáil le triail arís."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Ní féidir an comhad seo a aimsiú. Tapáil Íoslódáil le triail é a íoslódáil arís."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Ní féidir feidhmchlár a aimsiú leis an gcomhad seo a oscailt."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Cuir ar ceal"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Íoslódáil"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Gabh chuig Stóras"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Stóras réamhshocraithe lán"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Níos sine"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d roghnaithe"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Inniu"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Inné"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Roghnaigh gach"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Scrios"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "SCRIOS"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Níl go leor spáis i stóras do ghléis. Gabh chuig socruithe %s le roinnt sonraí a scriosadh nó ionsáigh cárta SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Níl go leor spáis i stóras do ghléis. Gabh chuig socruithe %s le roinnt spás stórála a shaoradh, ansin triail arís."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Níl go leor spáis ar do chárta SD. Gabh chuig socruithe %s le roinnt sonraí a scriosadh, nó athraigh an suíomh stórála réamhshocraithe chuig Gléas."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Níl go leor spáis ar do chárta SD. Gabh chuig socruithe %s le roinnt sonraí a scriosadh, ansin triail arís."
+

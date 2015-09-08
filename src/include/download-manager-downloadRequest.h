@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,20 +30,36 @@ using namespace std;
 class DownloadRequest
 {
 public:
-//	DownloadRequest();
-	DownloadRequest(string url, string cookie);
+	DownloadRequest(string url,	string reqHeaderField, string reqHeaderValue,
+			string installDir, string fileName);
 	DownloadRequest(DownloadRequest &rRequest);
-	~DownloadRequest();
+	~DownloadRequest(void);
 
-	string &getUrl();
-	string &getCookie();
-	bool isUrlEmpty();
-	bool isCookieEmpty();
+	string getUrl(void);
+	string getReqHeaderField(void);
+	string getReqHeaderValue(void);
+	string getInstallDir(void);
+	string getSender(void);
+	string getFileName(void);
+	string getTempFilePath(void);
+	string getEtag(void);
 	void setUrl(string url);
-	void setCookie(string cookie);
+	void setReqHeaderField(string reqHeaderField);
+	void setReqHeaderValue(string reqHeaderValue);
+	void setInstallDir(string installDir);
+	void setFileName(string fileName);
+	void setTempFilePath(string tempFilePath);
+	void setEtag(string etag);
 private:
+	void extractSenderName(void);
 	string m_url;
-	string m_cookie;
+	string m_sender;
+	string m_reqHeaderField;
+	string m_reqHeaderValue;
+	string m_installDir;
+	string m_fileName;
+	string m_tempFilePath;
+	string m_etag;
 };
 
 #endif /* DOWNLOAD_MANAGER_DOWNLOAD_REQUEST_H */

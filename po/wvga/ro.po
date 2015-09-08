@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ANULARE"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "%d elemente vor fi şterse."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Acest element va fi şters."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Pregătire..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Nicio descărcare"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "După ce descărcaţi elemente, acestea vor fi afişate aici."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Descărcarea a fost anulată"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Descărcare finalizată"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Descărcarea nu a reuşit"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Manager descărcare"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 element va fi şters."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Se activează conţinutul DRM..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Se notifică serverul..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d elemente vor fi şterse."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Stocare"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Atingeţi Descărcare pentru a încerca din nou."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Fişierul nu poate fi găsit. Atingeţi Descărcare pentru a încerca din nou să-l descărcaţi."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Nu s-a putut găsi o aplicaţie pentru a deschide acest fişier."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Anulare"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Descărcare"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Deschidere Stocare"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Spaţiul de stocare implicit este plin"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Mai vechi"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d selectate"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Azi"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Ieri"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Select. totală"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Ştergere"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "ŞTERGERE"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Spaţiul din memoria dispozitivului este insuficient. Deschideţi setările %s pentru a şterge câteva date sau introduceţi un card SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Spaţiul din memoria dispozitivului este insuficient. Deschideţi setările %s pentru a elibera spaţiu, apoi încercaţi din nou."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Spaţiul de pe cardul SD este insuficient. Deschideţi setările %s pentru a şterge câteva date sau schimbaţi locaţia implicită de stocare la Dispozitiv."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Spaţiul de pe cardul SD este insuficient. Deschideţi setările %s pentru a şterge date, apoi încercaţi din nou."
+

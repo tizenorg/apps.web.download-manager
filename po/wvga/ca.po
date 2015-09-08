@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "CANCEL·LAR"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "S'esborraran %d elements."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "S'esborrarà aquest element."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Preparant..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Sense descàrregues"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Després de descarregar elements, es mostraran aquí"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Descàrrega cancel·lada"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Descàrrega completa"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Descàrrega fallida"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Administrador descàr"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "S'esborrarà 1 element"
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "Activant el contingut DRM..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Notificant servidor..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "S'esborraran %d elements"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Emmagatzematge"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Toqui Descarregar per tornar-ho a intentar."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "No es pot trobar aquest fitxer. Toqui Descarregar per intentar tornar a descarregar-ho."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "No es troba cap aplicació per obrir aquest fitxer."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Cancel·lar"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Descarregar"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Anar a emmagatzem"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "Acceptar"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Emmagatzematge predeterminat ple"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Més antic"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d seleccionats"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Avui"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Ahir"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Seleccionar tot"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Esborrar"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "ESBORRAR"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "No hi ha prou espai a l'emmagatzematge del seu dispositiu. Vagi als ajustaments de %s per esborrar algunes dades o insereixi una targeta SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "No hi ha prou espai a l'emmagatzematge del seu dispositiu. Vagi als ajustaments de %s per alliberar espai d'emmagatzematge i torni-ho a intentar."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "No hi ha prou espai a la targeta SD. Vagi als ajustaments de %s per esborrar algunes dades o canviï la ubicació d'emmagatzematge predeterminada a Dispositiu."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "No hi ha prou espai a la targeta SD. Vagi als ajustaments de %s per esborrar dades i torni-ho a intentar."
+

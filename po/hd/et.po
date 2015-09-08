@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Faili ei võetud vastu. Kas laadida uuesti alla?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Faili pole olemas. Kas laadida uuesti alla?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Allalaadimisi pole"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Mälu pole piisavalt. Kustutage mõned üksused"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Allalaadimine on lõpule viidud"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Serveri teavitamine..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Allalaadimishaldur"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Vali üksusi"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Uksused kuvatakse siin parast nende allalaadimist."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Allalaadimine tühistati"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Allalaadimine nurjus"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Allalaadimiseks valmistumine..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Allalaadimiseks valmistumine..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Seadme mälus pole piisavalt ruumi. Avage menüü %s seaded, et kustutada mõned andmed, või paigaldage SD-kaart."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Seadme mälus pole piisavalt ruumi. Avage menüü %s seaded, et vabastada mäluruumi, ning seejärel proovige uuesti."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Teie SD-kaardil pole piisavalt ruumi. Avage menüü %s seaded, et kustutada mõned andmed, või muutke vaikemälu asukohaks Seade."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Teie SD-kaardil pole piisavalt ruumi. Avage menüü %s seaded, et kustutada mõned andmed, ning seejärel proovige uuesti."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Ava menüü Mälu"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Faili ei saa avada"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Kas kustutada %d faili?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Kustutada?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Vaikemälu on täis"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Vanemad"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Kustuta fail"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Hoiundamine"
+

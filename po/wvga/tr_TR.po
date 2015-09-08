@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "İPTAL"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "%d öğe silinecek."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Bu öğe silinecek."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Hzrlnıyor..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "İndirme yok"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Öğeleri indirdikten sonra burada gösterileceklerdir"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "İndirme iptal edildi"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "İndirme tamamlandı"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "İndirme başarısız"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "İndirme Yöneticisi"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 öğe silinecek."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "DRM içeriği etkinleştiriliyor..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Sunucuya bildiriliyor..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d öğe silinecek."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Kayıt yeri"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Tekrar denemek için İndir öğesine dokunun."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Bu dosya bulunamıyor. Tekrar indirmeyi denemek için İndir'e dokunun."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Bu dosyayı açacak bir uygulama bulunamadı."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "İptal"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "İndir"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Belleğe git"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "Tamam"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Varsayılan bellek dolu"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Daha eski"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d seçildi"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Bugün"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Dün"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Tümünü seç"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Sil"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "SİL"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Cihazınızın belleğinde yeterli alan yok. Bazı verileri silmek veya bir SD kart takmak için %s ayarlarına gidin."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Cihazınızın belleğinde yeterli alan yok. Depolama alanı açmak için %s ayarlarına gidin, ardından tekrar deneyin."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "SD kartınızda yeterli alan yok. Bazı verileri silmek için %s ayarlarına gidin veya varsayılan depolama konumunu Cihaz olarak değiştirin."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "SD kartınızda yeterli alan yok. Bazı verileri silmek için %s ayarlarına gidin, ardından tekrar deneyin."
+

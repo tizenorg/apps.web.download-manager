@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fişierul nu a fost primit. Îl descărcaţi din nou?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fişierul nu există. Îl descărcaţi din nou?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Nicio descărcare"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Memorie insuficientă. Ştergeţi câteva elemente"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Descărcare finalizată"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Se notifică serverul..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Manager descărcare"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Selectare elemente"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "După ce descărcaţi elemente, acestea vor fi afişate aici."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Descărcarea a fost anulată"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Descărcarea nu a reuşit"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Se pregăteşte descărcarea..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Se pregăteşte descărcarea..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Spaţiul din memoria dispozitivului este insuficient. Deschideţi setările %s pentru a şterge câteva date sau introduceţi un card SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Spaţiul din memoria dispozitivului este insuficient. Deschideţi setările %s pentru a elibera spaţiu, apoi încercaţi din nou."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Spaţiul de pe cardul SD este insuficient. Deschideţi setările %s pentru a şterge câteva date sau schimbaţi locaţia implicită de stocare la Dispozitiv."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Spaţiul de pe cardul SD este insuficient. Deschideţi setările %s pentru a şterge date, apoi încercaţi din nou."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Deschidere Stocare"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Fişierul nu poate fi deschis"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Ştergeţi %d fişiere?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Ştergeţi?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Spaţiul de stocare implicit este plin"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Mai vechi"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Ştergere fişier"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Stocare"
+

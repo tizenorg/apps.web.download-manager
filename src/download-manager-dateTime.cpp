@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,34 +20,20 @@
  * @brief	data and utility APIs for Date and Time
  */
 
+#include <string>
+#include <stdlib.h>
 #include "runtime_info.h"
 #include "download-manager-dateTime.h"
 
-#define MAX_SKELETON_BUFFER_LEN 8
-#define MAX_PATTERN_BUFFER_LEN 128
+#define MAX_SKELETON_BUFFER_LEN 16
+#define MAX_PATTERN_BUFFER_LEN 64
+#define MAX_STR_LEN 256
+/* requested by capi-base-utils-i18n team */
+#define DM_UDAT_PATTERN (I18N_UDATE_NONE - 1)
 
-DateGroup::DateGroup()
-	: count(0)
-	, type(DATETIME::DATE_TYPE_NONE)
-	, m_glGroupItem(NULL)
-{
-}
-
-DateGroup::~DateGroup()
-{
-}
-
-void DateGroup::initData()
-{
-	count = 0;
-	m_glGroupItem = NULL;
-}
 
 DateUtil::DateUtil()
-	: m_todayStandardTime(0)
-	, dateShortFormat(NULL)
-	, dateMediumFormat(NULL)
-	, dateFullFormat(NULL)
+	: dateShortFormat(NULL)
 	, timeFormat12H(NULL)
 	, timeFormat24H(NULL)
 {
@@ -55,36 +41,18 @@ DateUtil::DateUtil()
 
 DateUtil::~DateUtil()
 {
+	DM_LOGD("");
 	deinitLocaleData();
 }
 
 void DateUtil::deinitLocaleData()
 {
-	if (dateShortFormat)
-		udat_close(dateShortFormat);
-	if (dateMediumFormat)
-		udat_close(dateMediumFormat);
-	if (dateFullFormat)
-		udat_close(dateFullFormat);
-	if (timeFormat12H)
-		udat_close(timeFormat12H);
-	if (timeFormat24H)
-		udat_close(timeFormat24H);
+	i18n_udate_destroy(dateShortFormat);
+	i18n_udate_destroy(timeFormat12H);
+	i18n_udate_destroy(timeFormat24H);
 	dateShortFormat = NULL;
-	dateMediumFormat = NULL;
-	dateFullFormat = NULL;
 	timeFormat12H = NULL;
 	timeFormat24H = NULL;
-}
-
-int DateUtil::getDiffDaysFromToday()
-{
-	time_t now = time(NULL);
-	DP_LOGD("todayStandardTime[%ld]", m_todayStandardTime);
-	if (m_todayStandardTime == 0)
-		return 0;
-	else
-		return getDiffDays(now, m_todayStandardTime);
 }
 
 int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
@@ -101,9 +69,12 @@ int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
 	refYday = finishedDate->tm_yday;
 	refYear = finishedDate->tm_year;
 	diffDays = nowYday - refYday;
-	/*DP_LOGD("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
+	DM_LOGV("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
 		(finishedDate->tm_year + 1900), (finishedDate->tm_mon + 1),
-		finishedDate->tm_mday, refTime, refYday);*/
+		finishedDate->tm_mday, refTime, refYday);
+	DM_LOGV("nowDate[%d/%d/%d]",
+			(nowDate->tm_year + 1900), (nowDate->tm_mon + 1),
+			nowDate->tm_mday);
 	if ((nowYear-refYear)>0 && diffDays < 0) {
 		int year = nowDate->tm_year;
 		diffDays = diffDays + 365;
@@ -111,78 +82,91 @@ int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
 		if ((year%4 == 0 && year%100 != 0) || year%400 == 0)
 			diffDays++;
 	}
-	DP_LOGD("diffDays[%d]",diffDays);
+	DM_LOGD("diffDays[%d]",diffDays);
 	return diffDays;
 }
 
-UDateFormat *DateUtil::getBestPattern(const char *patternStr,
-	UDateTimePatternGenerator *generator, const char *locale)
+i18n_udate_format_h DateUtil::getBestPattern(const char *formatString,
+		i18n_udatepg_h patternGenerator, const char *locale)
 {
-	UDateFormat *format = NULL;
-	UChar customSkeleton[MAX_SKELETON_BUFFER_LEN] = {0,};
-	UChar bestPattern[MAX_PATTERN_BUFFER_LEN] = {0,};
-	UErrorCode status = U_ZERO_ERROR;
-	int32_t patternLen = 0;
+	int ret = I18N_ERROR_NONE;
+	i18n_udate_format_h format = NULL;
+	i18n_uchar uchCustomFormat[MAX_SKELETON_BUFFER_LEN] = {0,};
+	i18n_uchar bestPattern[MAX_PATTERN_BUFFER_LEN] = {0,};
+	int pattrenLength;
+	int bestPatternLength;
 
-	if (patternStr) {
-		u_uastrncpy(customSkeleton, patternStr, strlen(patternStr));
-		patternLen = udatpg_getBestPattern(generator, customSkeleton,
-		u_strlen(customSkeleton), bestPattern, MAX_PATTERN_BUFFER_LEN,
-			&status);
-		DP_LOGD("udatpg_getBestPattern status[%d] bestPattern[%s]", status,
-			bestPattern);
-		if (patternLen < 1) {
-			format = udat_open(UDAT_SHORT, UDAT_NONE, locale, NULL, -1,
-				NULL, -1, &status);
-			return format;
-		}
+	i18n_ustring_copy_ua(uchCustomFormat, formatString);
+	pattrenLength = i18n_ustring_get_length(uchCustomFormat);
+
+	// gets the best pattern that matches the given custom_format
+	ret = i18n_udatepg_get_best_pattern(patternGenerator, uchCustomFormat,
+		pattrenLength, bestPattern, MAX_PATTERN_BUFFER_LEN, &bestPatternLength);
+	if (ret != I18N_ERROR_NONE) {
+		DM_LOGE("failed to generate pattren, error [%d]", ret);
 	}
-	format = udat_open(UDAT_IGNORE, UDAT_NONE, locale, NULL, -1,
-		bestPattern, -1, &status);
+
+	if (bestPatternLength < 1) {
+		ret = i18n_udate_create(I18N_UDATE_SHORT, I18N_UDATE_NONE, locale, NULL, -1,
+			NULL, -1, &format);
+	} else {
+		ret = i18n_udate_create((i18n_udate_format_style_e)DM_UDAT_PATTERN,
+				(i18n_udate_format_style_e)DM_UDAT_PATTERN, locale, NULL, -1,
+				bestPattern, -1, &format);
+	}
 	return format;
 }
 
 void DateUtil::updateLocale()
 {
-	UDateTimePatternGenerator *generator = NULL;
-	UErrorCode status = U_ZERO_ERROR;
+	DM_LOGD("");
+	int ret = I18N_ERROR_NONE;
 	const char *locale = NULL;
-
-	DP_LOGD_FUNC();
-
+	i18n_udatepg_h patternGenerator = NULL;
+	locale = getenv("LC_TIME");
+	if (strlen(locale) > MAX_STR_LEN) {
+		DM_LOGE("Size of locale is greater than MAX STR LEN");
+		return;
+	}
+	DM_LOGD("locale : %s", locale);
 	deinitLocaleData();
+	// open a pattern generator according to a given locale
+	ret = i18n_udatepg_create(locale, &patternGenerator);
 
-	uloc_setDefault(getenv("LC_TIME"), &status);
-	DP_LOGD("uloc_setDefault status[%d]",status);
+	if(!patternGenerator) {
+		DM_LOGE("i18n_udatpg_open fail errot %d", ret);
+		return;
+	}
 
-	locale = uloc_getDefault();
-	generator = udatpg_open(locale,&status);
-	DP_LOGD("udatpg_open status[%d]",status);
+	ret = i18n_ulocale_set_default(locale);
+	if (ret != I18N_ERROR_NONE) {
+		DM_LOGE("unable to set default locale error [%d]", ret);
+	}
 
-	timeFormat12H = getBestPattern("hm", generator, locale);
-	timeFormat24H = getBestPattern("Hm", generator, locale);
+	ret = i18n_ulocale_get_default(&locale);
+	if (ret != I18N_ERROR_NONE) {
+		DM_LOGE("unable to get default locale error [%d]", ret);
+	}
 
-	dateShortFormat = udat_open(UDAT_NONE, UDAT_SHORT, locale, NULL, -1, NULL,
-		-1, &status);
-	dateMediumFormat = udat_open(UDAT_NONE, UDAT_MEDIUM, locale, NULL, -1, NULL,
-		-1, &status);
-	dateFullFormat = getBestPattern("yMMMEEEd", generator, locale);
-	udatpg_close(generator);
+	timeFormat12H = getBestPattern("hh:mm", patternGenerator, locale);
+	timeFormat24H = getBestPattern("HH:mm", patternGenerator, locale);
+	dateShortFormat = getBestPattern("MMMd", patternGenerator, locale);
+	i18n_udatepg_destroy(patternGenerator);
 }
 
-void DateUtil::getDateStr(int style, double time, string &outBuf)
+void DateUtil::getDateStr(double finishTime, string &outBuf)
 {
-	UDateFormat *format = NULL;
-	UErrorCode status = U_ZERO_ERROR;
-	UChar str[MAX_BUF_LEN] = {0,};
+	int ret = I18N_ERROR_NONE;
 	bool value = false;
+	int diffDay = 0;
+	i18n_udate_format_h format = NULL;
 
-	DP_LOGD_FUNC();
-	switch (style) {
-	case LOCALE_STYLE::TIME:
+	double nowTime = time(NULL);
+	diffDay = getDiffDays((time_t)nowTime, (time_t)finishTime);
+	if (diffDay == 0 || diffDay == 1) {
 		if (runtime_info_get_value_bool(
-				RUNTIME_INFO_KEY_24HOUR_CLOCK_FORMAT_ENABLED,&value) != 0) {
-			DP_LOGE("runtime_info_get_value_bool is failed");
+				RUNTIME_INFO_KEY_24HOUR_CLOCK_FORMAT_ENABLED, &value) != 0) {
+			DM_LOGE("Fail to get runtime_info_get_value_bool");
 			format = timeFormat12H;
 		} else {
 			if (value)
@@ -190,30 +174,23 @@ void DateUtil::getDateStr(int style, double time, string &outBuf)
 			else
 				format = timeFormat12H;
 		}
-		break;
-	case LOCALE_STYLE::SHORT_DATE:
+	} else {
 		format = dateShortFormat;
-		break;
-	case LOCALE_STYLE::MEDIUM_DATE:
-		format = dateMediumFormat;
-		break;
-	case LOCALE_STYLE::FULL_DATE:
-		format = dateFullFormat;
-		break;
-	default :
-		DP_LOGE("Critical: cannot enter here");
-		format = timeFormat12H;
-		break;
 	}
 	if (format) {
-		char tempBuf[MAX_BUF_LEN] = {0,};
-		udat_format(format, time, str, MAX_BUF_LEN - 1, NULL, &status);
-		DP_LOGD("udat_format : status[%d]", status);
-		u_austrncpy(tempBuf, str, MAX_BUF_LEN-1);
-		outBuf = string(tempBuf);
+		int formattedLength;
+		i18n_uchar formatted[MAX_BUF_LEN] = {0,};
+		char result[MAX_BUF_LEN] = {0,};
+		ret = i18n_udate_format_date(format, (finishTime * 1000), formatted,
+				MAX_BUF_LEN, NULL, &formattedLength);
+		if (ret != I18N_ERROR_NONE)
+			DM_LOGE("i18n_udate_format_date failed : ret [%d]", ret);
+		i18n_ustring_copy_au_n(result, formatted, MAX_BUF_LEN);
+		result[MAX_BUF_LEN - 1] = '\0';
+		outBuf = string(result);
 	} else {
-		DP_LOGE("Critical: fail to get time value");
-		outBuf = string(S_("IDS_COM_POP_ERROR"));
+		DM_LOGE("Fail to get time value");
+		outBuf = string(DM_POP_TEXT_ERROR);
 	}
 }
 

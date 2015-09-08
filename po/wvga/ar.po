@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "إلغاء"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "سيتم حذف %d من العناصر."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "سيتم حذف هذا العنصر."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "جارٍ التحضير..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "لا توجد ملفات محملة"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "بعد تنزيل العناصر، يتم عرضها هنا"
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "تم إلغاء التنزيل"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "تم التنزيل"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "فشل التنزيل"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "مدير التنزيل"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "سيتم حذف عنصر واحد."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "جارٍ تنشيط محتوى DRM..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "جارٍ إشعار الخادم..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "سيتم حذف %d عناصر."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "مكان التخزين"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "انقر فوق تنزيل للمحاولة مرة أخرى."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "لا يمكن العثور على هذا الملف. انقر فوق تنزيل لمحاولة تنزيله مرة أخرى."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "يتعذّر العثور على تطبيق لفتح هذا الملف."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "إلغاء"
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "تنزيل"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "انتقال إلى وحدة التخزين"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "موافق"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "التخزين الافتراضي ممتلئ"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "أقدم"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "تم تحديد %d"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "اليوم"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "أمس"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "تحديد الكل"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "حذف"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "حذف"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "ما من مساحة كافية على وحدة تخزين الجهاز. انتقل إلى ضبط %s لحذف بعض البيانات أو إدراج بطاقة SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "ما من مساحة كافية على وحدة تخزين الجهاز. انتقل إلى ضبط %s لإخلاء مساحة للتخزين ثم حاول مرة أخرى."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "ما من مساحة كافية على بطاقة SD. انتقل إلى ضبط %s لحذف بعض البيانات أو تغيير موقع التخزين الافتراضي إلى الجهاز."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "ما من مساحة كافية على بطاقة SD. انتقل إلى ضبط %s لحذف بعض البيانات ثم حاول مرة أخرى."
+

@@ -1,10 +1,10 @@
-
+%define _ux_define tizen2.3
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.0.1
-Release:	11
-Group:		TO_BE_FILLED_IN
-License:	TO_BE_FILLED_IN
+Version:	0.2.42
+Release:	1
+Group:		misc
+License:	Flora-1.1
 URL:		N/A
 Source0:	%{name}-%{version}.tar.gz
 BuildRequires: pkgconfig(capi-web-url-download)
@@ -12,16 +12,32 @@ BuildRequires: pkgconfig(capi-system-runtime-info)
 BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(capi-network-connection)
 BuildRequires: pkgconfig(capi-content-media-content)
+BuildRequires: pkgconfig(capi-content-mime-type)
+BuildRequires: pkgconfig(capi-base-utils-i18n)
 BuildRequires: pkgconfig(elementary)
-BuildRequires: pkgconfig(aul)
 BuildRequires: pkgconfig(ecore)
-BuildRequires: pkgconfig(bundle)
 BuildRequires: pkgconfig(xdgmime)
-BuildRequires: pkgconfig(icu-i18n)
+BuildRequires: pkgconfig(libcurl)
+BuildRequires: pkgconfig(notification)
+BuildRequires: pkgconfig(appsvc)
+BuildRequires: pkgconfig(sqlite3)
+BuildRequires: pkgconfig(vconf)
+BuildRequires: pkgconfig(utilX)
+BuildRequires: pkgconfig(xproto)
+BuildRequires: pkgconfig(x11)
+BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(storage)
+BuildRequires: efl-assist-devel
 BuildRequires: cmake
 BuildRequires: gettext-devel
 BuildRequires: expat-devel
-BuildRequires: edje-tools
+BuildRequires: hash-signer
+Requires(post): coreutils
+Requires(post): sqlite
+Requires(post): sys-assert
+Requires(post): edje-tools
+
+%{echo:#winset style:%{?_ux_define}#}
 
 %description
 Application for support of the content download
@@ -29,62 +45,83 @@ Application for support of the content download
 %prep
 %setup -q
 
-%build
-cmake . -DCMAKE_INSTALL_PREFIX="/opt/apps/org.tizen.download-manager"
+%define _default_path /usr/apps/%{name}
+%define _bin_path %{_default_path}/bin
+%define _res_path %{_default_path}/res
+%define _imagedir %{_res_path}/images
+%if "%{?_ux_define}" == "tizen2.3"
+%define _edjedir %{_res_path}/edje
+%define _tabledir %{_res_path}/tables
+%endif
+%define _localedir %{_res_path}/locale
+%define _pkgxmldir /usr/share/packages
+%define _icondir /usr/share/icons/default/small
+%define _licensedir /usr/share/license
+%define _smackdir /etc/smack/accesses.d
+%define support_oma_drm OFF
 
+%define cmake \
+	CFLAGS="${CFLAGS:-%optflags} -fPIC -D_REENTRANT -fvisibility=hidden"; export CFLAGS \
+	CXXFLAGS="${CXXFLAGS:-%optflags} -fvisibility-inlines-hidden"; export CXXLAGS \
+	FFLAGS="${FFLAGS:-%optflags} -fPIC -fvisibility=hidden"; export FFLAGS \
+	LDFLAGS+=" -Wl,--as-needed -Wl,--hash-style=both"; export LDFLAGS \
+	%__cmake \\\
+		-DCMAKE_INSTALL_PREFIX:PATH=%{_default_path} \\\
+		%if "%{?_lib}" == "lib64" \
+		%{?_cmake_lib_suffix64} \\\
+		%endif \
+		%{?_cmake_skip_rpath} \\\
+		%if "%{?support_oma_drm}" == "ON" \
+		-DSUPPORT_WAITING_RO:BOOL=ON \\\
+		%else \
+		-DSUPPORT_WAITING_RO:BOOL=OFF \\\
+		%endif \
+		%if "%{?_ux_define}" == "tizen2.3" \
+		-DTIZEN_2_3_UX:BOOL=ON \\\
+		%endif \
+		-DPKG_NAME=%{name} \\\
+		-DPKG_VERSION=%{version} \\\
+		-DPKG_RELEASE=%{release} \\\
+		-DSMACK_DIR=%{_smackdir}
+
+%build
+export CFLAGS="$CFLAGS -DTIZEN_DEBUG_ENABLE"
+export CXXFLAGS="$CXXFLAGS -DTIZEN_DEBUG_ENABLE"
+export FFLAGS="$FFLAGS -DTIZEN_DEBUG_ENABLE"
+%cmake .
 make %{?jobs:-j%jobs}
 
 %install
 rm -rf %{buildroot}
 %make_install
+PKG_ID=%{name}
+%define tizen_sign 1
+%define tizen_sign_base /usr/apps/${PKG_ID}
+%define tizen_sign_level platform
+%define tizen_author_sign 1
+%define tizen_dist_sign 1
+mkdir -p %{buildroot}/usr/share/license
 
 %post
-#### Download History ####
-if [ ! -f /opt/apps/org.tizen.download-manager/data/db/.download-history.db ];
-then
-		sqlite3 /opt/apps/org.tizen.download-manager/data/db/.download-history.db 'PRAGMA journal_mode=PERSIST;
-		create table history(id integer primary key autoincrement, historyid integer, downloadtype integer, contenttype integer, state integer, err integer, name, path, url, cookie, date datetime);'
-fi
-
-chown -R 5000:5000 /opt/apps/org.tizen.download-manager/data
-chmod 660 /opt/apps/org.tizen.download-manager/data/db/.download-history.db
-chmod 660 /opt/apps/org.tizen.download-manager/data/db/.download-history.db-journal
+mkdir -p /opt/usr/apps/org.tizen.download-manager/data/db
+chown -R 5000:5000 /opt/usr/apps/org.tizen.download-manager/data
+chmod -R 755 /opt/usr/apps/org.tizen.download-manager/data
+chsmack -a 'org.tizen.download-manager' /opt/usr/apps/org.tizen.download-manager/data/db
 
 %files
 %defattr(-,root,root,-)
-/opt/apps/org.tizen.download-manager/bin/*
-/opt/apps/org.tizen.download-manager/data
-/opt/apps/org.tizen.download-manager/res/*
-/opt/apps/org.tizen.download-manager/res/edje/*
-/opt/share/packages/org.tizen.download-manager.xml
-
-%changelog
-* Tue Sep 04 2012 Jungki kwak <jungki.kwak@samsung.com>
-- Change the name of application operation
-
-* Mon Sep 03 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Add deisplay language set
-- Resolve a bug about the name of edc
-
-* Mon Aug 27 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Change notify winset to selectioninfo winset
-- Apply changes of capi-web-url-download
-- Resolve a prevent defect
-
-* Wed Aug 22 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Enable to use notification of download CAPI
-- Show the application in case of default service operation
-
-* Mon Aug 17 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Add https protocol to service uri field
-
-* Mon Aug 16 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Apply changes of capi-web-url-download
-- Change boilerplates and licence to flora
-
-* Mon Aug 10 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Do not display installing message
-
-* Fri Aug 03 2012 Jungki Kwak <jungki.kwak@samsung.com>
-- Initial release
+%manifest %{name}.manifest
+%{_bin_path}/*
+%{_imagedir}/*
+%if "%{?_ux_define}" == "tizen2.3" 
+%{_edjedir}/*
+%{_tabledir}/*
+%endif
+%{_localedir}/*
+%{_default_path}/author-signature.xml
+%{_default_path}/signature1.xml
+%{_pkgxmldir}/%{name}.xml
+%{_icondir}/%{name}.png
+%{_licensedir}/%{name}
+%{_smackdir}/%{name}.efl
 

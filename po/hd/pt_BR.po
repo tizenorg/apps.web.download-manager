@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Arquivo não recebido. Baixar novamente?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "O arquivo não existe. Baixar novamente?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Não há downloads"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Memória insuficiente. Apague alguns itens"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Download concluído"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Notificando servidor..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Gerenciador download"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Selecionar itens"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Após baixar itens, eles serão exibidos aqui."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Download cancelado"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Falha no download"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Preparando para baixar..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Preparando para baixar..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Não existe espaço suficiente no armazenamento do seu dispositivo. Vá para configurações de %s para excluir alguns dados ou insira um cartão SD."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Não existe espaço suficiente no armazenamento do dispositivo. Vá para configurações de %s para liberar algum espaço de armazenamento e tente novamente."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Não existe espaço suficiente no seu cartão SD. Vá para configurações de %s para excluir alguns dados ou alterar o local de armazenamento padrão para o Dispositivo."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Não existe espaço suficiente no cartão SD. Vá para as configurações de %s para excluir alguns dados e tente novamente."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Ir ao Armazenamento"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Não é possível abrir o arquivo"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Excluir %d arquivos?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Apagar?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Armazenamento padrão cheio"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Mais antigo"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Excluir arquivo"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Armazenamento"
+

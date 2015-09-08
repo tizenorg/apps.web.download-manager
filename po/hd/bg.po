@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Файлът не е получен. Изтегляне отново?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Файлът не съществува. Изтегляне отново?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Няма изтегляния"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Няма достатъчно памет. Изтрийте някои елементи"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Изтеглянето завършено"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Уведомяв. на сървъра..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Диспечер на изтегляне"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Изберете елементи"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "След като изтеглите елементи, те ще се покажат тук."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Изтеглянето е отменено"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Изтеглянето неуспешно"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Подготвя се за изтегляне..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Подготвя се за изтегляне..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Няма достатъчно място в паметта на устройството ви. Отидете на Настройки на %s, за да изтриете някои данни, или поставете SD карта."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Няма достатъчно място в паметта на устройството ви. Отидете на Настройки на %s, за да освободите място за съхранение, след което опитайте отново."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Няма достатъчно място на вашата SD карта. Отидете на Настройки на %s, за да изтриете данни, или променете мястото за съхранение по подразбиране на Устройство."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Няма достатъчно място на вашата SD карта. Отидете в Настройки на %s, за да изтриете някои данни, след което опитайте отново."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Към Съхраняване"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Файлът не може да се отвори"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Изтриване на %d файла?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Изтриване?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Мястото за съхранение по подразбиране е пълно"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "По-стари"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Изтриване на файл"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Устройство за съхранение на данни"
+

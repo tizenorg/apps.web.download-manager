@@ -1,0 +1,388 @@
+/*
+ *  download-manager
+ *
+ * Copyright (c) 2014 Samsung Electronics Co., Ltd. All rights reserved.
+ *
+ * Contact: Amit Dhiman <amit.dhiman@samsung.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+#define DM_LIST_TYPE2_RIGHT_PADDING_WIDTH 15
+#define DM_LIST_TYPE2_ICON_SIZE 46 46
+
+#define DM_CANCEL_BUTTON_CIRCLE_LABEL_SIZE 46 46
+#define DM_CANCEL_BUTTON_CIRCLE_SIZE  46 46
+#define DM_CANCEL_BUTTON_CIRCLE_ICON_SIZE 46 46
+#define DM_CANCEL_BUTTON_BG_IMAGE "download_manager_list_button_bg.png"
+
+//Custom genlist downloading item
+#define DM_LIST_TEXT_MAIN_SIZE 30
+#define DM_LIST_TEXT_PROGRESS_SIZE 24
+#define DM_LIST_ITEM_HEIGHT 106
+#define DM_LIST_PADDING_TOP_BOTTOM_SIZE 10
+#define DM_LIST_PADDING_RIGHT_SIZE 15
+#define DM_LIST_ICON_SIZE 46 46
+#define DM_LIST_MAIN_CONTENT_HEIGHT 86
+
+#define STYLE_TAGS \
+   tag:  "br" "\n";\
+   tag:  "ps" "ps";\
+   tag:  "tab" "\t";\
+   tag:  "b" "+ font_weight=Bold";
+
+collections {
+	base_scale: 1.8;
+	// cancel button style
+	group { name: "elm/button/base/dm_cancel_button";
+		script {
+			public mouse_down = 0;
+			public multi_down = 0;
+		}
+		images {
+			image: DM_CANCEL_BUTTON_BG_IMAGE RAW;
+		}
+		parts {
+			part { name: "background";
+				type: SPACER;
+				scale: 1;
+				description { state: "default" 0.0;
+					min: DM_CANCEL_BUTTON_CIRCLE_LABEL_SIZE;
+				}
+			}
+			part { name: "base";
+				scale: 1;
+				description { state: "default" 0.0;
+					min: DM_CANCEL_BUTTON_CIRCLE_SIZE;
+					max: DM_CANCEL_BUTTON_CIRCLE_SIZE;
+					color_class: "W015L6E1";
+					rel1 {
+						relative: 0.0 0.0;
+						to: "background";
+					}
+					align: 0.5 0.0;
+					image.normal: DM_CANCEL_BUTTON_BG_IMAGE;
+				}
+				description { state: "pressed" 0.0;
+					inherit: "default" 0.0;
+					visible: 0 ;
+				}
+			}
+			part { name: "bg";
+				scale: 1;
+				description { state: "default" 0.0;
+					rel1.to: "base";
+					rel2.to: "base";
+					image.normal: DM_CANCEL_BUTTON_BG_IMAGE;
+					color_class: "W015L6";
+				}
+				description { state: "pressed" 0.0;
+					inherit: "default" 0.0;
+					color_class: "W015L6P";
+				}
+				description { state: "disabled" 0.0;
+					inherit: "default" 0.0;
+					color_class: "W015L6D";
+				}
+			}
+			part { name: "elm.swallow.icon";
+				type: SWALLOW;
+				scale: 1;
+				description { state: "default" 0.0;
+					min: DM_CANCEL_BUTTON_CIRCLE_ICON_SIZE;
+					max: DM_CANCEL_BUTTON_CIRCLE_ICON_SIZE;
+					rel1.to: "bg";
+					rel2.to: "bg";
+					color_class: "F032L3";
+				}
+				description { state: "visible" 0.0;
+					inherit: "default" 0.0;
+					color_class: "F032L3P";
+				}
+				description { state: "disabled" 0.0;
+					inherit: "default" 0.0;
+					color_class: "F032L3D";
+				}
+			}
+			part { name: "event";
+				scale: 1;
+				type: RECT;
+				description { state: "default" 0.0;
+					rel1.to: "background";
+					rel2.to: "background";
+					color: 0 0 0 0;
+				}
+			}
+		}
+		programs {
+			program { name: "pressed";
+				signal: "mouse,down,1*";
+				source: "event";
+				script {
+					if ((get_int(multi_down) == 0) && (get_int(mouse_down) == 0)) {
+						set_int(mouse_down, 1);
+						run_program(PROGRAM:"button_press1");
+					}
+				}
+			}
+			program { name: "button_press1";
+				script {
+					new st[31];
+					new Float:vl;
+					get_state(PART:"bg", st, 30, vl);
+					if (strcmp(st, "disabled")) {
+						set_state(PART:"base", "pressed", 0.0);
+						set_state(PART:"bg", "pressed", 0.0);
+						set_state(PART:"elm.swallow.icon", "pressed", 0.0);
+						emit("elm,action,press", "");
+					}
+				}
+			}
+			program { name: "unpressed";
+				signal: "mouse,up,1";
+				source: "event";
+				script {
+					if (get_int(mouse_down) == 1) {
+						set_int(mouse_down, 0);
+						run_program(PROGRAM:"button_unpress1");
+					}
+				}
+			}
+			program { name: "button_unpress1";
+				script {
+					new st[31];
+					new Float:vl;
+					get_state(PART:"bg", st, 30, vl);
+					if (strcmp(st, "disabled")) {
+						set_state(PART:"base", "default", 0.0);
+						set_state(PART:"bg", "default", 0.0);
+						set_state(PART:"elm.swallow.icon", "default", 0.0);
+						emit("elm,action,unpress", "");
+					}
+				}
+			}
+			program { name: "touch_snd";
+				signal: "mouse,clicked,1";
+				source: "event";
+				script {
+					new st[31];
+					new Float:vl;
+					if (get_int(multi_down) == 0) {
+						get_state(PART:"bg", st, 30, vl);
+						if (strcmp(st, "disabled")) {
+							run_program(PROGRAM:"touch_sound");
+							emit("elm,action,click", "");
+						}
+					}
+				}
+			}
+			program { name: "touch_sound";
+				action: RUN_PLUGIN "touch_sound";
+			}
+			program { name: "disable";
+				signal: "elm,state,disabled";
+				source: "elm";
+				action: STATE_SET "disabled" 0.0;
+				target: "bg";
+				target: "elm.swallow.icon";
+			}
+			program { name: "enable";
+				signal: "elm,state,enabled";
+				source: "elm";
+				action: STATE_SET "default" 0.0;
+				target: "bg";
+				target: "elm.swallow.icon";
+			}
+			program { name: "multi_down";
+				signal: "elm,action,multi,down";
+				source: "elm";
+				script {
+					set_int(multi_down, 1);
+				}
+			}
+			program { name: "multi_up";
+				signal: "elm,action,multi,up";
+				source: "elm";
+				script {
+					set_int(multi_down, 0);
+				}
+			}
+		}
+	}
+
+	//Custom group to show the downloading item
+	styles {
+		style { name: "list_text_main";
+			base: "font=Tizen:style=Regular font_size="DM_LIST_TEXT_MAIN_SIZE" color=#000000 color_class=ATO002 text_class=ATO002 ellipsis=1.0";
+		}
+		style { name: "list_text_progress";
+			base: "font=Tizen:style=Regular font_size="DM_LIST_TEXT_PROGRESS_SIZE" color=#ffffff color_class=T057L1 text_class=T057L1 ellipsis=1.0";
+			STYLE_TAGS
+		}
+	}
+	group { name: "elm/genlist/item/dm/progress.main/default";
+
+		data.item: "texts" "elm.text.main elm.text.progress";
+		data.item: "contents" "elm.icon.1 elm.icon.2 elm.icon";
+		data.item: "bg_color" "B0211";
+		parts {
+			part {
+				name: "bg";
+				scale : 1;
+				type : RECT;
+				description { state: "default" 0.0;
+					min: 0 DM_LIST_ITEM_HEIGHT;
+					max: -1 DM_LIST_ITEM_HEIGHT;
+					color_class: "B0211";
+				}
+				description { state: "pressed" 0.0;
+					inherit: "default" 0.0;
+					color_class: "B0211P";
+				}
+				description { state: "disabled" 0.0;
+					color_class: "B0211";
+				}
+			}
+			part { name: "left_top_padding";
+				type: SPACER;
+				scale : 1;
+				description { state: "default" 0.0;
+					min:  0 DM_LIST_PADDING_TOP_BOTTOM_SIZE;
+					fixed: 1 1;
+					align: 0.0 0.0;
+					rel1.to: "bg";
+					rel2 { relative: 0.0 0.0; to:"bg"; }
+
+				}
+			}
+			part { name: "right_bottom_padding";
+				type: SPACER;
+				scale: 1;
+				description { state: "default" 0.0;
+					min: 0 DM_LIST_PADDING_TOP_BOTTOM_SIZE;
+					fixed: 1 1;
+					align: 1.0 1.0;
+					rel1 { relative: 1.0 1.0; to:"bg"; }
+					rel2.to: "bg";
+				}
+			}
+			part {
+				name: "elm.icon.1";
+				scale : 1;
+				mouse_events: 0;
+				type : SWALLOW;
+				description {
+					state: "default" 0.0;
+					fixed: 1 0;
+					align: 0.0 0.5;
+					rel2 { relative: 0.0 1.0; to: "bg"; }
+				}
+			}
+			part { name: "icon_content_padding";
+				scale : 1;
+				type : SPACER;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					align: 0.0 0.0;
+					min: DM_LIST_PADDING_RIGHT_SIZE 0;
+					fixed: 1 1;
+					rel1 { relative: 1.0 0.0; to:"elm.icon.1"; }
+					rel2 { relative: 1.0 1.0; to:"elm.icon.1"; }
+				}
+			}
+			part {
+				name: "elm.icon.2";
+				scale : 1;
+				mouse_events: 1;
+				type : SWALLOW;
+				description {
+					state: "default" 0.0;
+					fixed: 1 0;
+					align: 1.0 0.5;
+					rel1 { relative: 1.0 0.0; }
+				}
+			}
+			part { name: "content_icon_padding";
+				scale : 1;
+				type : SPACER;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					align: 1.0 0.5;
+					min: DM_LIST_PADDING_RIGHT_SIZE 0;
+					fixed: 1 1;
+					rel1 { relative: 0.0 0.0; to_x:"elm.icon.2"; to_y: "bg"; }
+					rel2 { relative: 0.0 1.0; to_x:"elm.icon.2"; to_y: "bg"; }
+				}
+			}
+			part {
+				name: "content_bg";
+				scale : 1;
+				type : SPACER;
+				description {
+					state: "default" 0.0;
+					align: 0.0 0.0;
+					min: 0 DM_LIST_MAIN_CONTENT_HEIGHT;
+					max: -1 DM_LIST_MAIN_CONTENT_HEIGHT;
+					fixed: 1 1;
+					rel1 { relative: 1.0 1.0; to_x:"icon_content_padding"; to_y:"left_top_padding"; }
+					rel2 { relative: 0.0 1.0; to_x:"content_icon_padding"; to_y:"right_bottom_padding"; }
+				}
+			}
+			part { name: "elm.text.main";
+				scale : 1;
+				mouse_events: 1;
+				type : TEXTBLOCK;
+				description {
+					state: "default" 0.0;
+					align: 0.0 0.0;
+					fixed: 0 1;
+					rel1 { relative: 0.0 0.0; to: "content_bg"; }
+					rel2 { relative: 1.0 0.3; to: "content_bg"; }
+					text.min: 0 1;
+					text.style: "list_text_main";
+				}
+			}
+			part {
+				name: "elm.icon";
+				scale : 1;
+				mouse_events: 0;
+				type : SWALLOW;
+				description {
+					state: "default" 0.0;
+					align: 0.0 0.0;
+					fixed: 1 1;
+					rel1 { relative: 0.0 0.2; to_x: "content_bg"; to_y: "elm.text.main"; }
+					rel2 { relative: 1.0 1.0; to: "content_bg"; }
+				}
+			}
+			part { name: "elm.text.progress";
+				scale : 1;
+				mouse_events: 1;
+				type : TEXTBLOCK;
+				description {
+					state: "default" 0.0;
+					align: 0.0 0.5;
+					fixed: 0 1;
+					rel1 { relative: 0.0 0.6; to_x: "content_bg"; to_y: "elm.icon"; }
+					rel2 { relative: 1.0 1.0; to: "content_bg"; }
+					text.min: 0 1;
+					text.style: "list_text_progress";
+				}
+			}
+		}
+	}
+} //collections ends
+

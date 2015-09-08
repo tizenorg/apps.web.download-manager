@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Fil ikke modtaget. Download igen?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Fil findes ikke. Download igen?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Ingen downloads"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Der er ikke tilstrækkelig hukommelse. Slet nogle elementer."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Overførsel fuldført"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Underretter server ..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Downloadstyring"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Vælg elementer"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Når du har hentet elementer, vises de her."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Overførsel annulleret"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Overførsel mislykkedes"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Forbereder overførsel ..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Forbereder overførsel ..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Der er ikke tilstrækkelig plads i din enheds hukommelse. Gå til indstillingerne for %s for at slette data, eller indsæt et SD-kort."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Der er ikke tilstrækkelig plads i din enheds hukommelse. Gå til indstillingerne for %s for at frigøre lagerplads, og prøv igen."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Der er ikke tilstrækkelig plads på dit SD-kort. Gå til indstillingerne for %s for at slette data, eller skift standardlagerplacering til Enhed."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Der er ikke tilstrækkelig plads på dit SD-kort. Gå til %s for at slette data, og prøv igen."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Gå til Lagring"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Kan ikke åbne filen"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Vil du slette %d filer?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Slet?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Standardlager fuldt"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Ældre"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Slet fil"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Lagring"
+

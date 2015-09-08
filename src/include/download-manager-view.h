@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,11 +30,17 @@
 #include "download-manager-common.h"
 #include "download-manager-viewItem.h"
 #include "download-manager-dateTime.h"
+#include "vconf.h"
 
 enum {
 	POPUP_EVENT_EXIT = 0,
 	POPUP_EVENT_ERR,
 };
+
+typedef struct {
+	int subItemsCount;
+	ViewItem *viewItem;
+} groupTitleType;
 
 class DownloadView {
 public:
@@ -47,67 +53,88 @@ public:
 	void destroy(void);
 	void createView(void);
 	void activateWindow(void);
-#ifndef _TIZEN_PUBLIC
-	void rotateWindow(int angle);
-#endif
+	void clickedItemFromNoti(unsigned int historyId, NOTIFICATION_TYPE::TYPE type);
 	void show(void);
 	void hide(void);
+	void pause(void);
+	void resume(void);
+	static void lockStateChangedCB(keynode_t *node, void *user_data);
 
 	void attachViewItem(ViewItem *viewItem);
 	void detachViewItem(ViewItem *viewItem);
-
+	static void changedGenlistLanguage(void *data, Evas_Object *obj, void *event_info);
 	void changedRegion(void);
-	void showErrPopup(string &desc);
-	void update();
+	void showErrPopup(string *desc);
+	void showMemoryFullPopup(string &msg);
+	void showRetryPopup(ViewItem *viewItem, string *msg);
+	void update(void);
 	void update(ViewItem *viewItem);
 	void update(Elm_Object_Item *glItem);
-	void showViewItem(int id, const char *title);
-	void playContent(int id, const char *title);
+	void update(int diffDays);
+	void updateLang(void);
 	void handleChangedAllCheckedState(void);
 	void handleCheckedState(void);
 	bool isGenlistEditMode(void);
 	void handleGenlistGroupItem(int type);
-#ifndef _TIZEN_PUBLIC
-	void setSweepedItem(ViewItem *item) { m_sweepedItem = item; }
-	ViewItem *sweepedItem(void) { return m_sweepedItem; }
+#ifdef _ENABLE_OMA_DOWNLOAD
+	void showOMAPopup(string msg, ViewItem *viewItem);
 #endif
-	void moveRetryItem(ViewItem *viewItem);
-	static char *getGenlistGroupLabelCB(void *data, Evas_Object *obj,
-		const char *part);
+	void setSilentMode(bool value) { m_silentMode = value; }
+	void setActivatedLockScreen(bool value) { m_activatedLockScreen = value; }
+	void checkEditMode(void);
+	static Eina_Bool pauseTimerCB(void *data);
 
 private:
-	static void showNotifyInfoCB(void *data, Evas *evas, Evas_Object *obj, void *event);
-	static void hideNotifyInfoCB(void *data, Evas *evas, Evas_Object *obj, void *event);
-#ifndef _TIZEN_PUBLIC
-	static void sweepRightCB(void *data, Evas_Object *obj, void *event_info);
-	static void sweepLeftCB(void *data, Evas_Object *obj, void *event_info);
+#ifdef _TIZEN_2_3_UX
+	static void selectAllChangedCB(void *data, Evas *e, Evas_Object *obj, void *event_info);
+#else
+	static void selectAllChangedCB(void *data, Evas_Object *obj, void *event_info);
 #endif
-	static void backBtnCB(void *data, Evas_Object *obj, void *event_info);
-	static void cbItemDeleteCB(void *data, Evas_Object *obj, void *event_info);
-	static void cbItemCancelCB(void *data, Evas_Object *obj, void *event_info);
-	static void selectAllClickedCB(void *data, Evas *evas, Evas_Object *obj,
-		void *event_info);
-	static void selectAllChangedCB(void *data, Evas_Object *obj,
-		void *event_info);
 	static void genlistClickCB(void *data, Evas_Object *obj, void *event_info);
-	static void cancelClickCB(void *data, Evas_Object *obj, void *event_info);
 	static void errPopupResponseCB(void *data, Evas_Object *obj, void *event_info);
-	static Eina_Bool deletedNotifyTimerCB(void *data);
-
+	static void retryPopupCancelCB(void *data, Evas_Object *obj, void *event_info);
+	static void retryPopupRetryCB(void *data, Evas_Object *obj, void *event_info);
+	static void memoryFullPopupCancelCB(void *data, Evas_Object *obj, void *event_info);
+	static void memoryFullPopupMyFilesCB(void *data, Evas_Object *obj, void *event_info);
+	static void deleteBtnCB(void *data, Evas_Object *obj, void *event_info);
+	static void popupBackCB(void *data, Evas_Object *obj, void *event_info);
+	static void deleteToolBarBtnCB(void *data, Evas_Object *obj, void *event_info);
+	static void deletePopupDeleteCB(void *data, Evas_Object *obj, void *event_info);
+	static Eina_Bool popCB(void *data, Elm_Object_Item *it);
+	static void realizedCB(void *data, Evas_Object *obj,	void *event_info);
+#ifdef _ENABLE_OMA_DOWNLOAD
+	static void omaPopupResponseOKCB(void *data, Evas_Object *obj, void *event_info);
+	static void omaPopupResponseCancelCB(void *data, Evas_Object *obj, void *event_info);
+#endif
+#ifdef _TIZEN_2_3_UX
+	static void moreKeyCB(void *data, Evas_Object *obj, void *event_info);
+	static void contextPopupDismissedCB(void *data, Evas_Object *obj, void *event_info);
+	static void rotateContextPopupCB(void *data, Evas_Object *obj, void *event_info);
+	static void tabBarCancelButtonCB(void *data, Evas_Object *obj, void *event_info);
+#endif
 private:
 	DownloadView();
 	~DownloadView();
 
-	inline void destroyEvasObj(Evas_Object *e) { if(e) evas_object_del(e); e = NULL;}
 	void setTheme(void);
 	void setIndicator(Evas_Object *window);
 	Evas_Object *createWindow(const char *windowName);
 	Evas_Object *createBackground(Evas_Object *window);
+	Evas_Object *createConformant(Evas_Object *window);
 	Evas_Object *createLayout(Evas_Object *parent);
 	void createTheme(void);
 	void createNaviBar(void);
-	void createBackBtn(void);
-	void createControlBar(void);
+#ifdef _TIZEN_2_3_UX
+	void createContextPopup();
+	void deleteContextPopup();
+	void moveContextPopup();
+#else
+	void createToolBar(void);
+	void destroyToolBar(void);
+	void createDeleteBtn(void);
+	void destroyDeleteBtn(void);
+#endif
+	void showDeletePopup(void);
 	void createBox(void);
 	void createList(void);
 
@@ -119,61 +146,56 @@ private:
 	void hideEmptyView(void);
 
 	void removePopup(void);
+#ifdef _ENABLE_OMA_DOWNLOAD
+	void removeOnlyPopupObj(void);
+#endif
 	void showGenlistEditMode(void);
 	void hideGenlistEditMode(void);
-#ifndef _TIZEN_PUBLIC
-	void cancelSweepEvent(void);
+#ifdef _TIZEN_2_3_UX
+	void createSelectAllLayout();
+	void deleteSelectAllLayout();
+#else
+	void changeSelectAll(void);
+	void restoreDeleteBtn(void);
 #endif
-	void createSelectAllLayout(void);
-	void changeAllCheckedValue(void);
 	void destroyCheckedItem(void);
-	void showNotifyInfo(int type, int selectedCount);
-	void destroyNotifyInfo(void);
-	void createNotifyInfo(void);
-
-	DateGroup *getDateGroupObj(int type);
-	Elm_Object_Item *getGenlistGroupItem(int type);
-	int getGenlistGroupCount(int type);
-	void setGenlistGroupItem(int type, Elm_Object_Item *item);
-	void increaseGenlistGroupCount(int type);
-	void handleUpdateDateGroupType(ViewItem *viewItem);
+	void showSelectedNotify(int selectedCount);
 	void cleanGenlistData();
-	char *getGenlistGroupLabel(void *data, Evas_Object *obj, const char *part);
-#ifndef _TIZEN_PUBLIC
-	ViewItem *findViewItemForGenlistItem(Elm_Object_Item *glItem);
-#endif
 
 	Evas_Object *eoWindow;
+#ifndef _TIZEN_2_3_UX
+	Evas_Object *eoIndicatorBackground;
+#endif
 	Evas_Object *eoBackground;
+	Evas_Object *eoConform;
 	Evas_Object *eoLayout;
-	Elm_Theme *eoTheme;
-
 	Evas_Object *eoEmptyNoContent;
 	Evas_Object *eoNaviBar;
 	Elm_Object_Item *eoNaviBarItem;
-	Evas_Object *eoBackBtn;
-	Evas_Object *eoControlBar;
-	Elm_Object_Item *eoCbItemDelete;
-	Elm_Object_Item *eoCbItemCancel;
-	Elm_Object_Item *eoCbItemEmpty;
-	Ecore_Timer *eoNotifyTimer;
-	Evas_Object *eoBoxLayout;
+#ifndef _TIZEN_2_3_UX
+	Evas_Object *eoToolBar;
+	Elm_Object_Item *eoToolBarItem;
+#endif
 	Evas_Object *eoBox;
 	Evas_Object *eoDldList;
 	Evas_Object *eoPopup;
+#ifdef _TIZEN_2_3_UX
+	Elm_Theme *m_theme;
+	Evas_Object *eoMoreMenu;
 	Evas_Object *eoSelectAllLayout;
-	Evas_Object *eoAllCheckedBox;
-	Evas_Object *eoNotifyInfoLayout;
-	Elm_Genlist_Item_Class dldGenlistGroupStyle;
-	Eina_Bool m_allChecked;
-#ifndef _TIZEN_PUBLIC
-	ViewItem *m_sweepedItem;
+	bool m_isEditMode;
 #endif
-
+	Eina_Bool m_allChecked;
+#ifdef _ENABLE_OMA_DOWNLOAD
+	ViewItem *prevOmaViewItem;
+#endif
+	Ecore_Timer *m_pauseTimer;
 	int m_viewItemCount;
-	DateGroup m_today;
-	DateGroup m_yesterday;
-	DateGroup m_previousDay;
+	int m_selectedItemsCount;
+	bool m_silentMode;
+	bool m_activatedLockScreen;
+	groupTitleType m_groupTitle[3];
+	unsigned long long m_viewLastRefreshTime;
 };
 
 #endif /* DOWNLOAD_MANAGER_VIEW_H */

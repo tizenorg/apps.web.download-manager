@@ -1,0 +1,102 @@
+msgid "IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"
+msgstr "ANNULEREN"
+
+msgid "IDS_DM_POP_PD_ITEMS_WILL_BE_DELETED_ABB2"
+msgstr "%d items worden verwijderd."
+
+msgid "IDS_DM_POP_THIS_ITEM_WILL_BE_DELETED_ABB"
+msgstr "Dit item wordt verwijderd."
+
+msgid "IDS_DM_BODY_PREPARING_ING_M_STATUS_ABB"
+msgstr "Voorber..."
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Geen downloads"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Nadat u items hebt gedownload, worden ze hier getoond."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Download geannuleerd"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Downloaden voltooid"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Downloaden mislukt"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Downloadmanager"
+
+msgid "IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"
+msgstr "1 item wordt verwijderd."
+
+msgid "IDS_DM_BODY_ACTIVATING_DRM_CONTENT_ING"
+msgstr "DRM-inhoud activeren..."
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING"
+msgstr "Melden aan server..."
+
+msgid "IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED"
+msgstr "%d items worden verwijderd."
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Opslag"
+
+msgid "IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN"
+msgstr "Tik op Downloaden om opnieuw te proberen."
+
+msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
+msgstr "Dit bestand is niet gevonden. Tik op Downloaden om het opnieuw te proberen."
+
+msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
+msgstr "Kan geen applicatie vinden om dit bestand te openen."
+
+msgid "IDS_DM_BUTTON_CANCEL_ABB2"
+msgstr "Annul."
+
+msgid "IDS_DM_BUTTON_DOWNLOAD_ABB2"
+msgstr "Downloaden"
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Ga naar Opslag"
+
+msgid "IDS_DM_BUTTON_OK_ABB"
+msgstr "OK"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Standaardopslag vol"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Ouder"
+
+msgid "IDS_DM_HEADER_PD_SELECTED_ABB3"
+msgstr "%d geselecteerd"
+
+msgid "IDS_DM_HEADER_TODAY"
+msgstr "Vandaag"
+
+msgid "IDS_DM_HEADER_YESTERDAY"
+msgstr "Gisteren"
+
+msgid "IDS_DM_MBODY_SELECT_ALL"
+msgstr "Alles selecteren"
+
+msgid "IDS_DM_OPT_DELETE"
+msgstr "Wissen"
+
+msgid "IDS_TPLATFORM_ACBUTTON_DELETE_ABB"
+msgstr "VERWIJDEREN"
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Er is onvoldoende ruimte in uw apparaatopslag. Ga naar de instellingen voor %s om gegevens te verwijderen of plaats een SD-kaart."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Er is onvoldoende ruimte in uw apparaatopslag. Ga naar de instellingen voor %s om opslagruimte vrij te maken en probeer het opnieuw."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Er is onvoldoende ruimte op uw SD-kaart. Ga naar de instellingen voor %s om gegevens te verwijderen of de standaard opslaglocatie te wijzen in Apparaat."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Er is onvoldoende ruimte op uw SD-kaart. Ga naar de instellingen voor %s om gegevens te verwijderen en probeer het opnieuw."
+

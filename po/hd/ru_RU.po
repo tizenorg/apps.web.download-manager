@@ -1,0 +1,75 @@
+msgid "IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q"
+msgstr "Файл не получен. Загрузить еще раз?"
+
+msgid "IDS_DM_POP_FILE_DOES_NOT_EXIST_DOWNLOAD_AGAIN_Q"
+msgstr "Файл не существует. Загрузить еще раз?"
+
+msgid "IDS_DM_BODY_NO_DOWNLOADS"
+msgstr "Нет загрузок"
+
+msgid "IDS_DM_POP_NOT_ENOUGH_MEMORY_DELETE_SOME_ITEMS"
+msgstr "Недостаточно памяти. Удалите некоторые элементы"
+
+msgid "IDS_DM_HEADER_DOWNLOAD_COMPLETE"
+msgstr "Загрузка завершена"
+
+msgid "IDS_DM_BODY_NOTIFYING_SERVER_ING_ABB"
+msgstr "Уведомление сервера..."
+
+msgid "IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"
+msgstr "Диспетчер загрузки"
+
+msgid "IDS_DM_HEADER_SELECT_ITEMS"
+msgstr "Выберите элементы"
+
+msgid "IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"
+msgstr "Здесь отображаются загруженные элементы."
+
+msgid "IDS_DM_BODY_DOWNLOAD_CANCELLED_M_STATUS_ABB"
+msgstr "Загрузка отменена"
+
+msgid "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB"
+msgstr "Сбой загрузки"
+
+msgid "IDS_DM_BODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Подготовка к загрузке..."
+
+msgid "IDS_DM_SBODY_PREPARING_TO_DOWNLOAD_ING"
+msgstr "Подготовка к загрузке..."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_INSERT_AN_SD_CARD"
+msgstr "Недостаточно места в памяти устройства. Вставьте карту памяти SD или перейдите в меню %s, чтобы удалить некоторые данные."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_IN_YOUR_DEVICE_STORAGE_GO_TO_PS_SETTINGS_TO_FREE_UP_SOME_STORAGE_SPACE_THEN_TRY_AGAIN"
+msgstr "Недостаточно места в памяти устройства. Перейдите в меню %s, чтобы освободить место, затем повторите попытку."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_OR_CHANGE_THE_DEFAULT_STORAGE_LOCATION_TO_DEVICE"
+msgstr "Недостаточно места на карте памяти SD. Перейдите в меню %s, чтобы удалить некоторые данные, или измените место хранения по умолчанию на “Устройство”."
+
+msgid "IDS_DM_BODY_THERE_IS_NOT_ENOUGH_SPACE_ON_YOUR_SD_CARD_GO_TO_PS_SETTINGS_TO_DELETE_SOME_DATA_THEN_TRY_AGAIN"
+msgstr "Недостаточно места на карте памяти SD. Перейдите в меню %s, чтобы удалить некоторые данные, затем повторите попытку."
+
+msgid "IDS_DM_BUTTON_GO_TO_STORAGE_ABB"
+msgstr "Перейти в “Хранил.”"
+
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE_ABB"
+msgstr "Не удалось открыть файл"
+
+msgid "IDS_DM_POP_DELETE_PD_FILES_Q"
+msgstr "Удалить файлы (%d)?"
+
+msgid "IDS_DM_POP_DELETE_Q"
+msgstr "Удалить?"
+
+msgid "IDS_DM_HEADER_DEFAULT_STROAGE_FULL"
+msgstr "Хранилище по умолчанию заполнено"
+
+msgid "IDS_DM_HEADER_OLDER"
+msgstr "Старые"
+
+msgid "IDS_DM_HEADER_DELETE_FILE"
+msgstr "Удалить файл"
+
+msgid "IDS_DM_BODY_STORAGE"
+msgstr "Память"
+

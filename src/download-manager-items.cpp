@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,11 +28,12 @@ void Items::attachItem(Item *item)
 
 void Items::detachItem(Item *item)
 {
-	vector<Item *>::iterator it;
-	for (it = m_items.begin(); it < m_items.end(); it++) {
+	vector <Item *>::iterator it;
+	for (it = m_items.begin(); it != m_items.end(); ++it) {
 		if (*it == item) {
 			delete item;
 			m_items.erase(it);
+			return;
 		}
 	}
 }
@@ -40,13 +41,26 @@ void Items::detachItem(Item *item)
 bool Items::isExistedHistoryId(unsigned int id)
 {
 	vector <Item *>::iterator it;
-	for (it = m_items.begin(); it < m_items.end(); it++) {
-		if ((*it)->historyId() == id ) {
-			DP_LOGD("historyId[%ld],title[%s]",
-				(*it)->historyId(), (*it)->title().c_str());
+	for (it = m_items.begin(); it != m_items.end(); ++it) {
+		if ((*it)->getHistoryId() == id ) {
+			DM_SLOGD("historyId[%ld],title[%s]",
+				(*it)->getHistoryId(), (*it)->getTitle().c_str());
 			return true;
 		}
 	}
 	return false;
+}
+
+int Items::checkQueuedItem()
+{
+	int count = 0;
+	vector <Item *>::iterator it;
+	for (it = m_items.begin(); it != m_items.end(); ++it) {
+		if ((*it)->getState() == ITEM::QUEUED ) {
+			(*it)->downloadFromQueuedState();
+			count++;
+		}
+	}
+	return count;
 }
 

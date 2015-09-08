@@ -1,11 +1,11 @@
 /*
  * Copyright 2012  Samsung Electronics Co., Ltd
  *
- * Licensed under the Flora License, Version 1.0 (the "License");
+ * Licensed under the Flora License, Version 1.1 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.tizenopensource.org/license
+ *    http://floralicense.org/license/
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,9 +21,12 @@
  */
 #include <sstream>
 #include <queue>
+#include "utilX.h"
+#include "efl_assist.h"
+
 #include "download-manager-view.h"
 #include "download-manager-history-db.h"
-#include "download-manager-downloadItem.h"
+#include "download-manager-dateTime.h"
 
 static void destroy_window_cb(void *data, Evas_Object *obj, void *event);
 
@@ -34,139 +37,311 @@ enum {
 
 DownloadView::DownloadView(void)
 	: eoWindow(NULL)
+#ifndef _TIZEN_2_3_UX
+	, eoIndicatorBackground(NULL)
+#endif
 	, eoBackground(NULL)
+	, eoConform(NULL)
 	, eoLayout(NULL)
+	, eoEmptyNoContent(NULL)
 	, eoNaviBar(NULL)
 	, eoNaviBarItem(NULL)
-	, eoBackBtn(NULL)
-	, eoControlBar(NULL)
-	, eoCbItemDelete(NULL)
-	, eoCbItemCancel(NULL)
-	, eoCbItemEmpty(NULL)
-	, eoNotifyTimer(NULL)
-	, eoBoxLayout(NULL)
+#ifndef _TIZEN_2_3_UX
+	, eoToolBar(NULL)
+	, eoToolBarItem(NULL)
+#endif
 	, eoBox(NULL)
 	, eoDldList(NULL)
 	, eoPopup(NULL)
+#ifdef _TIZEN_2_3_UX
+	, m_theme(NULL)
+	, eoMoreMenu(NULL)
 	, eoSelectAllLayout(NULL)
-	, eoAllCheckedBox(NULL)
-	, eoNotifyInfoLayout(NULL)
-	, m_allChecked(EINA_FALSE)
-#ifndef _TIZEN_PUBLIC
-	, m_sweepedItem(NULL)
+	, m_isEditMode(false)
 #endif
+	, m_allChecked(EINA_FALSE)
+#ifdef _ENABLE_OMA_DOWNLOAD
+	, prevOmaViewItem(NULL)
+#endif
+	, m_pauseTimer(NULL)
 	, m_viewItemCount(0)
+	, m_selectedItemsCount(0)
+	, m_silentMode(false)
+	, m_activatedLockScreen(false)
 {
+	m_groupTitle[VIEWITEM_GROUP::TODAY].subItemsCount = 0;
+	m_groupTitle[VIEWITEM_GROUP::TODAY].viewItem = NULL;
+	m_groupTitle[VIEWITEM_GROUP::YESTERDAY].subItemsCount = 0;
+	m_groupTitle[VIEWITEM_GROUP::YESTERDAY].viewItem = NULL;
+	m_groupTitle[VIEWITEM_GROUP::OLDER].subItemsCount = 0;
+	m_groupTitle[VIEWITEM_GROUP::OLDER].viewItem = NULL;
+	m_viewLastRefreshTime = time(NULL);
 // FIXME Later : init private members
 	DownloadEngine &engine = DownloadEngine::getInstance();
 	engine.initEngine();
 	DateUtil &inst = DateUtil::getInstance();
 	inst.updateLocale();
-	dldGenlistGroupStyle.item_style = "grouptitle";
-	dldGenlistGroupStyle.func.text_get = getGenlistGroupLabelCB;
-	dldGenlistGroupStyle.func.content_get = NULL;
-	dldGenlistGroupStyle.func.state_get = NULL;
-	dldGenlistGroupStyle.func.del = NULL;
-
-	m_today.setType(DATETIME::DATE_TYPE_TODAY);
-	m_yesterday.setType(DATETIME::DATE_TYPE_YESTERDAY);
-	m_previousDay.setType(DATETIME::DATE_TYPE_PREVIOUS);
+#ifdef _TIZEN_2_3_UX
+	m_theme = elm_theme_new();
+	elm_theme_ref_set(m_theme, NULL);
+	elm_theme_extension_add(m_theme, EDJEDIR"/download-manager-view.edj");
+#endif
 }
 
 DownloadView::~DownloadView()
 {
-	DP_LOG_FUNC();
-//	DownloadEngine &engine = DownloadEngine::getInstance();
-//	engine.deinitEngine();
+	DM_LOGD("");
+#ifdef _TIZEN_2_3_UX
+	elm_theme_extension_del(m_theme, EDJEDIR"/download-manager-view.edj");
+	elm_theme_free(m_theme);
+#endif
 }
 
 Evas_Object *DownloadView::create(void)
 {
 	Evas_Object *window = NULL;
-	window = createWindow(PACKAGE);
+	Evas_Object *conformant = NULL;
+	FileUtility fileObj;
+	window = createWindow(PACKAGE_NAME);
 	if (!window)
 		return NULL;
 
+	if (elm_win_wm_rotation_supported_get(window)) {
+		int rots[4] = {0, 90, 180, 270};
+		elm_win_wm_rotation_available_rotations_set(window, rots, 4);
+	}
+	/* If there are some job when the rotation event is happened, please enable this.
+	 * It is handled to rotate of a window by window manager. Please don't care it */
+//	evas_object_smart_callback_add(window, "wm,rotation,changed", _rot_changed_cb, NULL);
+
+	conformant = createConformant(window);
 	createBackground(window);
-	createLayout(window);
+	createLayout(conformant);
 	setIndicator(window);
 	createView();
-
+	fileObj.cleanTempDir();
 	return window;
 }
 
 void DownloadView::destroy()
 {
+	Elm_Object_Item *it = NULL;
+	ViewItem *item = NULL;
 	DownloadEngine &engine = DownloadEngine::getInstance();
+
+	if (vconf_ignore_key_changed(
+			VCONFKEY_IDLE_LOCK_STATE, lockStateChangedCB) != 0) {
+		DM_LOGE("Fail to vconf_ignore_key_changed");
+	}
+	if(eoDldList)
+		it = elm_genlist_first_item_get(eoDldList);
+
+	while (it) {
+		item = (ViewItem *)elm_object_item_data_get(it);
+		it = elm_genlist_item_next_get(it);
+		if (item && item->isGroupTitle() == false) {
+			if (item->getState() < ITEM::FINISH_DOWNLOAD)
+				item->cancel();
+			item->destroy();
+		}
+	}
 	engine.deinitEngine();
-	ecore_timer_del(eoNotifyTimer);
+	if (isGenlistEditMode()) {
+		hideGenlistEditMode();
+	}
+	removePopup();
+	if(eoEmptyNoContent) {
+		evas_object_del(eoEmptyNoContent);
+		eoEmptyNoContent = NULL;
+	}
+	if(eoDldList)
+		elm_genlist_clear(eoDldList);
+	if(eoDldList) {
+		evas_object_del(eoDldList);
+		eoDldList = NULL;
+	}
+#ifndef _TIZEN_2_3_UX
+	if(eoToolBar) {
+		evas_object_del(eoToolBar);
+		eoToolBar = NULL;
+	}
+#endif
+	if(eoBox) {
+		evas_object_del(eoBox);
+		eoBox = NULL;
+	}
+	if(eoNaviBar) {
+		evas_object_del(eoNaviBar);
+		eoNaviBar = NULL;
+	}
+	if(eoLayout) {
+		evas_object_del(eoLayout);
+		eoLayout = NULL;
+	}
+	if(eoConform) {
+		evas_object_del(eoConform);
+		eoConform = NULL;
+	}
+#ifndef _TIZEN_2_3_UX
+	if(eoIndicatorBackground) {
+		evas_object_del(eoIndicatorBackground);
+		eoIndicatorBackground = NULL;
+	}
+#endif
+	if(eoBackground) {
+		evas_object_del(eoBackground);
+		eoBackground = NULL;
+	}
+	if(eoWindow) {
+		evas_object_del(eoWindow);
+		eoWindow = NULL;
+	}
+	if(m_pauseTimer) {
+		ecore_timer_del(m_pauseTimer);
+		m_pauseTimer = NULL;
+	}
 }
+
 
 void DownloadView::show()
 {
-	DP_LOG_FUNC();
-#ifdef _SILENT_LAUNCH
-	evas_object_show(eoWindow);
-#endif
-	elm_win_raise(eoWindow);
-	handleUpdateDateGroupType(NULL);
+	DM_LOGI("");
+	if (!m_silentMode) {
+		evas_object_show(eoWindow);
+		elm_win_activate(eoWindow);
+	}
+
+	/* FIXME later : For performance, this is re-considered later
+	 * This is added to update date information when system time is changed by user*/
+	update();
 }
 
 void DownloadView::hide()
 {
-	DP_LOG_FUNC();
+	DM_LOGI("");
 	removePopup();
-#ifndef _TIZEN_PUBLIC
-	cancelSweepEvent();
-#endif
-	destroyNotifyInfo();
 	if (isGenlistEditMode()) {
 		hideGenlistEditMode();
 	}
-#ifdef _SILENT_LAUNCH
 	evas_object_hide(eoWindow);
-#endif
 	elm_win_lower(eoWindow);
+}
+
+void DownloadView::lockStateChangedCB(keynode_t *node, void *user_data)
+{
+	DownloadView *view = NULL;
+	if (!user_data) {
+		DM_LOGE("NULL Check:user_data");
+		return;
+	}
+	if (!node) {
+		DM_LOGE("NULL Check:node");
+		return;
+	}
+	if (node->keyname)
+		DM_LOGV("keyname:%s", node->keyname);
+	DM_LOGI("value:%d", node->value.i);
+	if (node->value.i == VCONFKEY_IDLE_LOCK) {
+		view = (DownloadView *)user_data;
+		view->setActivatedLockScreen(true);
+		DM_LOGV("Activated Lock Screen");
+	}
+}
+
+void DownloadView::checkEditMode()
+{
+	DM_LOGD("");
+	if (isGenlistEditMode() && !m_activatedLockScreen) {
+		DM_LOGI("Clear genlist mode");
+		hideGenlistEditMode();
+	}
+}
+
+Eina_Bool DownloadView::pauseTimerCB(void *data)
+{
+	DM_LOGD("");
+	DownloadView &view = DownloadView::getInstance();
+	view.m_pauseTimer = NULL;
+	return ECORE_CALLBACK_CANCEL;
+}
+
+void DownloadView::pause()
+{
+	DM_LOGI("");
+//	removePopup();
+
+	if (vconf_notify_key_changed(
+			VCONFKEY_IDLE_LOCK_STATE, lockStateChangedCB, this) != 0) {
+		DM_LOGE("Fail to vconf_notify_key_changed");
+	}
+	m_pauseTimer = ecore_timer_add(0.2, pauseTimerCB, NULL);
+}
+
+void DownloadView::resume()
+{
+	DM_LOGI("");
+	if (vconf_ignore_key_changed(
+			VCONFKEY_IDLE_LOCK_STATE, lockStateChangedCB) != 0) {
+		DM_LOGD("Fail to vconf_ignore_key_changed");
+	}
+	// one more check if the vconf value of lock state has not been changed due to some error
+	m_activatedLockScreen = false;
+	DateUtil &util = DateUtil::getInstance();
+	int diffDays = util.getDiffDays(time(NULL),(time_t)m_viewLastRefreshTime);
+	if (diffDays > 0) {
+		if (m_viewItemCount > 0)
+			update(diffDays);
+		m_viewLastRefreshTime = time(NULL);
+	}
 }
 
 void DownloadView::activateWindow()
 {
 	if (!eoWindow)
 		create();
-
+	else
+		resume();
 	show();
 }
 
-#ifndef _TIZEN_PUBLIC
-void DownloadView::rotateWindow(int angle)
+void DownloadView::clickedItemFromNoti(unsigned id, NOTIFICATION_TYPE::TYPE type)
 {
-	if (angle >= 0)
-		elm_win_rotation_with_resize_set(eoWindow, angle);
-}
+	Elm_Object_Item *it = NULL;
+	ViewItem *item = NULL;
+	it = elm_genlist_first_item_get(eoDldList);
+	while (it) {
+		item = (ViewItem *)elm_object_item_data_get(it);
+		/* elm_genlist_item_select_mode_get is needed to check group item */
+		if (item && item->isGroupTitle() == false && item->getHistoryId() == id) {
+			elm_genlist_item_bring_in(it, ELM_GENLIST_ITEM_SCROLLTO_TOP);
+			if (type == NOTIFICATION_TYPE::NOTI_FAILED) {
+				string msg[2];
+				msg[0] = __("IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB");
+#ifdef _TIZEN_2_3_UX
+				msg[1] = __("IDS_DM_BODY_TAP_DOWNLOAD_TO_TRY_AGAIN");
+#else
+				msg[1] = __("IDS_DM_POP_FILE_NOT_RECEIVED_DOWNLOAD_AGAIN_Q");
 #endif
-
-void DownloadView::showViewItem(int id, const char *title)
-{
-	DP_LOG_FUNC();
-}
-
-/* This is called by AUL view mode */
-void DownloadView::playContent(int id, const char *title)
-{
-	DP_LOG_FUNC();
+				item->setIsClickedFromNoti(true);
+				showRetryPopup(item, msg);
+			}
+			break;
+		}
+		it = elm_genlist_item_next_get(it);
+	}
 }
 
 void DownloadView::setIndicator(Evas_Object *window)
 {
 	elm_win_indicator_mode_set(window, ELM_WIN_INDICATOR_SHOW);
+	elm_win_indicator_opacity_set(window, ELM_WIN_INDICATOR_OPAQUE);
 }
 
 Evas_Object *DownloadView::createWindow(const char *windowName)
 {
 	eoWindow = elm_win_add(NULL, windowName, ELM_WIN_BASIC);
 	if (eoWindow) {
-		elm_win_title_set(eoWindow, __("IDS_BR_HEADER_DOWNLOAD_MANAGER"));
-		elm_win_borderless_set(eoWindow, EINA_TRUE);
+		elm_win_title_set(eoWindow, __("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
 		elm_win_conformant_set(eoWindow, 1);
 		evas_object_smart_callback_add(eoWindow, "delete,request",
 				destroy_window_cb,	static_cast<void*>(this));
@@ -178,130 +353,407 @@ Evas_Object *DownloadView::createBackground(Evas_Object *window)
 {
 	if (!window)
 		return NULL;
-
+#ifndef _TIZEN_2_3_UX
+	eoIndicatorBackground = elm_bg_add(window);
+	if (eoIndicatorBackground) {
+		evas_object_size_hint_weight_set(eoIndicatorBackground, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+		elm_object_style_set(eoIndicatorBackground, "indicator/headerbg");
+		elm_object_part_content_set(eoConform, "elm.swallow.indicator_bg", eoIndicatorBackground);
+	}
+#endif
 	eoBackground = elm_bg_add(window);
 	if (eoBackground) {
 		evas_object_size_hint_weight_set(eoBackground, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-		elm_win_resize_object_add(window, eoBackground);
+#ifdef _TIZEN_2_3_UX
+		elm_bg_color_set(eoBackground, 255, 255, 255);
+#endif
 		evas_object_show(eoBackground);
 	} else {
-		DP_LOGE("Fail to create bg object");
+		DM_LOGE("Fail to create bg object");
 	}
 	return eoBackground;
+}
+
+Evas_Object *DownloadView::createConformant(Evas_Object *window)
+{
+	DM_LOGD("");
+	if (!window)
+		return NULL;
+	eoConform = elm_conformant_add(window);
+	if (eoConform) {
+		evas_object_size_hint_weight_set(eoConform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+		elm_win_resize_object_add(window, eoConform);
+	}
+	if (!eoConform) {
+		DM_LOGE("Fail to create conformant object");
+		return NULL;
+	}
+	evas_object_show(eoConform);
+	return eoConform;
 }
 
 Evas_Object *DownloadView::createLayout(Evas_Object *parent)
 {
 	if (!parent) {
-		DP_LOGE("Invalid Paramter");
+		DM_LOGE("Invalid Paramter");
 		return NULL;
 	}
 
 	eoLayout = elm_layout_add(parent);
 	if (eoLayout) {
 		if (!elm_layout_theme_set(eoLayout, "layout", "application", "default" ))
-			DP_LOGE("Fail to set elm_layout_theme_set");
+			DM_LOGE("Fail to set elm_layout_theme_set");
 
 		evas_object_size_hint_weight_set(eoLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-		elm_win_resize_object_add(parent, eoLayout);
-
-		edje_object_signal_emit(elm_layout_edje_get(eoLayout), "elm,state,show,indicator", "elm");
+		elm_object_content_set(parent, eoLayout);
+#ifdef _TIZEN_2_3_UX
+		elm_object_part_content_set(eoLayout, "elm.swallow.bg", eoBackground);
+#endif
 		evas_object_show(eoLayout);
 	} else {
-		DP_LOGE("Fail to create layout");
+		DM_LOGE("Fail to create layout");
 	}
 	return eoLayout;
 }
 
 void DownloadView::createView()
 {
-	DP_LOG_FUNC();
+	DM_LOGD("");
 	createNaviBar();
-	createList();
 	if (m_viewItemCount < 1)
 		showEmptyView();
+	else
+		createList();
 }
 
 void DownloadView::createNaviBar()
 {
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 	eoNaviBar = elm_naviframe_add(eoLayout);
+	if (!eoNaviBar) {
+		DM_LOGE("Null Check:eoNaviBar");
+	}
+
 	elm_object_part_content_set(eoLayout, "elm.swallow.content", eoNaviBar);
-	createBackBtn();
+	elm_naviframe_prev_btn_auto_pushed_set(eoNaviBar, EINA_FALSE);
+	ea_object_event_callback_add(eoNaviBar, EA_CALLBACK_BACK,
+			ea_naviframe_back_cb, NULL);
 	createBox();
 	eoNaviBarItem = elm_naviframe_item_push(eoNaviBar,
-		__("IDS_BR_HEADER_DOWNLOAD_MANAGER"),eoBackBtn, NULL, eoBoxLayout, NULL);
-	createControlBar();
+		__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"),NULL, NULL, eoBox, NULL);
+	if (!eoNaviBarItem)
+		DM_LOGE("Null Check:eoNaviBarItem");
+#ifdef _TIZEN_2_3_UX
+	ea_object_event_callback_add(eoNaviBar, EA_CALLBACK_MORE, moreKeyCB, NULL);
+#else
+	createDeleteBtn();
+#endif
+
+	elm_naviframe_item_pop_cb_set(eoNaviBarItem, popCB, NULL);
 	evas_object_show(eoNaviBar);
 }
 
-void DownloadView::createBackBtn()
+void DownloadView::deletePopupDeleteCB(void *data, Evas_Object *obj, void *event_info)
 {
-	DP_LOGD_FUNC();
-	eoBackBtn = elm_button_add(eoNaviBar);
-	elm_object_style_set(eoBackBtn, "naviframe/end_btn/default");
-	evas_object_smart_callback_add(eoBackBtn, "clicked", backBtnCB,NULL);
-	evas_object_show(eoBackBtn);
+	DownloadView& view = DownloadView::getInstance();
+	view.destroyCheckedItem();
+	view.removePopup();
+	Evas_Object *navi_it_access_obj = elm_object_item_access_object_get(view.eoNaviBarItem);
+	elm_access_highlight_set(navi_it_access_obj);
 }
 
-void DownloadView::createControlBar()
+void DownloadView::showDeletePopup()
 {
-	DP_LOGD_FUNC();
+	Evas_Object *btn1 = NULL;
+	Evas_Object *btn2 = NULL;
+	char buff[MAX_BUF_LEN] = {0,};
 
-	eoControlBar = elm_toolbar_add(eoNaviBar);
-	if (eoControlBar == NULL)
+	DM_LOGI("");
+
+	/* If another popup is shown, delete it*/
+	removePopup();
+	eoPopup = elm_popup_add(eoWindow);
+	elm_popup_align_set(eoPopup, ELM_NOTIFY_ALIGN_FILL, 1.0);
+	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND,
+			EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(eoPopup, EVAS_HINT_FILL,
+		EVAS_HINT_FILL);
+#ifdef _TIZEN_2_3_UX
+	snprintf(buff, MAX_BUF_LEN, "%s%s%s", "<align=left>",
+		DM_OPT_TEXT_DELETE, "</align>");
+	elm_object_part_text_set(eoPopup, "title,text", buff);
+
+	if (m_selectedItemsCount == 1) {
+		snprintf(buff, MAX_BUF_LEN, "%s", __("IDS_DM_BODY_1_ITEM_WILL_BE_DELETED"));
+	} else {
+		const char *format_str = __("IDS_DM_BODY_PD_ITEMS_WILL_BE_DELETED");
+		snprintf(buff, MAX_BUF_LEN, format_str, m_selectedItemsCount);
+	}
+#else
+	elm_object_part_text_set(eoPopup, "title,text", __("IDS_DM_HEADER_DELETE_FILE"));
+
+	if (m_selectedItemsCount == 1) {
+		snprintf(buff, MAX_BUF_LEN, "%s", __("IDS_DM_POP_DELETE_Q"));
+	} else {
+		const char *format_str = __("IDS_DM_POP_DELETE_PD_FILES_Q");
+		snprintf(buff, MAX_BUF_LEN, format_str, m_selectedItemsCount);
+	}
+#endif
+	elm_object_text_set(eoPopup, buff);
+	btn1 = elm_button_add(eoPopup);
+	elm_object_style_set(btn1, "popup");
+	elm_object_text_set(btn1, DM_SK_TEXT_CANCEL);
+	elm_object_part_content_set(eoPopup, "button1", btn1);
+	evas_object_smart_callback_add(btn1, "clicked", popupBackCB,
+			NULL);
+	btn2 = elm_button_add(eoPopup);
+	elm_object_style_set(btn2, "popup");
+	elm_object_text_set(btn2, DM_OPT_TEXT_DELETE);
+	elm_object_part_content_set(eoPopup, "button2", btn2);
+	evas_object_smart_callback_add(btn2, "clicked", deletePopupDeleteCB,
+			NULL);
+	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	evas_object_show(eoPopup);
+}
+
+void DownloadView::deleteToolBarBtnCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGI("");
+	DownloadView& view = DownloadView::getInstance();
+	view.showDeletePopup();
+}
+
+#ifdef _TIZEN_2_3_UX
+void DownloadView::moreKeyCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGD("");
+	DownloadView &view = DownloadView::getInstance();
+	view.createContextPopup();
+}
+
+void DownloadView::rotateContextPopupCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGD("");
+	DownloadView &view = DownloadView::getInstance();
+	view.moveContextPopup();
+}
+
+void DownloadView::contextPopupDismissedCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGD("");
+	DownloadView &view = DownloadView::getInstance();
+	view.deleteContextPopup();
+}
+
+void DownloadView::tabBarCancelButtonCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGD("");
+	DownloadView &view = DownloadView::getInstance();
+	view.hideGenlistEditMode();
+}
+
+
+void DownloadView::createContextPopup()
+{
+	DM_LOGD("");
+
+	if (isGenlistEditMode() || eoEmptyNoContent)
 		return;
-	elm_toolbar_shrink_mode_set(eoControlBar, ELM_TOOLBAR_SHRINK_EXPAND);
-	eoCbItemDelete = elm_toolbar_item_append(eoControlBar, NULL,
-		S_("IDS_COM_OPT_DELETE"), cbItemDeleteCB, eoNaviBar);
-	eoCbItemEmpty = elm_toolbar_item_append(eoControlBar, NULL, NULL, NULL, NULL);
-	elm_object_item_part_content_set(eoNaviBarItem, "controlbar",
-		eoControlBar);
-	elm_object_item_disabled_set(eoCbItemDelete, EINA_TRUE);
-	elm_object_item_disabled_set(eoCbItemEmpty, EINA_TRUE);
-	evas_object_show(eoControlBar);
+
+	Evas_Object *moreMenu = elm_ctxpopup_add(eoWindow);
+	if (!moreMenu) {
+		DM_LOGE("elm_ctxpopup_add failed");
+		return;
+	}
+	elm_object_style_set(moreMenu, "more/default");
+	elm_ctxpopup_direction_priority_set(moreMenu, ELM_CTXPOPUP_DIRECTION_UP,
+			ELM_CTXPOPUP_DIRECTION_UNKNOWN, ELM_CTXPOPUP_DIRECTION_UNKNOWN,
+			ELM_CTXPOPUP_DIRECTION_UNKNOWN);
+
+	evas_object_size_hint_weight_set(moreMenu, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_smart_callback_add(moreMenu, "dismissed", contextPopupDismissedCB, this);
+	elm_ctxpopup_auto_hide_disabled_set(moreMenu, EINA_TRUE);
+	evas_object_smart_callback_add(elm_object_top_widget_get(moreMenu),
+			"rotation,changed", rotateContextPopupCB, this);
+	ea_object_event_callback_add(moreMenu, EA_CALLBACK_BACK,
+			ea_ctxpopup_back_cb, NULL);
+	ea_object_event_callback_add(moreMenu, EA_CALLBACK_MORE,
+			ea_ctxpopup_back_cb, NULL);
+	Elm_Object_Item *item = elm_ctxpopup_item_append(moreMenu,
+			DM_OPT_TEXT_DELETE, NULL, deleteBtnCB, NULL);
+	if (m_viewItemCount < 1)
+		elm_object_item_disabled_set(item, EINA_TRUE);
+
+	eoMoreMenu = moreMenu;
+	moveContextPopup();
+	evas_object_show(moreMenu);
+}
+
+void DownloadView::deleteContextPopup()
+{
+	DM_LOGD("");
+	evas_object_smart_callback_del(eoWindow,
+			"rotation,changed", rotateContextPopupCB);
+	evas_object_del(eoMoreMenu);
+	eoMoreMenu = NULL;
+}
+
+void DownloadView::moveContextPopup()
+{
+	DM_LOGD("");
+	if (!eoMoreMenu) {
+		DM_LOGE("Null Check:eoMoreMenu");
+		return;
+	}
+	Evas_Coord w, h;
+	int pos = -1;
+
+	elm_win_screen_size_get(eoWindow, NULL, NULL, &w, &h);
+	pos = elm_win_rotation_get(eoWindow);
+	switch (pos) {
+		case 0:
+		case 180:
+			evas_object_move(eoMoreMenu, (w/2), h);
+			break;
+		case 90:
+			evas_object_move(eoMoreMenu, (h/2), w);
+			break;
+		case 270:
+			evas_object_move(eoMoreMenu, (h/2), w);
+			break;
+	}
+}
+#else
+
+void DownloadView::createToolBar()
+{
+	DM_LOGD("");
+	eoToolBar = elm_toolbar_add(eoNaviBar);
+	if(!eoToolBar) {
+		DM_LOGE("Null Check:eoDeleteBtn");
+		return;
+	}
+	elm_object_style_set(eoToolBar, "default");
+	elm_toolbar_shrink_mode_set(eoToolBar, ELM_TOOLBAR_SHRINK_EXPAND);
+	elm_toolbar_select_mode_set(eoToolBar, ELM_OBJECT_SELECT_MODE_NONE);
+	elm_toolbar_transverse_expanded_set(eoToolBar, EINA_TRUE);
+	eoToolBarItem = elm_toolbar_item_append(eoToolBar, NULL,
+			DM_OPT_TEXT_DELETE, deleteToolBarBtnCB, NULL);
+	if (eoNaviBarItem)
+		elm_object_item_part_content_set(eoNaviBarItem, "toolbar", eoToolBar);
+	evas_object_show(eoToolBar);
+}
+
+void DownloadView::destroyToolBar()
+{
+	if(eoToolBar) {
+		evas_object_del(eoToolBar);
+		eoToolBar = NULL;
+		eoToolBarItem = NULL;
+	}
+	if (eoNaviBarItem)
+		elm_object_item_part_content_unset(eoNaviBarItem, "toolbar");
+}
+
+void DownloadView::createDeleteBtn()
+{
+	Evas_Object *icon = NULL;
+	Evas_Object *button = elm_button_add(eoNaviBar);
+	if (!button) {
+		DM_LOGE("Null Check:eoNaviBarItem");
+		return;
+	}
+	elm_object_style_set(button, "naviframe/title_icon");
+	icon = elm_image_add(eoNaviBar);
+	elm_image_file_set(icon, DM_DELETE_ICON_PATH, NULL);
+	elm_image_resizable_set(icon, EINA_TRUE, EINA_TRUE);
+	elm_access_info_set(button, ELM_ACCESS_INFO, S_("IDS_COM_SK_DELETE"));
+	elm_object_part_content_set(button, "icon", icon);
+	evas_object_smart_callback_add(button, "clicked", deleteBtnCB, NULL);
+	elm_object_item_part_content_set(eoNaviBarItem, "title_right_btn",	button);
+}
+
+void DownloadView::destroyDeleteBtn()
+{
+	Evas_Object *button = NULL;
+	if (eoNaviBarItem) {
+		button = elm_object_item_part_content_get(eoNaviBarItem, "title_right_btn");
+		if(button) {
+			evas_object_del(button);
+		}
+		elm_object_item_part_content_unset(eoNaviBarItem, "title_right_btn");
+	}
+}
+#endif
+
+void DownloadView::deleteBtnCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGI("");
+	DownloadView& view = DownloadView::getInstance();
+	view.showGenlistEditMode();
 }
 
 void DownloadView::createBox()
 {
-	DP_LOGD_FUNC();
-	eoBoxLayout = elm_layout_add(eoNaviBar);
-	elm_layout_file_set(eoBoxLayout,
-		"/opt/apps/org.tizen.download-manager/res/edje/download-manager.edj",
-		"download/selectioninfo");
+	DM_LOGD("");
 
-	evas_object_size_hint_weight_set(eoBoxLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(eoBoxLayout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-	eoBox = elm_box_add(eoBoxLayout);
-	elm_object_part_content_set(eoBoxLayout, "gen.swallow.contents", eoBox);
-
+	eoBox = elm_box_add(eoNaviBar);
+	evas_object_size_hint_weight_set(eoBox, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(eoBox, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_show(eoBox);
-	evas_object_show(eoBoxLayout);
+}
+
+void DownloadView::realizedCB(void *data, Evas_Object *obj,
+	void *event_info) {
+	Elm_Object_Item *it = NULL;
+	Elm_Object_Item *nextIt = NULL;
+	ViewItem *item = NULL;
+	if (!event_info) {
+		DM_LOGE("NULL Check:event_info");
+		return;
+	}
+	if (!obj) {
+		DM_LOGE("NULL Check:obj");
+		return;
+	}
+	it = (Elm_Object_Item *)event_info;
+	if (it != elm_genlist_last_item_get(obj))
+		nextIt = elm_genlist_item_next_get(it);
+	if (nextIt) {
+		item = (ViewItem *)elm_object_item_data_get(nextIt);
+		if (item && item->isGroupTitle()) {
+			elm_object_item_signal_emit(it, "elm,state,bottomline,hide", "");
+		}
+	}
 }
 
 void DownloadView::createList()
 {
-	//DP_LOGD_FUNC();
-	eoDldList = elm_genlist_add(eoBoxLayout);
-	DP_LOGD("create::eoDldList[%p]",eoDldList);
+	eoDldList = elm_genlist_add(eoLayout);
+	DM_LOGTEST("CREATE:eoDldList[%p]",eoDldList);
 /* When using ELM_LIST_LIMIT, the window size is broken at the landscape mode */
+	evas_object_smart_callback_add(eoDldList, "language,changed", changedGenlistLanguage, NULL);
 	evas_object_size_hint_weight_set(eoDldList, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(eoDldList, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	evas_object_smart_callback_add(eoDldList, "realized", realizedCB, NULL);
 	elm_genlist_homogeneous_set(eoDldList, EINA_TRUE);
-	elm_genlist_block_count_set(eoDldList,8);
-
-#ifndef _TIZEN_PUBLIC
-	evas_object_smart_callback_add(eoDldList, "drag,start,right", sweepRightCB, NULL);
-	evas_object_smart_callback_add(eoDldList, "drag,start,left", sweepLeftCB, NULL);
+	elm_genlist_mode_set(eoDldList, ELM_LIST_COMPRESS);
+#ifdef _TIZEN_2_3_UX
+	elm_object_theme_set(eoDldList, m_theme);
 #endif
+	elm_genlist_block_count_set(eoDldList,8);
 	elm_box_pack_end(eoBox, eoDldList);
 	evas_object_show(eoDldList);
 }
 
+void DownloadView::changedGenlistLanguage(void *data, Evas_Object *obj, void *event_info)
+{
+	elm_genlist_realized_items_update(obj);
+}
+
 void destroy_window_cb(void *data, Evas_Object *obj, void *event)
 {
-	DP_LOG_FUNC();
+	DM_LOGI("");
 	elm_exit();
 }
 
@@ -314,10 +766,17 @@ void DownloadView::changedRegion()
 
 void DownloadView::attachViewItem(ViewItem *viewItem)
 {
-	DP_LOG_FUNC();
+	DM_LOGD("");
 	if (m_viewItemCount < 1) {
 		hideEmptyView();
 		createList();
+#ifndef _TIZEN_2_3_UX
+		if (eoNaviBarItem)
+			if (!elm_object_item_part_content_get(eoNaviBarItem,
+					"title_right_btn")) {
+				createDeleteBtn();
+			}
+#endif
 	}
 	if (viewItem) {
 		addViewItemToGenlist(viewItem);
@@ -327,27 +786,33 @@ void DownloadView::attachViewItem(ViewItem *viewItem)
 
 void DownloadView::detachViewItem(ViewItem *viewItem)
 {
-	DP_LOG("delete viewItem[%p]",viewItem);
-	if (viewItem) {
-		delete viewItem;
+	DM_LOGI("delete viewItem[%p]",viewItem);
+	if (viewItem && viewItem->isGroupTitle() == false) {
+		groupTitleType &groupTitleItem = m_groupTitle[viewItem->getItemGroup()];
 		m_viewItemCount--;
+		groupTitleItem.subItemsCount--;
+		elm_object_item_del(viewItem->genlistItem());
+		if (groupTitleItem.subItemsCount == 0) {
+			elm_object_item_del(groupTitleItem.viewItem->genlistItem());
+			groupTitleItem.viewItem = NULL;
+		}
 	}
-	if (!isGenlistEditMode() &&
-			(m_viewItemCount < 1))
+	if (m_viewItemCount < 1 && !isGenlistEditMode())
 		showEmptyView();
 }
 
 void DownloadView::update()
 {
 	Elm_Object_Item *it = NULL;
-	DP_LOG_FUNC();
+	DM_LOGD("");
 	if (!eoDldList) {
-		DP_LOGE("download list is NULL");
+		DM_LOGI("download list is NULL");
 		return;
 	}
+
 	it = elm_genlist_first_item_get(eoDldList);
 	while (it) {
-		DP_LOGD("glItem[%p]",it);
+		DM_LOGD("glItem[%p]",it);
 		elm_genlist_item_update(it);
 		it = elm_genlist_item_next_get(it);
 	}
@@ -358,7 +823,7 @@ void DownloadView::update(ViewItem *viewItem)
 	if (!viewItem)
 		return;
 
-	DP_LOG("DownloadView::update viewItem [%p]", viewItem);
+	DM_LOGI("viewItem [%p]", viewItem);
 	elm_genlist_item_update(viewItem->genlistItem());
 }
 
@@ -367,92 +832,239 @@ void DownloadView::update(Elm_Object_Item *glItem)
 	if (!glItem)
 		return;
 
-	DP_LOG("DownloadView::update glItem [%p]", glItem);
+	DM_LOGI("glItem [%p]", glItem);
 	elm_genlist_item_update(glItem);
 }
 
-#ifndef _TIZEN_PUBLIC
-ViewItem *DownloadView::findViewItemForGenlistItem(Elm_Object_Item *glItem)
+void DownloadView::update(int diffDays)
 {
-	Elm_Object_Item *it = NULL;
-	ViewItem *viewItem = NULL;
-	if (!eoDldList) {
-		DP_LOGE("download list is NULL");
-		return NULL;
-	}
-	it = elm_genlist_first_item_get(eoDldList);
-	while (it) {
-		/* don't search group item */
-		if (elm_genlist_item_select_mode_get(it) !=
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY && it == glItem) {
-			viewItem = (ViewItem *)elm_object_item_data_get(it);
-			break;
-		}
-		it = elm_genlist_item_next_get(it);
-	}
+	DM_LOGD("");
+	groupTitleType &todayGroupTitle = m_groupTitle[VIEWITEM_GROUP::TODAY];
+	groupTitleType &yesterdayGroupTitle = m_groupTitle[VIEWITEM_GROUP::YESTERDAY];
+	groupTitleType &olderGroupTitle = m_groupTitle[VIEWITEM_GROUP::OLDER];
+	Elm_Object_Item *lastItem = NULL;
 
-	return viewItem;
-}
+	if (diffDays == 1) {
+		Elm_Object_Item *yesterdayLastItem = NULL;
+		if (yesterdayGroupTitle.viewItem) {
+			if (olderGroupTitle.viewItem) {
+				yesterdayLastItem = elm_genlist_item_prev_get(
+						olderGroupTitle.viewItem->genlistItem());
+				elm_object_item_del(olderGroupTitle.viewItem->genlistItem());
+				if (yesterdayLastItem)
+					elm_object_item_signal_emit(
+							yesterdayLastItem, "elm,state,bottomline,show", "");
+			} else {
+				yesterdayLastItem = elm_genlist_last_item_get(eoDldList);
+			}
+			olderGroupTitle.subItemsCount += yesterdayGroupTitle.subItemsCount;
+			olderGroupTitle.viewItem = yesterdayGroupTitle.viewItem;
+			olderGroupTitle.viewItem->setItemGroup(VIEWITEM_GROUP::OLDER);
+			yesterdayGroupTitle.viewItem = NULL;
+			yesterdayGroupTitle.subItemsCount = 0;
+		}
+		if (todayGroupTitle.viewItem) {
+			yesterdayGroupTitle.viewItem = todayGroupTitle.viewItem;
+			yesterdayGroupTitle.subItemsCount = todayGroupTitle.subItemsCount;
+			yesterdayGroupTitle.viewItem->setItemGroup(VIEWITEM_GROUP::YESTERDAY);
+			todayGroupTitle.viewItem = NULL;
+			todayGroupTitle.subItemsCount = 0;
+		}
+		lastItem = yesterdayLastItem;
+	} else {
+		Elm_Object_Item *todayLastItem = NULL;
+		Elm_Object_Item *yesterdayLastItem = NULL;
+		int itemsCount = olderGroupTitle.subItemsCount;
+		bool flag = false;
+
+		if (todayGroupTitle.viewItem) {
+			if (yesterdayGroupTitle.viewItem) {
+				todayLastItem = elm_genlist_item_prev_get(
+					yesterdayGroupTitle.viewItem->genlistItem());
+				flag = true;
+			} else if (olderGroupTitle.viewItem) {
+				todayLastItem = elm_genlist_item_prev_get(
+					olderGroupTitle.viewItem->genlistItem());
+				flag = true;
+			} else {
+				todayLastItem = elm_genlist_last_item_get(eoDldList);
+			}
+			if (flag && todayLastItem)
+				elm_object_item_signal_emit(
+						todayLastItem, "elm,state,bottomline,show", "");
+			lastItem = todayLastItem;
+		}
+		if (yesterdayGroupTitle.viewItem) {
+			if (olderGroupTitle.viewItem) {
+				yesterdayLastItem = elm_genlist_item_prev_get(
+							olderGroupTitle.viewItem->genlistItem());
+				if (yesterdayLastItem)
+					elm_object_item_signal_emit(
+						yesterdayLastItem, "elm,state,bottomline,show", "");
+			} else {
+				yesterdayLastItem = elm_genlist_last_item_get(eoDldList);
+			}
+			lastItem = yesterdayLastItem;
+		}
+		flag = false;
+		if (todayGroupTitle.viewItem) {
+			itemsCount += todayGroupTitle.subItemsCount;
+			if (olderGroupTitle.viewItem)
+				elm_object_item_del(olderGroupTitle.viewItem->genlistItem());
+			olderGroupTitle.viewItem = todayGroupTitle.viewItem;
+			olderGroupTitle.viewItem->setItemGroup(VIEWITEM_GROUP::OLDER);
+			todayGroupTitle.viewItem = NULL;
+			todayGroupTitle.subItemsCount = 0;
+			flag = true;
+		}
+		if (yesterdayGroupTitle.viewItem) {
+			itemsCount += yesterdayGroupTitle.subItemsCount;
+			if (flag)
+				elm_object_item_del(yesterdayGroupTitle.viewItem->genlistItem());
+			else {
+				if (olderGroupTitle.viewItem)
+					elm_object_item_del(olderGroupTitle.viewItem->genlistItem());
+				olderGroupTitle.viewItem = yesterdayGroupTitle.viewItem;
+				olderGroupTitle.viewItem->setItemGroup(VIEWITEM_GROUP::OLDER);
+			}
+			yesterdayGroupTitle.subItemsCount = 0;
+			yesterdayGroupTitle.viewItem = NULL;
+		}
+		olderGroupTitle.subItemsCount = itemsCount;
+	}
+	ViewItem *viewItem = NULL;
+	Elm_Object_Item *item1 = NULL;
+	Elm_Object_Item *item2 = NULL;
+	if (yesterdayGroupTitle.viewItem)
+		item1 = yesterdayGroupTitle.viewItem->genlistItem();
+	if (olderGroupTitle.viewItem)
+		item2 = olderGroupTitle.viewItem->genlistItem();
+	/* Update the viewItem group of all the Items moved to Yesterday group */
+	while(item1 && item1 != item2) {
+		viewItem = (ViewItem *)elm_object_item_data_get(item1);
+		if (viewItem)
+			viewItem->setItemGroup(VIEWITEM_GROUP::YESTERDAY);
+		item1 = elm_genlist_item_next_get(item1);
+	}
+	/* Update time field of genlist Item and viewItem group
+	for all the Items moved to Older Group
+	*/
+	if (lastItem) {
+		item1 = item2;
+		while(item1) {
+#ifdef _TIZEN_2_3_UX
+			elm_genlist_item_fields_update(item1 , "elm.text.sub.right.bottom",
+					ELM_GENLIST_ITEM_FIELD_TEXT);
+#else
+			elm_genlist_item_fields_update(item1 , "elm.text.3",
+					ELM_GENLIST_ITEM_FIELD_TEXT);
 #endif
+			viewItem = (ViewItem *)elm_object_item_data_get(item1);
+			if (viewItem)
+				viewItem->setItemGroup(VIEWITEM_GROUP::OLDER);
+			if (item1 == lastItem)
+				break;
+			item1 = elm_genlist_item_next_get(item1);
+		}
+	}
+	update(todayGroupTitle.viewItem);
+	update(yesterdayGroupTitle.viewItem);
+	update(olderGroupTitle.viewItem);
+}
+
+void DownloadView::updateLang()
+{
+	DM_LOGD("");
+	if (eoNaviBarItem) {
+		if (isGenlistEditMode()) {
+#ifdef _TIZEN_2_3_UX
+			if (eoSelectAllLayout)
+				elm_object_part_text_set(eoSelectAllLayout, "elm.text.main",
+					DM_BODY_TEXT_SELECT_ALL);
+			showSelectedNotify(m_selectedItemsCount);
+#else
+			if (eoToolBarItem)
+				elm_object_item_text_set(eoToolBarItem, DM_OPT_TEXT_DELETE);
+			elm_object_item_text_set(eoNaviBarItem, __("IDS_DM_HEADER_SELECT_ITEMS"));
+#endif
+		} else {
+#ifndef _TIZEN_2_3_UX
+			Evas_Object *buttonObj = NULL;
+			buttonObj = elm_object_item_part_content_get(eoNaviBarItem, "title_right_btn");
+			elm_object_text_set(buttonObj, DM_OPT_TEXT_DELETE);
+#endif
+			elm_object_item_text_set(eoNaviBarItem,
+					__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
+		}
+	}
+	if (eoEmptyNoContent) {
+		elm_object_part_text_set(eoEmptyNoContent, "elm.text",
+				__("IDS_DM_BODY_NO_DOWNLOADS"));
+		elm_object_part_text_set(eoEmptyNoContent, "elm.help.text",
+					__("IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"));
+	}
+}
 
 void DownloadView::addViewItemToGenlist(ViewItem *viewItem)
 {
-	DP_LOG_FUNC();
-	handleUpdateDateGroupType(viewItem);
+	DM_LOGD("");
 	createGenlistItem(viewItem);
 }
 
 void DownloadView::createGenlistItem(ViewItem *viewItem)
 {
+	DM_LOGTEST("CreateItem:eoDldList[%p]", eoDldList);
+	int diffDays = 0;
+	ViewItem *parentItem = NULL;
 	Elm_Object_Item *glItem = NULL;
-	Elm_Object_Item *glGroupItem = NULL;
-	/* EAPI Elm_Object_Item *elm_genlist_item_prepend(
-	 * 	Evas_Object *obj,
-	 * 	const Elm_Genlist_Item_Class *itc,
-	 * 	const void *data,
-	 * 	Elm_Object_Item *parent,
-	 * 	Elm_Genlist_Item_Type flags,
-	 * 	Evas_Smart_Cb func,
-	 * 	const void *func_data) EINA_ARG_NONNULL(1); */
-	glGroupItem = getGenlistGroupItem(viewItem->dateGroupType());
-	DP_LOGD("group item[%p]",glGroupItem);
-	if (!glGroupItem) {
-		DateGroup *dateGrpObj = getDateGroupObj(viewItem->dateGroupType());
-		if (!viewItem->isFinished()) {
-			glGroupItem = elm_genlist_item_prepend(
-				eoDldList,
-				&dldGenlistGroupStyle,
-				static_cast<const void*>(dateGrpObj),
-				NULL,
-				ELM_GENLIST_ITEM_GROUP,
-				NULL,
-				NULL);
-		} else {
-			/* Download History Item */
-			glGroupItem = elm_genlist_item_append(
-				eoDldList,
-				&dldGenlistGroupStyle,
-				static_cast<const void*>(dateGrpObj),
-				NULL,
-				ELM_GENLIST_ITEM_GROUP,
-				NULL,
-				NULL);
-		}
-		if (!glGroupItem)
-			DP_LOGE("Fail to add a genlist group item");
-		else
-			elm_genlist_item_select_mode_set(glGroupItem,
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY);
-		setGenlistGroupItem(viewItem->dateGroupType(), glGroupItem);
+	VIEWITEM_GROUP::GROUP group;
+	double finishedTime = viewItem->getFinishedTime();
+	if (finishedTime == 0)
+		diffDays = 0;
+	else {
+		DateUtil &inst = DateUtil::getInstance();
+		diffDays = inst.getDiffDays(time(NULL),(time_t)finishedTime);
 	}
-	increaseGenlistGroupCount(viewItem->dateGroupType());
-	if (!viewItem->isFinished()) {
+
+	if (diffDays < 1)
+		group = VIEWITEM_GROUP::TODAY;
+	else if (diffDays < 2)
+		group = VIEWITEM_GROUP::YESTERDAY;
+	else
+		group = VIEWITEM_GROUP::OLDER;
+	groupTitleType &groupTitleItem = m_groupTitle[group];
+	if (!groupTitleItem.viewItem)
+		groupTitleItem.viewItem = new ViewItem(group);
+	parentItem = groupTitleItem.viewItem;
+
+	if (groupTitleItem.subItemsCount == 0) {
+		if (group == VIEWITEM_GROUP::TODAY) {
+			glItem = elm_genlist_item_prepend(
+				eoDldList,
+				parentItem->elmGenlistStyle(),
+				static_cast<const void*>(parentItem),
+				NULL,
+				ELM_GENLIST_ITEM_NONE,
+				NULL, NULL);
+		} else {
+			glItem = elm_genlist_item_append(
+				eoDldList,
+				parentItem->elmGenlistStyle(),
+				static_cast<const void*>(parentItem),
+				NULL,
+				ELM_GENLIST_ITEM_NONE,
+				NULL, NULL);
+		}
+		elm_genlist_item_select_mode_set(glItem, ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY);
+		parentItem->setGenlistItem(glItem);
+	}
+	if (viewItem->getInsertAtFirst()) {
 		glItem = elm_genlist_item_insert_after(
 			eoDldList,
 			viewItem->elmGenlistStyle(),
 			static_cast<const void*>(viewItem),
-			glGroupItem,
-			glGroupItem,
+			NULL,
+			parentItem->genlistItem(),
 			ELM_GENLIST_ITEM_NONE,
 			genlistClickCB,
 			static_cast<const void*>(viewItem));
@@ -462,105 +1074,180 @@ void DownloadView::createGenlistItem(ViewItem *viewItem)
 			eoDldList,
 			viewItem->elmGenlistStyle(),
 			static_cast<const void*>(viewItem),
-			glGroupItem,
+			NULL,
 			ELM_GENLIST_ITEM_NONE,
 			genlistClickCB,
 			static_cast<const void*>(viewItem));
 	}
 	if (!glItem)
-		DP_LOGE("Fail to add a genlist item");
+		DM_LOGE("Fail to add a genlist item");
+	else {
+		viewItem->setItemGroup(group);
+		viewItem->setGenlistItem(glItem);
+		groupTitleItem.subItemsCount++;
+	}
 
-	DP_LOGD("genlist groupItem[%p] item[%p] viewItem[%p]", glGroupItem, glItem, viewItem);
-	viewItem->setGenlistItem(glItem);
+	DM_LOGTEST("CreateItem:genlist item[%p] viewItem[%p]", glItem, viewItem);
 	/* Move scrollbar to top.
 	 * When groupItem means today group in case of addtion of download link item
 	**/
 	if (!viewItem->isFinished())
-		elm_genlist_item_show(glGroupItem, ELM_GENLIST_ITEM_SCROLLTO_TOP);
+		elm_genlist_item_show(glItem, ELM_GENLIST_ITEM_SCROLLTO_TOP);
 }
 
 void DownloadView::showEmptyView()
 {
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 	if (!eoEmptyNoContent) {
 		eoEmptyNoContent = elm_layout_add(eoLayout);
-		elm_layout_theme_set(eoEmptyNoContent, "layout", "nocontents", "text");
+		elm_layout_theme_set(eoEmptyNoContent, "layout", "nocontents", "default");
 		evas_object_size_hint_weight_set(eoEmptyNoContent, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 		evas_object_size_hint_align_set(eoEmptyNoContent, EVAS_HINT_FILL, EVAS_HINT_FILL);
+#ifndef _TIZEN_2_3_UX
+		Evas_Object *icon = elm_image_add(eoEmptyNoContent);
+		elm_image_file_set(icon, DM_NO_CONTENT_ICON_PATH, NULL);
+		elm_object_part_content_set(eoEmptyNoContent, "nocontents.image", icon);
+#endif
 		elm_object_part_text_set(eoEmptyNoContent, "elm.text",
-			__("IDS_DL_BODY_NO_DOWNLOADS"));
-		evas_object_size_hint_weight_set (eoEmptyNoContent,
-			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-
+			__("IDS_DM_BODY_NO_DOWNLOADS"));
+		elm_object_part_text_set(eoEmptyNoContent, "elm.help.text",
+			__("IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"));
+#ifndef _TIZEN_2_3_UX
+		Evas_Object *accessObject = NULL;
+		Evas_Object *noContentAccess = (Evas_Object *)edje_object_part_object_get(_EDJ(eoEmptyNoContent), "elm.text");
+		accessObject = elm_access_object_register(noContentAccess, eoEmptyNoContent);
+		elm_object_focus_custom_chain_append(eoEmptyNoContent, accessObject, NULL);
+		elm_access_info_set(accessObject, ELM_ACCESS_INFO, __("IDS_DM_BODY_NO_DOWNLOADS"));
+		Evas_Object *noContentHelpAccess = (Evas_Object *)edje_object_part_object_get(_EDJ(eoEmptyNoContent), "elm.help.text");
+		accessObject = elm_access_object_register(noContentHelpAccess, eoEmptyNoContent);
+		elm_object_focus_custom_chain_append(eoEmptyNoContent, accessObject, NULL);
+		elm_access_info_set(accessObject, ELM_ACCESS_INFO,
+					__("IDS_DM_BODY_AFTER_YOU_DOWNLOAD_ITEMS_THEY_WILL_BE_SHOWN_HERE"));
+#endif
+		elm_layout_signal_emit(eoEmptyNoContent, "align.center", "elm");
 		if (eoDldList) {
 			elm_box_unpack(eoBox,eoDldList);
 			/* Detection code */
-			DP_LOGD("del::eoDldList[%p]",eoDldList);
+			DM_LOGI("del::eoDldList[%p]",eoDldList);
 			evas_object_del(eoDldList);
 			eoDldList = NULL;
 		}
 		elm_box_pack_start(eoBox, eoEmptyNoContent);
 	}
 	evas_object_show(eoEmptyNoContent);
-	elm_object_item_disabled_set(eoCbItemDelete, EINA_TRUE);
+#ifndef _TIZEN_2_3_UX
+	destroyDeleteBtn();
+#endif
 }
 
 void DownloadView::hideEmptyView()
 {
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 	if(eoEmptyNoContent) {
 		elm_box_unpack(eoBox, eoEmptyNoContent);
 		evas_object_del(eoEmptyNoContent);
 		eoEmptyNoContent = NULL;
 	}
-	elm_object_item_disabled_set(eoCbItemDelete, EINA_FALSE);
 }
 
 bool DownloadView::isGenlistEditMode()
 {
-	return (bool)elm_genlist_decorate_mode_get(eoDldList);
-}
-
-#ifndef _TIZEN_PUBLIC
-void DownloadView::cancelSweepEvent()
-{
-	DP_LOGD_FUNC();
-	if (m_sweepedItem) {
-		m_sweepedItem->sweepLeft();
-		m_sweepedItem = NULL;
-	}
-}
+#ifdef _TIZEN_2_3_UX
+	return m_isEditMode;
+#else
+	if (eoDldList)
+		return (bool)elm_genlist_decorate_mode_get(eoDldList);
+	else
+		return false;
 #endif
+}
 
+#ifdef _TIZEN_2_3_UX
 void DownloadView::createSelectAllLayout()
 {
+	DM_LOGD("");
 	eoSelectAllLayout = elm_layout_add(eoBox);
-	elm_layout_theme_set(eoSelectAllLayout, "genlist", "item",
-		"select_all/default");
-	evas_object_size_hint_weight_set(eoSelectAllLayout, EVAS_HINT_EXPAND,
-		EVAS_HINT_FILL);
-	evas_object_size_hint_align_set(eoSelectAllLayout, EVAS_HINT_FILL,
-		EVAS_HINT_FILL);
-	evas_object_event_callback_add(eoSelectAllLayout, EVAS_CALLBACK_MOUSE_DOWN,
-		selectAllClickedCB, NULL);
-	eoAllCheckedBox = elm_check_add(eoSelectAllLayout);
-	elm_check_state_pointer_set(eoAllCheckedBox, &m_allChecked);
-	evas_object_smart_callback_add(eoAllCheckedBox, "changed",
-		selectAllChangedCB, NULL);
-	evas_object_propagate_events_set(eoAllCheckedBox, EINA_FALSE);
-	elm_object_part_content_set(eoSelectAllLayout, "elm.icon", eoAllCheckedBox);
-	elm_object_text_set(eoSelectAllLayout, S_("IDS_COM_BODY_SELECT_ALL"));
-	elm_box_pack_start(eoBox, eoSelectAllLayout);
+	if (!eoSelectAllLayout) {
+		DM_LOGE("elm_layout_add is failed");
+		return;
+	}
+
+	elm_object_focus_allow_set(eoSelectAllLayout, EINA_TRUE);
+
+	elm_layout_theme_set(eoSelectAllLayout, "genlist", "item", "select_all/default");
+	evas_object_size_hint_weight_set(eoSelectAllLayout, EVAS_HINT_EXPAND, EVAS_HINT_FILL);
+	evas_object_size_hint_align_set(eoSelectAllLayout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+	Evas_Object *check = elm_check_add(eoSelectAllLayout);
+	evas_object_propagate_events_set(check, EINA_TRUE);
+	elm_object_part_content_set(eoSelectAllLayout, "elm.icon", check);
+	elm_object_part_text_set(eoSelectAllLayout, "elm.text.main", DM_BODY_TEXT_SELECT_ALL);
 	evas_object_show(eoSelectAllLayout);
+	elm_box_pack_start(eoBox, eoSelectAllLayout);
+
+	evas_object_event_callback_add(eoSelectAllLayout, EVAS_CALLBACK_MOUSE_DOWN,
+			selectAllChangedCB, this);
+
+	Evas_Object *cancelButton = elm_button_add(eoNaviBar);
+	if (!cancelButton) return;
+	elm_object_style_set(cancelButton, "naviframe/title_cancel");
+	evas_object_smart_callback_add(cancelButton, "clicked", tabBarCancelButtonCB, NULL);
+	elm_object_item_part_content_set(eoNaviBarItem, "title_left_btn", cancelButton);
+	DM_LOGD("");
+	Evas_Object *doneButton = elm_button_add(eoNaviBar);
+	if (!doneButton) return;
+	elm_object_style_set(doneButton, "naviframe/title_done");
+	evas_object_smart_callback_add(doneButton, "clicked", deleteToolBarBtnCB, this);
+	elm_object_item_part_content_set(eoNaviBarItem, "title_right_btn", doneButton);
+	elm_object_disabled_set(doneButton, EINA_TRUE);
 	m_allChecked = EINA_FALSE;
 }
 
-void DownloadView::changeAllCheckedValue()
+void DownloadView::deleteSelectAllLayout()
 {
-	m_allChecked = !m_allChecked;
-	elm_check_state_pointer_set(eoAllCheckedBox, &m_allChecked);
-	handleChangedAllCheckedState();
+	if (eoSelectAllLayout) {
+		elm_box_unpack(eoBox, eoSelectAllLayout);
+		evas_object_del(eoSelectAllLayout);
+		eoSelectAllLayout = NULL;
+	}
+	Evas_Object *cancelButton = elm_object_item_part_content_unset(
+			eoNaviBarItem, "title_left_btn");
+	evas_object_hide(cancelButton);
+	Evas_Object *doneButton = elm_object_item_part_content_unset(
+			eoNaviBarItem, "title_right_btn");
+	evas_object_hide(doneButton);
+	m_allChecked = EINA_FALSE;
 }
+#else
+void DownloadView::changeSelectAll()
+{
+	Evas_Object *icon = NULL;
+	Evas_Object *button = NULL;
+	button = elm_object_item_part_content_get(eoNaviBarItem, "title_right_btn");
+	icon = elm_object_part_content_get(button, "icon");
+	elm_image_file_set(icon, DM_SELECT_ALL_ICON_PATH, NULL);
+	evas_object_smart_callback_del(button, "clicked", deleteBtnCB);
+	evas_object_smart_callback_add(button, "clicked", selectAllChangedCB, NULL);
+	evas_object_show(button);
+	m_allChecked = EINA_FALSE;
+	elm_access_info_set(button, ELM_ACCESS_INFO, DM_BODY_TEXT_SELECT_ALL);
+}
+
+void DownloadView::restoreDeleteBtn()
+{
+	Evas_Object *icon = NULL;
+	Evas_Object *button = NULL;
+	button = elm_object_item_part_content_get(eoNaviBarItem, "title_right_btn");
+	icon = elm_object_part_content_get(button, "icon");
+	elm_image_file_set(icon, DM_DELETE_ICON_PATH, NULL);
+	elm_image_resizable_set(icon, EINA_TRUE, EINA_TRUE);
+	elm_access_info_set(button, ELM_ACCESS_INFO, S_("IDS_COM_SK_DELETE"));
+	evas_object_smart_callback_del(button, "clicked", selectAllChangedCB);
+	evas_object_smart_callback_add(button, "clicked", deleteBtnCB, NULL);
+	evas_object_show(button);
+	m_allChecked = EINA_FALSE;
+}
+#endif
 
 void DownloadView::destroyCheckedItem()
 {
@@ -570,30 +1257,26 @@ void DownloadView::destroyCheckedItem()
 	int checkedCount = 0;
 	queue <unsigned int> deleteQueue;
 
-	DP_LOGD_FUNC();
-
 	it = elm_genlist_first_item_get(eoDldList);
 
 	while (it) {
 		item = (ViewItem *)elm_object_item_data_get(it);
 		/* elm_genlist_item_select_mode_get is needed to check group item */
-		if (elm_genlist_item_select_mode_get(it) !=
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY &&
-				item && item->checkedValue()) {
+		if (item && item->checkedValue()) {
 			list = eina_list_append(list, it);
 		}
 		it = elm_genlist_item_next_get(it);
 	}
 
 	if (!list) {
-		DP_LOGD("There is no delete item");
+		DM_LOGI("There is no delete item");
 		return;
 	}
 
 	checkedCount = eina_list_count(list);
 	if (checkedCount < 1)
 		return;
-	DP_LOGD("checkedCount[%d]", checkedCount);
+	DM_LOGD("checkedCount[%d]", checkedCount);
 
 	for (int i = 0; i < checkedCount; i++)
 	{
@@ -601,100 +1284,101 @@ void DownloadView::destroyCheckedItem()
 		if (it)
 			item = (ViewItem *)elm_object_item_data_get(it);
 		else
-			DP_LOGE("genlist item is null");
+			DM_LOGE("NULL Check:genlist item");
 		list = eina_list_next(list);
 		if (item) {
-			deleteQueue.push(item->historyId());
+			deleteQueue.push(item->getHistoryId());
 			item->destroy();
 		} else {
-			DP_LOGE("viewItem is null");
+			DM_LOGE("NULL Check:viewItem");
 		}
 	}
 	if (list)
 		eina_list_free(list);
 
 	DownloadHistoryDB::deleteMultipleItem(deleteQueue);
-	showNotifyInfo(DOWNLOAD_NOTIFY_DELETED, checkedCount);
 	hideGenlistEditMode();
 }
 
 void DownloadView::showGenlistEditMode()
 {
-	DP_LOG_FUNC();
-#ifndef _TIZEN_PUBLIC
-	cancelSweepEvent();
-#endif
+	DM_LOGD("");
+
+#ifdef _TIZEN_2_3_UX
+	deleteContextPopup();
+	showSelectedNotify(0);
+	m_isEditMode = true;
+	createSelectAllLayout();
+//	elm_genlist_select_mode_set(eoDldList, ELM_OBJECT_SELECT_MODE_ALWAYS);
+#else
 	/* Initialize notify info widget */
-	destroyNotifyInfo();
-	elm_object_item_text_set(eoNaviBarItem, S_("IDS_COM_OPT_DELETE"));
+	elm_object_item_text_set(eoNaviBarItem, __("IDS_DM_HEADER_SELECT_ITEMS"));
 	/* Change layoutbackground color to edit mode color */
 	elm_object_style_set(eoBackground, "edit_mode");
-	/* Disable the back button of control bar */
-	elm_object_item_part_content_unset(eoNaviBarItem, "prev_btn");
-	destroyEvasObj(eoBackBtn);
 
-	if (eoCbItemEmpty)
-		elm_object_item_del(eoCbItemEmpty);
-	eoCbItemCancel = elm_toolbar_item_append(eoControlBar, NULL,
-		S_("IDS_COM_SK_CANCEL"), cbItemCancelCB, eoNaviBar);
+	createToolBar();
 
 	/* Append 'Select All' layout */
-	createSelectAllLayout();
+	changeSelectAll();
 	/* Set reorder end edit mode */
-	elm_genlist_reorder_mode_set(eoDldList, EINA_TRUE);
 	elm_genlist_decorate_mode_set(eoDldList, EINA_TRUE);
 	/* This means even if the ouside of checked box is selected,
 	   it is same to click a check box. */
 	elm_genlist_select_mode_set(eoDldList, ELM_OBJECT_SELECT_MODE_ALWAYS);
-
+#endif
 	Elm_Object_Item *it = NULL;
+	Elm_Object_Item *prev = NULL;
 	ViewItem *viewItem = NULL;
+	int finishedCount = 0;
 	it = elm_genlist_first_item_get(eoDldList);
 	while (it) {
 		viewItem = (ViewItem *)elm_object_item_data_get(it);
-		if (elm_genlist_item_select_mode_get(it) !=
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY &&
-				viewItem && !(viewItem->isFinished()))
-			elm_object_item_disabled_set(it, EINA_TRUE);
+		if (viewItem) {
+			if (!(viewItem->isFinished()))
+				elm_object_item_disabled_set(it, EINA_TRUE);
+			else
+				finishedCount++;
+			if (viewItem->isGroupTitle() && prev) {
+				elm_object_item_signal_emit(prev,
+					"elm,state,bottomline,hide", "");
+			}
+		}
+		prev = it;
 		it = elm_genlist_item_next_get(it);
 	}
-	elm_object_item_disabled_set(eoCbItemDelete, EINA_TRUE);
+
+
+#ifdef _TIZEN_2_3_UX
+	/* Update all the realized Items */
+	if (m_viewItemCount > 0)
+		elm_genlist_realized_items_update(eoDldList);
+#else
+	elm_object_item_disabled_set(eoToolBarItem, EINA_TRUE);
+#endif
 }
 
 void DownloadView::hideGenlistEditMode()
 {
-	DP_LOG_FUNC();
-
-	elm_object_item_text_set(eoNaviBarItem, __("IDS_BR_HEADER_DOWNLOAD_MANAGER"));
-	elm_object_style_set(eoBackground, "default");
-
-	/* Recreate back button */
-	createBackBtn();
-	elm_object_item_part_content_set(eoNaviBarItem, "prev_btn", eoBackBtn);
-
-	if (eoCbItemCancel) {
-		elm_object_item_del(eoCbItemCancel);
-		eoCbItemCancel = NULL;
-	}
-	eoCbItemEmpty = elm_toolbar_item_append(eoControlBar, NULL, NULL, NULL, NULL);
-	elm_object_item_disabled_set(eoCbItemEmpty, EINA_TRUE);
-
-	elm_box_unpack(eoBox, eoSelectAllLayout);
-
-	destroyEvasObj(eoAllCheckedBox);
-	destroyEvasObj(eoSelectAllLayout);
-
-	elm_genlist_reorder_mode_set(eoDldList, EINA_FALSE);
-	elm_genlist_decorate_mode_set(eoDldList, EINA_FALSE);
-	elm_genlist_select_mode_set(eoDldList, ELM_OBJECT_SELECT_MODE_DEFAULT);
-
 	Elm_Object_Item *it = NULL;
 	ViewItem *viewItem = NULL;
+
+	DM_LOGD("");
+
+	removePopup();
+	elm_object_item_text_set(eoNaviBarItem,
+			__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
+#ifdef _TIZEN_2_3_UX
+	m_isEditMode = false;
+	deleteSelectAllLayout();
+#else
+	elm_object_style_set(eoBackground, "default");
+	elm_genlist_decorate_mode_set(eoDldList, EINA_FALSE);
+	elm_genlist_select_mode_set(eoDldList, ELM_OBJECT_SELECT_MODE_DEFAULT);
+#endif
 	it = elm_genlist_first_item_get(eoDldList);
 	while (it) {
 		viewItem = (ViewItem *)elm_object_item_data_get(it);
-		if (elm_genlist_item_select_mode_get(it) !=
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY && viewItem) {
+		if (viewItem) {
 			if (elm_object_item_disabled_get(it))
 				elm_object_item_disabled_set(it, EINA_FALSE);
 			viewItem->setCheckedValue(EINA_FALSE);
@@ -702,14 +1386,18 @@ void DownloadView::hideGenlistEditMode()
 		}
 		it = elm_genlist_item_next_get(it);
 	}
-
-	m_allChecked = EINA_FALSE;
+#ifdef _TIZEN_2_3_UX
+	/* Update all the realized Items */
+	if (m_viewItemCount > 0)
+		elm_genlist_realized_items_update(eoDldList);
+#else
+	destroyToolBar();
+	restoreDeleteBtn();
+#endif
 
 	if (m_viewItemCount < 1) {
-		elm_object_item_disabled_set(eoCbItemDelete, EINA_TRUE);
 		showEmptyView();
-	} else
-		elm_object_item_disabled_set(eoCbItemDelete, EINA_FALSE);
+	}
 }
 
 void DownloadView::handleChangedAllCheckedState()
@@ -718,13 +1406,19 @@ void DownloadView::handleChangedAllCheckedState()
 	Elm_Object_Item *it = NULL;
 	ViewItem *viewItem = NULL;
 	it = elm_genlist_first_item_get(eoDldList);
+	m_allChecked = !m_allChecked;
 	while (it) {
 		viewItem = (ViewItem *)elm_object_item_data_get(it);
-		if (elm_genlist_item_select_mode_get(it) !=
-			ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY && viewItem) {
+		if (viewItem) {
 			if (viewItem->isFinished()) {
 				viewItem->setCheckedValue(m_allChecked);
-				viewItem->updateCheckedBtn();
+#ifdef _TIZEN_2_3_UX
+				elm_genlist_item_fields_update(it, "elm.icon.2",
+					ELM_GENLIST_ITEM_FIELD_CONTENT);
+#else
+				elm_genlist_item_fields_update(it, "elm.edit.icon.1",
+					ELM_GENLIST_ITEM_FIELD_CONTENT);
+#endif
 				checkedCount++;
 			}
 		}
@@ -732,11 +1426,28 @@ void DownloadView::handleChangedAllCheckedState()
 	}
 
 	if (m_allChecked && checkedCount > 0) {
-		elm_object_item_disabled_set(eoCbItemDelete, EINA_FALSE);
-		showNotifyInfo(DOWNLOAD_NOTIFY_SELECTED, checkedCount);
+#ifdef _TIZEN_2_3_UX
+		Evas_Object *doneButton = elm_object_part_content_get(eoNaviBar, "title_right_btn");
+		elm_object_disabled_set(doneButton, EINA_FALSE);
+		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.icon");
+		if (checkBox)
+			elm_check_state_set(checkBox, m_allChecked);
+#else
+		elm_object_item_disabled_set(eoToolBarItem, EINA_FALSE);
+#endif
+		showSelectedNotify(checkedCount);
 	} else {
-		elm_object_item_disabled_set(eoCbItemDelete, EINA_TRUE);
-		showNotifyInfo(DOWNLOAD_NOTIFY_SELECTED, 0);
+		m_allChecked = EINA_FALSE;
+		showSelectedNotify(0);
+#ifdef _TIZEN_2_3_UX
+		Evas_Object *doneButton = elm_object_part_content_get(eoNaviBar, "title_right_btn");
+		elm_object_disabled_set(doneButton, EINA_TRUE);
+		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.icon");
+		if (checkBox)
+			elm_check_state_set(checkBox, m_allChecked);
+#else
+		elm_object_item_disabled_set(eoToolBarItem, EINA_TRUE);
+#endif
 	}
 }
 
@@ -745,15 +1456,14 @@ void DownloadView::handleCheckedState()
 	int checkedCount = 0;
 	int deleteAbleTotalCount = 0;
 
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 
 	Elm_Object_Item *it = NULL;
 	ViewItem *viewItem = NULL;
 	it = elm_genlist_first_item_get(eoDldList);
 	while (it) {
 		viewItem = (ViewItem *)elm_object_item_data_get(it);
-		if (elm_genlist_item_select_mode_get(it) !=
-			ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY && viewItem) {
+		if (viewItem) {
 			if (viewItem->checkedValue())
 				checkedCount++;
 			if (viewItem->isFinished())
@@ -766,489 +1476,383 @@ void DownloadView::handleCheckedState()
 		m_allChecked = EINA_TRUE;
 	else
 		m_allChecked = EINA_FALSE;
-	elm_check_state_pointer_set(eoAllCheckedBox, &m_allChecked);
+
+#ifdef _TIZEN_2_3_UX
+	if (eoSelectAllLayout) {
+		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.icon");
+		if (checkBox)
+			elm_check_state_set(checkBox, m_allChecked);
+	}
+	Evas_Object *doneButton = elm_object_part_content_get(eoNaviBar, "title_right_btn");
+#endif
+
 
 	if (checkedCount == 0) {
-		elm_object_item_disabled_set(eoCbItemDelete, EINA_TRUE);
-		destroyNotifyInfo();
-	} else
-		elm_object_item_disabled_set(eoCbItemDelete, EINA_FALSE);
-	showNotifyInfo(DOWNLOAD_NOTIFY_SELECTED, checkedCount);
-}
-void DownloadView::createNotifyInfo()
-{
-	DP_LOGD_FUNC();
-	eoNotifyInfoLayout = elm_layout_add(eoBoxLayout);
-	elm_object_part_content_set(eoBoxLayout, "sel.swallow.contents",
-			eoNotifyInfoLayout);
-	evas_object_size_hint_weight_set(eoNotifyInfoLayout,
-			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(eoNotifyInfoLayout,
-			EVAS_HINT_FILL, EVAS_HINT_FILL);
+#ifdef _TIZEN_2_3_UX
+		elm_object_disabled_set(doneButton, EINA_TRUE);
+#else
+		elm_object_item_disabled_set(eoToolBarItem, EINA_TRUE);
+#endif
+	} else {
+#ifdef _TIZEN_2_3_UX
+		elm_object_disabled_set(doneButton, EINA_FALSE);
+#else
+		elm_object_item_disabled_set(eoToolBarItem, EINA_FALSE);
+#endif
+	}
+	showSelectedNotify(checkedCount);
 }
 
-void DownloadView::showNotifyInfo(int type, int selectedCount)
+void DownloadView::showSelectedNotify(int selectedCount)
 {
-	string buf;
-	DP_LOGD_FUNC();
+	char buff[MAX_BUF_LEN] = {0,};
 
-	if (selectedCount == 0) {
-		destroyNotifyInfo();
+	DM_LOGD("");
+#ifndef _TIZEN_2_3_UX
+	if (selectedCount <= 0) {
+		elm_object_item_text_set(eoNaviBarItem, __("IDS_DM_HEADER_SELECT_ITEMS"));
 		return;
 	}
+#endif
+	m_selectedItemsCount = selectedCount;
+	const char *format_str = DM_BODY_TEXT_PD_SELECTED;
+	snprintf(buff, MAX_BUF_LEN, format_str, selectedCount);
 
-	if (!eoNotifyInfoLayout)
-		createNotifyInfo();
-
-	elm_layout_theme_set(eoNotifyInfoLayout, "standard", "selectioninfo",
-			"default");
-	buf.append(" ");
-	if (type == DOWNLOAD_NOTIFY_SELECTED) {
-		stringstream countStr;
-		countStr << selectedCount;
-		buf = S_("IDS_COM_BODY_SELECTED");
-		buf.append(" (");
-		buf.append(countStr.str());
-		buf.append(")");
-	} else if (type == DOWNLOAD_NOTIFY_DELETED) {
-		buf = S_("IDS_COM_POP_DELETED");
-		if (eoNotifyTimer) {
-			ecore_timer_del(eoNotifyTimer);
-			eoNotifyTimer = NULL;
-		}
-		eoNotifyTimer = ecore_timer_add(3, deletedNotifyTimerCB, NULL);
-	}
-	elm_object_part_text_set(eoNotifyInfoLayout, "elm.text", buf.c_str());
-	elm_object_signal_emit(eoBoxLayout, "show,selection,info", "elm");
-	evas_object_show(eoNotifyInfoLayout);
+	elm_object_item_text_set(eoNaviBarItem, buff);
 }
 
-Eina_Bool DownloadView::deletedNotifyTimerCB(void *data)
-{
-	DownloadView& view = DownloadView::getInstance();
-	view.destroyNotifyInfo();
-	return ECORE_CALLBACK_RENEW;
-}
-
-void DownloadView::destroyNotifyInfo()
-{
-	DP_LOGD_FUNC();
-	destroyEvasObj(eoNotifyInfoLayout);
-	eoNotifyInfoLayout = NULL;
-}
-
-/* Static callback function */
-void DownloadView::showNotifyInfoCB(void *data, Evas *evas, Evas_Object *obj,
-	void *event)
-{
-	Evas_Object *layout = (Evas_Object *)data;
-	if (!data) {
-		DP_LOGE("data is NULL");
-		return;
-	}
-	edje_object_signal_emit(_EDJ(layout), "elm,layout,content,bottom_padding",
-		"layout");
-}
-
-void DownloadView::hideNotifyInfoCB(void *data, Evas *evas, Evas_Object *obj,
-	void *event)
-{
-	Evas_Object *layout = (Evas_Object *)data;
-	if (!data) {
-		DP_LOGE("data is NULL");
-		return;
-	}
-	edje_object_signal_emit(_EDJ(layout), "elm,layout,content,default", "layout");
-}
-
-void DownloadView::selectAllClickedCB(void *data, Evas *evas, Evas_Object *obj,
+#ifdef _TIZEN_2_3_UX
+void DownloadView::selectAllChangedCB(void *data, Evas *e, Evas_Object *obj,
 	void *event_info)
 {
+	DM_LOGD("");
 	DownloadView &view = DownloadView::getInstance();
-	DP_LOGD_FUNC();
-	view.changeAllCheckedValue();
+	view.handleChangedAllCheckedState();
 }
-
+#else
 void DownloadView::selectAllChangedCB(void *data, Evas_Object *obj,
 	void *event_info)
 {
 	DownloadView &view = DownloadView::getInstance();
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 	view.handleChangedAllCheckedState();
-}
-
-#ifndef _TIZEN_PUBLIC
-void DownloadView::sweepRightCB(void *data, Evas_Object *obj, void *event_info)
-{
-	DownloadView& view = DownloadView::getInstance();
-	DP_LOGD_FUNC();
-	if (!obj || !event_info) {
-		DP_LOGE("obj or event_info is NULL");
-		return;
-	}
-	if (!elm_genlist_decorate_mode_get(obj)) {
-		Elm_Object_Item *glItem = (Elm_Object_Item *)event_info;
-		ViewItem *viewItem = view.findViewItemForGenlistItem(glItem);
-		if (viewItem) {
-			if (viewItem->isFinished()) {
-				if (view.sweepedItem())
-					view.sweepedItem()->sweepLeft();
-				viewItem->sweepRight();
-				view.setSweepedItem(viewItem);
-			}
-		} else {
-			DP_LOGE("Fail to find view item at sweep mode");
-		}
-	} else
-		DP_LOGD("Unable to sweep right");
-}
-
-void DownloadView::sweepLeftCB(void *data, Evas_Object *obj, void *event_info)
-{
-	DownloadView& view = DownloadView::getInstance();
-	DP_LOGD_FUNC();
-	if (!obj || !event_info) {
-		DP_LOGE("obj or event_info is NULL");
-		return;
-	}
-
-	if (!elm_genlist_decorate_mode_get(obj)) {
-		Elm_Object_Item *glItem = (Elm_Object_Item *)event_info;
-		ViewItem *viewItem = view.findViewItemForGenlistItem(glItem);
-		if (viewItem) {
-			if (viewItem->isFinished()) {
-				viewItem->sweepLeft();
-				view.setSweepedItem(NULL);
-			}
-		} else {
-			DP_LOGE("Fail to find view item at sweep mode");
-		}
-	} else
-		DP_LOGD("Unable to sweep left");
 }
 #endif
 
-void DownloadView::backBtnCB(void *data, Evas_Object *obj, void *event_info)
+Eina_Bool DownloadView::popCB(void *data, Elm_Object_Item *it)
 {
 	DownloadView& view = DownloadView::getInstance();
-	view.hide();
-}
-
-void DownloadView::cbItemDeleteCB(void *data, Evas_Object *obj, void *event_info)
-{
-
-	DownloadView& view = DownloadView::getInstance();
-	if (!view.isGenlistEditMode())
-		view.showGenlistEditMode();
-	else
-		view.destroyCheckedItem();
-}
-
-void DownloadView::cbItemCancelCB(void *data, Evas_Object *obj, void *event_info)
-{
-	DownloadView& view = DownloadView::getInstance();
-	view.destroyNotifyInfo();
-	view.hideGenlistEditMode();
+	DM_LOGI("");
+	if (view.isGenlistEditMode()) {
+		view.hideGenlistEditMode();
+		return EINA_FALSE;
+	} else {
+		view.hide();
+		return EINA_FALSE;
+	}
 }
 
 void DownloadView::genlistClickCB(void *data, Evas_Object *obj, void *event_info)
 {
 	ViewItem *item = reinterpret_cast<ViewItem *>(data);
-	DP_LOGD_FUNC();
+	DM_LOGD("");
 	if (!data) {
-		DP_LOGE("data is NULL");
+		DM_LOGE("NULL Check:data");
 		return;
 	}
 	item->clickedGenlistItem();
 }
 
-void DownloadView::cancelClickCB(void *data, Evas_Object *obj, void *event_info)
+void DownloadView::showRetryPopup(ViewItem *viewItem, string *msg)
 {
-	ViewItem *item = NULL;
+	Evas_Object *btn1 = NULL;
+	Evas_Object *btn2 = NULL;
 
-	DP_LOGD_FUNC();
-
-	if (!data) {
-		DP_LOGE("data is NULL");
+	DM_LOGI("");
+	if (!viewItem)
 		return;
-	}
-	item = reinterpret_cast<ViewItem *>(data);
-	item->requestCancel();
-
-}
-
-void DownloadView::showErrPopup(string &desc)
-{
+	/* If another popup is shown, delete it*/
 	removePopup();
-
 	eoPopup = elm_popup_add(eoWindow);
-	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_object_text_set(eoPopup, desc.c_str());
-	elm_popup_timeout_set(eoPopup, 2);
-	evas_object_smart_callback_add(eoPopup, "response", errPopupResponseCB, NULL);
+	elm_popup_align_set(eoPopup, ELM_NOTIFY_ALIGN_FILL, 1.0);
+	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND,
+			EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(eoPopup, EVAS_HINT_FILL,
+		EVAS_HINT_FILL);
+
+#ifdef _TIZEN_2_3_UX
+	string titleText = "<align=left>" + msg[0] + "</align>";
+	elm_object_part_text_set(eoPopup, "title,text", titleText.c_str());
+#else
+	elm_object_part_text_set(eoPopup, "title,text", msg[0].c_str());
+#endif
+	elm_object_text_set(eoPopup, msg[1].c_str());
+	btn1 = elm_button_add(eoPopup);
+	elm_object_style_set(btn1, "popup");
+	elm_object_text_set(btn1, DM_SK_TEXT_CANCEL);
+	elm_object_part_content_set(eoPopup, "button1", btn1);
+	evas_object_smart_callback_add(btn1, "clicked", retryPopupCancelCB,
+			viewItem);
+	btn2 = elm_button_add(eoPopup);
+	elm_object_style_set(btn2, "popup");
+#ifdef _TIZEN_2_3_UX
+		elm_object_text_set(btn2, DM_SK_TEXT_DOWNLOAD);
+#else
+		elm_object_text_set(btn2, S_("IDS_COM_SK_RETRY"));
+#endif
+
+	elm_object_part_content_set(eoPopup, "button2", btn2);
+	evas_object_smart_callback_add(btn2, "clicked", retryPopupRetryCB,
+			viewItem);
+	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 }
 
+
+void DownloadView::showMemoryFullPopup(string &msg)
+{
+	Evas_Object *btn1 = NULL;
+	Evas_Object *btn2 = NULL;
+	char buff[MAX_BUF_LEN] = {0,};
+
+	DM_LOGI("");
+
+	if (m_silentMode) {
+		DM_LOGI("silent mode");
+		evas_object_show(eoWindow);
+		elm_win_activate(eoWindow);
+	}
+
+	/* If another popup is shown, delete it*/
+	removePopup();
+	eoPopup = elm_popup_add(eoWindow);
+	elm_popup_align_set(eoPopup, ELM_NOTIFY_ALIGN_FILL, 1.0);
+	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND,
+			EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(eoPopup, EVAS_HINT_FILL,
+			EVAS_HINT_FILL);
+
+#ifdef _TIZEN_2_3_UX
+	snprintf(buff, MAX_BUF_LEN, "%s%s%s", "<align=left>",
+		__("IDS_DM_HEADER_DEFAULT_STROAGE_FULL"), "</align>");
+	elm_object_part_text_set(eoPopup, "title,text", buff);
+#else
+	elm_object_part_text_set(eoPopup, "title,text",
+			__("IDS_DM_HEADER_DEFAULT_STROAGE_FULL"));
+#endif
+	snprintf(buff, MAX_BUF_LEN, msg.c_str(), __("IDS_DM_BODY_STORAGE"));
+	elm_object_text_set(eoPopup, buff);
+	btn1 = elm_button_add(eoPopup);
+	elm_object_style_set(btn1, "popup");
+#ifdef _TIZEN_2_3_UX
+	elm_object_text_set(btn1, DM_SK_TEXT_CANCEL);
+#else
+	elm_object_text_set(btn1, DM_SK_TEXT_OK);
+#endif
+	elm_object_part_content_set(eoPopup, "button1", btn1);
+	evas_object_smart_callback_add(btn1, "clicked", memoryFullPopupCancelCB,
+			NULL);
+	btn2 = elm_button_add(eoPopup);
+	elm_object_style_set(btn2, "popup");
+	elm_object_text_set(btn2, __("IDS_DM_BUTTON_GO_TO_STORAGE_ABB"));
+	elm_object_part_content_set(eoPopup, "button2", btn2);
+	evas_object_smart_callback_add(btn2, "clicked", memoryFullPopupMyFilesCB,
+			NULL);
+	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	evas_object_show(eoPopup);
+}
+
+void DownloadView::showErrPopup(string *desc)
+{
+	Evas_Object *btn1 = NULL;
+
+	if (m_silentMode) {
+		DM_LOGI("silent mode");
+		evas_object_show(eoWindow);
+		elm_win_activate(eoWindow);
+	}
+
+	removePopup();
+
+	eoPopup = elm_popup_add(eoWindow);
+	elm_popup_align_set(eoPopup, ELM_NOTIFY_ALIGN_FILL, 1.0);
+	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+#ifdef _TIZEN_2_3_UX
+	string titleText = "<align=left>" + desc[0] + "</align>";
+	elm_object_part_text_set(eoPopup, "title,text", titleText.c_str());
+#else
+	elm_object_part_text_set(eoPopup, "title,text", desc[0].c_str());
+#endif
+	elm_object_text_set(eoPopup, desc[1].c_str());
+	btn1 = elm_button_add(eoPopup);
+	elm_object_style_set(btn1, "popup");
+	elm_object_text_set(btn1, DM_SK_TEXT_OK);
+	elm_object_part_content_set(eoPopup, "button1", btn1);
+	evas_object_smart_callback_add(btn1, "clicked", errPopupResponseCB,
+			NULL);
+	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	evas_object_show(eoPopup);
+}
+
+
 void DownloadView::errPopupResponseCB(void *data, Evas_Object *obj, void *event_info)
 {
-	DP_LOGD_FUNC();
+	DM_LOGI("");
 	DownloadView& view = DownloadView::getInstance();
+	view.removePopup();
+}
+
+
+void DownloadView::memoryFullPopupCancelCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DownloadView& view = DownloadView::getInstance();
+	view.removePopup();
+}
+
+void DownloadView::memoryFullPopupMyFilesCB(void *data, Evas_Object *obj, void *event_info)
+{
+	DM_LOGI("");
+	DownloadView& view = DownloadView::getInstance();
+	FileUtility fileObj;
+	fileObj.openMyFilesApp();
+	view.removePopup();
+}
+
+void DownloadView::retryPopupCancelCB(void *data, Evas_Object *obj, void *event_info)
+{
+	ViewItem *viewItem = (ViewItem *)data;
+	DownloadView& view = DownloadView::getInstance();
+	if (viewItem)
+		viewItem->clickedCanceledRetryButton();
+	else
+		DM_LOGE("No viewItem");
+	view.removePopup();
+}
+
+void DownloadView::retryPopupRetryCB(void *data, Evas_Object *obj, void *event_info)
+{
+	ViewItem *viewItem = (ViewItem *)data;
+	DownloadView& view = DownloadView::getInstance();
+
+	DM_LOGI("");
+	if (viewItem)
+		viewItem->clickedRetryButton();
+	else
+		DM_LOGE("No viewItem");
 	view.removePopup();
 }
 
 void DownloadView::removePopup()
 {
-	DP_LOGD_FUNC();
-	destroyEvasObj(eoPopup);
-}
-
-DateGroup *DownloadView::getDateGroupObj(int type)
-{
-	DateGroup *obj = NULL;
-	switch (type) {
-	case DATETIME::DATE_TYPE_LATER:
-	case DATETIME::DATE_TYPE_TODAY:
-		obj = &m_today;
-		break;
-	case DATETIME::DATE_TYPE_YESTERDAY:
-		obj = &m_yesterday;
-		break;
-	case DATETIME::DATE_TYPE_PREVIOUS:
-		obj = &m_previousDay;
-		break;
-	default:
-		obj = NULL;
-		DP_LOGE("Cannot enter here");
-		break;
+#ifdef _ENABLE_OMA_DOWNLOAD
+	if (eoPopup && prevOmaViewItem) {
+		DM_LOGI("Destroy oma popup and cancel oma download");
+		prevOmaViewItem->responseUserConfirm(false);
+		prevOmaViewItem = NULL;
+	} else {
+		prevOmaViewItem = NULL;
 	}
-	return obj;
-}
-
-Elm_Object_Item *DownloadView::getGenlistGroupItem(int type)
-{
-	DateGroup *obj = getDateGroupObj(type);
-	if (!obj)
-		return NULL;
-	return obj->glGroupItem();
-}
-
-void DownloadView::setGenlistGroupItem(int type, Elm_Object_Item *item)
-{
-	DateGroup *obj = getDateGroupObj(type);
-	if (!obj)
-		return;
-	obj->setGlGroupItem(item);
-}
-
-void DownloadView::increaseGenlistGroupCount(int type)
-{
-	DateGroup *obj = getDateGroupObj(type);
-	if (!obj)
-		return;
-	if (type == DATETIME::DATE_TYPE_TODAY || type == DATETIME::DATE_TYPE_LATER) {
-		if (m_today.getCount() < 1) {
-			DateUtil &inst = DateUtil::getInstance();
-			inst.setTodayStandardTime();
-		}
-	}
-	obj->increaseCount();
-	DP_LOGD("increased count[%d]",obj->getCount());
-}
-
-int DownloadView::getGenlistGroupCount(int type)
-{
-	DateGroup *obj = getDateGroupObj(type);
-	if (!obj)
-		return 0;
-	DP_LOGD("Group count[%d]",obj->getCount());
-	return obj->getCount();
-}
-
-void DownloadView::handleGenlistGroupItem(int type)
-{
-	DateGroup *obj = getDateGroupObj(type);
-	if (!obj)
-		return;
-	obj->decreaseCount();
-	DP_LOGD("count[%d]type[%d]",obj->getCount(),type);
-	if (obj->getCount() < 1) {
-		//DP_LOGD("Group Item[%p][%d]", obj->glGroupItem(),type);
-		elm_object_item_del(obj->glGroupItem());
-		obj->setGlGroupItem(NULL);
-	}
-}
-
-void DownloadView::handleUpdateDateGroupType(ViewItem *viewItem)
-{
-	int diffDays = 0;
-	DateUtil &inst = DateUtil::getInstance();
-	DP_LOGD_FUNC();
-	diffDays = inst.getDiffDaysFromToday();
-	if (viewItem) {
-	/* Update a view item which is added now
-	 * This should be only called when attaching item
-	**/
-		viewItem->extractDateGroupType();
-	} else if (diffDays != 0) {
-	/* FIXME later
-	 * Now, it is recreated download items and group items.
-	 * Consider to move only group item later.
-	 * This should be only called from show() function
-	**/
-/* FIXME later
- * Another problem is happend becuase eina list is used repacing with vector */
-#if 0
-		cleanGenlistData();
-		Elm_Object_Item *it = NULL;
-		ViewItem *viewItem = NULL;
-		it = elm_genlist_first_item_get(eoDldList);
-		while (it) {
-			viewItem = (ViewItem *)elm_object_item_data_get(it);
-			if (!viewItem || elm_genlist_item_select_mode_get(it) !=
-					ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY)
-				continue;
-			viewItem->extractDateGroupType();
-			createGenlistItem(viewItem);
-			it = elm_genlist_item_next_get(it);
-		}
 #endif
+	if(eoPopup) {
+		DM_LOGD("Remove Popup");
+		evas_object_del(eoPopup);
+		eoPopup = NULL;
 	}
-	inst.setTodayStandardTime();
 }
 
-void DownloadView::moveRetryItem(ViewItem *viewItem)
+#ifdef _ENABLE_OMA_DOWNLOAD
+void DownloadView::removeOnlyPopupObj()
 {
-	Elm_Object_Item *todayGroupItem = NULL;
-	Elm_Object_Item *firstItem = NULL;
-	DP_LOGD_FUNC();
-	if (!viewItem) {
-		DP_LOGE("view item is NULL");
+	DM_LOGD("");
+	prevOmaViewItem = NULL;
+	if(eoPopup) {
+		evas_object_del(eoPopup);
+		eoPopup = NULL;
+	}
+}
+
+void DownloadView::showOMAPopup(string msg, ViewItem *viewItem)
+{
+	Evas_Object *btn1 = NULL;
+	Evas_Object *btn2 = NULL;
+
+	DM_LOGI("");
+
+	if (!viewItem)
+		return;
+	if (msg.empty()) {
+		viewItem->responseUserConfirm(false);
 		return;
 	}
-	firstItem = elm_genlist_first_item_get(eoDldList);
-	if (firstItem) {
-		DP_LOGD("groupItem[%p] viewItem[%p]", firstItem, viewItem);
-		/* This is group item */
-		if (elm_genlist_item_select_mode_get(firstItem) ==
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY) {
-			/* The top item is the item after group item */
-			firstItem = elm_genlist_item_next_get(firstItem);
-			DP_LOGD("firstItem[%p], present item[%p]", firstItem, viewItem->genlistItem());
-			if (firstItem == viewItem->genlistItem()) {
-				DP_LOGD("This is already top item. Don't need to move");
-				return;
-			}
-		}
+
+	if (m_silentMode) {
+		DM_LOGI("silent mode");
+		evas_object_show(eoWindow);
+		elm_win_activate(eoWindow);
 	}
-	elm_object_item_del(viewItem->genlistItem());
-	viewItem->setGenlistItem(NULL);
-	handleGenlistGroupItem(viewItem->dateGroupType());
-	todayGroupItem = getGenlistGroupItem(DATETIME::DATE_TYPE_TODAY);
-	if (!todayGroupItem) {
-		DateGroup *dateGrpObj = getDateGroupObj(DATETIME::DATE_TYPE_TODAY);
-		todayGroupItem = elm_genlist_item_prepend(
-				eoDldList,
-				&dldGenlistGroupStyle,
-				static_cast<const void*>(dateGrpObj),
-				NULL,
-				ELM_GENLIST_ITEM_GROUP,
-				NULL,
-				NULL);
-		setGenlistGroupItem(DATETIME::DATE_TYPE_TODAY, todayGroupItem);
-		if (!todayGroupItem)
-			DP_LOGE("Fail to add a genlist group item");
-		else
-			elm_genlist_item_select_mode_set(todayGroupItem,
-				ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY);
-	}
-	increaseGenlistGroupCount(DATETIME::DATE_TYPE_TODAY);
-	Elm_Object_Item *glItem = elm_genlist_item_insert_after(
-			eoDldList,
-			viewItem->elmGenlistStyle(),
-			static_cast<const void*>(viewItem),
-			todayGroupItem,
-			todayGroupItem,
-			ELM_GENLIST_ITEM_NONE,
-			genlistClickCB,
-			static_cast<const void*>(viewItem));
-	if (!glItem)
-		DP_LOGE("Fail to add a genlist item");
-	DP_LOGD("genlist groupItem[%p] item[%p] viewItem[%p]", todayGroupItem,
-		glItem, viewItem);
-	viewItem->setGenlistItem(glItem);
-	elm_genlist_item_show(todayGroupItem, ELM_GENLIST_ITEM_SCROLLTO_TOP);
-	viewItem->extractDateGroupType();
+
+	/* If another popup is shown, delete it*/
+	removePopup();
+
+	eoPopup = elm_popup_add(eoWindow);
+	elm_popup_align_set(eoPopup, ELM_NOTIFY_ALIGN_FILL, 1.0);
+	evas_object_size_hint_weight_set(eoPopup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	elm_object_text_set(eoPopup, msg.c_str());
+#ifdef _TIZEN_2_3_UX
+	string titleText = "<align=left>" + string(DM_SK_TEXT_DOWNLOAD) + "</align>";
+	elm_object_part_text_set(eoPopup, "title,text", titleText.c_str());
+#else
+	elm_object_part_text_set(eoPopup, "title,text", DM_SK_TEXT_DOWNLOAD);
+#endif
+	btn1 = elm_button_add(eoPopup);
+	elm_object_style_set(btn1, "popup");
+	elm_object_text_set(btn1, DM_SK_TEXT_CANCEL);
+	elm_object_part_content_set(eoPopup, "button1", btn1);
+	evas_object_smart_callback_add(btn1, "clicked", omaPopupResponseCancelCB,
+		viewItem);
+	btn2 = elm_button_add(eoPopup);
+	elm_object_style_set(btn2, "popup");
+	elm_object_text_set(btn2, DM_SK_TEXT_OK);
+	elm_object_part_content_set(eoPopup, "button2", btn2);
+	evas_object_smart_callback_add(btn2, "clicked", omaPopupResponseOKCB,
+		viewItem);
+	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	evas_object_show(eoPopup);
+	prevOmaViewItem = viewItem;
 }
 
-char *DownloadView::getGenlistGroupLabel(void *data, Evas_Object *obj, const char *part)
+void DownloadView::omaPopupResponseOKCB(void *data, Evas_Object *obj,
+		void *event_info)
 {
-	DateGroup *dateGrp = static_cast<DateGroup *>(data);
+	ViewItem *viewItem = (ViewItem *)data;
+	DownloadView& view = DownloadView::getInstance();
 
-	if(!data || !obj || !part)
-		return NULL;
-
-	DP_LOGD("ViewItem::getListGroupLabel:part[%s] groupDateType[%d] obj[%p]", part, dateGrp->getType(), obj);
-	if (strncmp(part, "elm.text", strlen("elm.text")) == 0) {
-		DateUtil &inst = DateUtil::getInstance();
-		string msg;
-		string outBuf;
-		double udateTime = 0;
-		switch (dateGrp->getType()) {
-		case DATETIME::DATE_TYPE_PREVIOUS:
-			msg = S_("IDS_COM_BODY_PREVIOUS_DAYS");
-			break;
-		case DATETIME::DATE_TYPE_YESTERDAY:
-			udateTime = inst.yesterdayTime()*1000;
-			msg = S_("IDS_COM_BODY_YESTERDAY");
-			msg += " (";
-			inst.getDateStr(LOCALE_STYLE::FULL_DATE, udateTime, outBuf);
-			msg += outBuf;
-			msg += ")";
-			break;
-		case DATETIME::DATE_TYPE_LATER:
-		case DATETIME::DATE_TYPE_TODAY:
-			udateTime = inst.nowTime()*1000;
-			msg = S_("IDS_COM_BODY_TODAY");
-			msg += " (";
-			inst.getDateStr(LOCALE_STYLE::FULL_DATE, udateTime, outBuf);
-			msg += outBuf;
-			msg += ")";
-			break;
-		default :
-			DP_LOGE("Cannot enter here");
-			return NULL;
-		}
-		return strdup(msg.c_str());
-	}
-	return NULL;
+	DM_LOGI("");
+	if (viewItem)
+		viewItem->responseUserConfirm(true);
+	else
+		DM_LOGE("No viewItem");
+	view.removeOnlyPopupObj();
 }
 
-char *DownloadView::getGenlistGroupLabelCB(void *data, Evas_Object *obj, const char *part)
+void DownloadView::omaPopupResponseCancelCB(void *data, Evas_Object *obj,
+		void *event_info)
 {
-//	DP_LOGD_FUNC();
-	if(!data || !obj || !part)
-		return NULL;
+	ViewItem *viewItem = (ViewItem *)data;
+	DownloadView& view = DownloadView::getInstance();
 
-	DownloadView &view = DownloadView::getInstance();
-	return view.getGenlistGroupLabel(data, obj, part);
+	DM_LOGI("");
+	if (viewItem)
+		viewItem->responseUserConfirm(false);
+	else
+		DM_LOGE("No viewItem");
+
+	view.removeOnlyPopupObj();
 }
+#endif
 
-void DownloadView::cleanGenlistData()
+void DownloadView::popupBackCB(void *data, Evas_Object *obj, void *event_info)
 {
-	Elm_Object_Item *grpItem = NULL;
-	DP_LOGD_FUNC();
-	grpItem = m_today.glGroupItem();
-	if (grpItem)
-		elm_object_item_del(grpItem);
-	m_today.initData();
-	grpItem = m_yesterday.glGroupItem();
-	if (grpItem)
-		elm_object_item_del(grpItem);
-	m_yesterday.initData();
-	grpItem = m_previousDay.glGroupItem();
-	if (grpItem)
-		elm_object_item_del(grpItem);
-	m_previousDay.initData();
-	elm_genlist_clear(eoDldList);
+	DownloadView& view = DownloadView::getInstance();
+	view.removePopup();
 }
-
