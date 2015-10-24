@@ -24,6 +24,7 @@
 
 #include "notification.h"
 #include "notification_internal.h"
+#include "notification_text_domain.h"
 
 #include "download-manager-common.h"
 #include "download-manager-event.h"

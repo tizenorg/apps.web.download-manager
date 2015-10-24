@@ -28,6 +28,7 @@ DownloadRequest::DownloadRequest(string url, string reqHeaderField, string reqHe
 	, m_reqHeaderValue(reqHeaderValue)
 	, m_installDir(installDir)
 	, m_fileName(fileName)
+	, m_networkBonding(false)
 {
 }
 
@@ -40,6 +41,7 @@ DownloadRequest::DownloadRequest(DownloadRequest &rRequest)
 	m_fileName.assign(rRequest.getFileName());
 	m_tempFilePath.assign(rRequest.getTempFilePath());
 	m_etag.assign(rRequest.getEtag());
+	m_networkBonding = rRequest.getNetworkBondingOption();
 	extractSenderName();
 }
 
@@ -87,6 +89,11 @@ string DownloadRequest::getEtag()
 	return m_etag;
 }
 
+bool DownloadRequest::getNetworkBondingOption()
+{
+	return m_networkBonding;
+}
+
 void DownloadRequest::setUrl(string url)
 {
 	m_url.assign(url);
@@ -121,6 +128,11 @@ void DownloadRequest::setTempFilePath(string tempFilePath)
 void DownloadRequest::setEtag(string etag)
 {
 	m_etag.assign(etag);
+}
+
+void DownloadRequest::setNetworkBondingOption(bool enable)
+{
+	m_networkBonding = enable;
 }
 
 void DownloadRequest::extractSenderName()

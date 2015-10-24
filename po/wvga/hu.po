@@ -49,6 +49,9 @@ msgstr "Érintse meg a Letöltés gombot az újabb próbálkozáshoz."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "A fájl nem található. A Letöltés megérintésével megpróbálhatja újból letölteni."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Nem lehet megnyitni a fájlt"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Nem található alkalmazás a fájl megnyitásához."
 

@@ -49,6 +49,9 @@ msgstr "点击下载以重试。"
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "该文件无法找到。点击下载以重新尝试下载。"
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "无法打开文件"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "无法找到用于打开该文件的应用程序。"
 

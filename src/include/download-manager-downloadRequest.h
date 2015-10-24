@@ -43,6 +43,7 @@ public:
 	string getFileName(void);
 	string getTempFilePath(void);
 	string getEtag(void);
+	bool getNetworkBondingOption(void);
 	void setUrl(string url);
 	void setReqHeaderField(string reqHeaderField);
 	void setReqHeaderValue(string reqHeaderValue);
@@ -50,6 +51,7 @@ public:
 	void setFileName(string fileName);
 	void setTempFilePath(string tempFilePath);
 	void setEtag(string etag);
+	void setNetworkBondingOption(bool enable);
 private:
 	void extractSenderName(void);
 	string m_url;
@@ -60,6 +62,7 @@ private:
 	string m_fileName;
 	string m_tempFilePath;
 	string m_etag;
+	bool m_networkBonding;
 };
 
 #endif /* DOWNLOAD_MANAGER_DOWNLOAD_REQUEST_H */

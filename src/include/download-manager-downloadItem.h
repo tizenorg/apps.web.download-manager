@@ -24,6 +24,7 @@
 #define DOWNLOAD_MANAGER_DOWNLOAD_ITEM_H
 
 #include <memory>
+#include "download_product.h"
 #include "download.h"
 #include "download-manager-common.h"
 #include "download-manager-downloadRequest.h"
@@ -162,6 +163,13 @@ public:
 	{
 		m_etag = etag;
 		m_aptr_request->setEtag(etag);
+	}
+
+	inline bool getNetworkBonding(void)
+	{
+		if (m_aptr_request.get())
+			return m_aptr_request->getNetworkBondingOption();
+		return false;
 	}
 
 	inline DL_ITEM::STATE getState(void) { return m_state; }

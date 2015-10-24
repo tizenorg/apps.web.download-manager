@@ -29,7 +29,7 @@
 #include "Ecore_X.h"
 #include "app.h"
 #include "app_control.h"
-#include "efl_assist.h"
+
 #ifdef _ENABLE_OMA_DOWNLOAD
 #include <oma-parser-interface.h>
 #endif
@@ -53,45 +53,7 @@ struct app_data_t {
 	int load_count;
 };
 
-
-#ifdef _TIZEN_2_3_UX
-static Ea_Theme_Color_Table *colorTable = NULL;
-static Eina_List *fontTable = NULL;
-
-static void __dm_changeable_theme_init(void)
-{
-	DM_LOGD("");
-	Ea_Theme_Style style = ea_theme_style_get();
-	colorTable = ea_theme_color_table_new(DM_COLOR_TABLE_PATH);
-	if (colorTable)
-		ea_theme_colors_set(colorTable, style);
-	else
-		DM_LOGE("[ERR] color table create fail");
-
-	fontTable = ea_theme_font_table_new(DM_FONT_TABLE_PATH);
-	if (fontTable)
-		ea_theme_fonts_set(fontTable);
-	else
-		DM_LOGE("[ERR] font table create fail");
-}
-
-static void __dm_changeable_theme_free(void)
-{
-	DM_LOGD("");
-	if (colorTable) {
-		ea_theme_color_table_free(colorTable);
-		colorTable = NULL;
-	}
-
-	if (fontTable) {
-		ea_theme_font_table_free(fontTable);
-		fontTable = NULL;
-	}
-}
-
-#endif
-
-static void __lang_changed_cb(void *data)
+static void __lang_changed_cb(app_event_info_h event_info, void *data)
 {
 	DM_LOGI("==Language changed notification==");
 	char *lang_set = vconf_get_str(VCONFKEY_LANGSET);
@@ -104,7 +66,7 @@ static void __lang_changed_cb(void *data)
 	return;
 }
 
-static void __region_changed_cb(void *data)
+static void __region_changed_cb(app_event_info_h event_info,void *data)
 {
 	DownloadView &view = DownloadView::getInstance();
 	view.changedRegion();
@@ -112,7 +74,7 @@ static void __region_changed_cb(void *data)
 	return;
 }
 
-static void __low_memory_cb(void *data)
+static void __low_memory_cb(app_event_info_h event_info, void *data)
 {
 	DM_LOGI("=== Low memory nofification ===");
 	return;
@@ -145,10 +107,6 @@ static bool __app_create(void *data)
 		DM_LOGE("Fail to create main window");
 		return false;
 	}
-	ea_theme_changeable_ui_enabled_set(EINA_TRUE);
-#ifdef _TIZEN_2_3_UX
-	__dm_changeable_theme_init();
-#endif
 #ifdef _ENABLE_OMA_DOWNLOAD
 	op_parser_init();
 #endif
@@ -179,9 +137,6 @@ static void __app_terminate(void *data)
 	struct app_data_t *app_data = (struct app_data_t *)data;
 	DownloadView &view = DownloadView::getInstance();
 	view.destroy();
-#ifdef _TIZEN_2_3_UX
-	__dm_changeable_theme_free();
-#endif
 #ifdef _ENABLE_OMA_DOWNLOAD
 	op_parser_deinit();
 #endif
@@ -216,6 +171,7 @@ static void __app_control(app_control_h s, void *data)
 	string reqHeaderValue = std::string();
 	string reqInstallDir = std::string();
 	string reqFileName = std::string();
+	bool reqNetworkBonding = false;
 	char *url = NULL;
 	char *mode = NULL;
 	char *app_op = NULL;
@@ -355,6 +311,19 @@ static void __app_control(app_control_h s, void *data)
 		DM_LOGI("Fail to get extra data failed history ID[%d]", ret);
 	}
 
+	ret = app_control_get_extra_data(s, KEY_NETWORK_BONDING, &network_bonding);
+	if (ret == APP_CONTROL_ERROR_NONE) {
+		if (network_bonding) {
+			string tmpStr = string(network_bonding);
+			if (tmpStr.compare("true") == 0)
+				reqNetworkBonding = true;
+			DM_LOGI("network_bonding option[%s]",tmpStr.c_str());
+		}
+		free(network_bonding);
+	} else {
+		DM_LOGD("Fail to get extra data network bonding[%d]", ret);
+	}
+
 	if (reqUrl.empty()) {
 		view.setSilentMode(false);
 		view.activateWindow();
@@ -362,6 +331,7 @@ static void __app_control(app_control_h s, void *data)
 	}
 	DownloadRequest request(reqUrl, reqHeaderField, reqHeaderValue,
 			reqInstallDir, reqFileName);
+	request.setNetworkBondingOption(reqNetworkBonding);
 	Item::create(request);
 	view.activateWindow();
 	return;
@@ -369,7 +339,8 @@ static void __app_control(app_control_h s, void *data)
 
 EXPORT_API int main(int argc, char *argv[])
 {
-	app_event_callback_s evt_cb = {0,};
+	ui_app_lifecycle_callback_s evt_cb = {0,};
+
 	int ret = 0;
 	struct app_data_t *app_data = NULL;
 
@@ -386,13 +357,16 @@ EXPORT_API int main(int argc, char *argv[])
 	evt_cb.pause = __app_pause;
 	evt_cb.resume = __app_resume;
 	evt_cb.app_control = __app_control;
-	evt_cb.low_memory = __low_memory_cb;
-	evt_cb.low_battery = NULL;
-	evt_cb.device_orientation = NULL;
-	evt_cb.language_changed = __lang_changed_cb;
-	evt_cb.region_format_changed = __region_changed_cb;
 
-	ret = app_efl_main(&argc, &argv, &evt_cb, app_data);
+	app_event_handler_h lang_changed_handler;
+	app_event_handler_h low_memory_handler;
+	app_event_handler_h region_changed_handler;
+
+	ui_app_add_event_handler(&lang_changed_handler, APP_EVENT_LANGUAGE_CHANGED, __lang_changed_cb, &app_data);
+	ui_app_add_event_handler(&low_memory_handler, APP_EVENT_LOW_MEMORY, __low_memory_cb, &app_data);
+	ui_app_add_event_handler(&region_changed_handler, APP_EVENT_REGION_FORMAT_CHANGED, __region_changed_cb, &app_data);
+
+	ret = ui_app_main(argc, argv, &evt_cb, app_data);
 	DM_LOGI("Done");
 	free(app_data);
 

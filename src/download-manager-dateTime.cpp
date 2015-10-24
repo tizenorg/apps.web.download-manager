@@ -22,7 +22,7 @@
 
 #include <string>
 #include <stdlib.h>
-#include "runtime_info.h"
+#include <system_settings.h>
 #include "download-manager-dateTime.h"
 
 #define MAX_SKELETON_BUFFER_LEN 16
@@ -164,8 +164,7 @@ void DateUtil::getDateStr(double finishTime, string &outBuf)
 	double nowTime = time(NULL);
 	diffDay = getDiffDays((time_t)nowTime, (time_t)finishTime);
 	if (diffDay == 0 || diffDay == 1) {
-		if (runtime_info_get_value_bool(
-				RUNTIME_INFO_KEY_24HOUR_CLOCK_FORMAT_ENABLED, &value) != 0) {
+		if (system_settings_get_value_bool(SYSTEM_SETTINGS_KEY_LOCALE_TIMEFORMAT_24HOUR, &value) != SYSTEM_SETTINGS_ERROR_NONE) {
 			DM_LOGE("Fail to get runtime_info_get_value_bool");
 			format = timeFormat12H;
 		} else {

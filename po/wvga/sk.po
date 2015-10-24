@@ -49,6 +49,9 @@ msgstr "Ťuknutím na tlačidlo Stiahnuť to skúste znova."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Tento súbor sa nedá nájsť. Ťuknutím na tlačidlo Stiahnuť ho skúste stiahnuť znova."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Súbor sa nedá otvoriť"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Nedá sa nájsť aplikácia na otvorenie tohto súboru."
 

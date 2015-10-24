@@ -49,6 +49,9 @@ msgstr "Торкніться «Завантажити», щоб спробува
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Неможливо знайти цей файл. Торкніться «Завантажити», щоб спробувати завантажити його ще раз."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Неможливо відкрити файл"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Неможливо знайти програму для відкриття цього файла."
 

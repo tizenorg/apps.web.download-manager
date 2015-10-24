@@ -56,7 +56,7 @@ MESSAGE("Build type: ${CMAKE_BUILD_TYPE}")
 INCLUDE(FindPkgConfig)
 pkg_check_modules(pkgs REQUIRED
 	capi-web-url-download
-	capi-system-runtime-info
+	capi-system-system-settings
 	capi-appfw-application
 	capi-network-connection
 	capi-content-media-content
@@ -75,7 +75,7 @@ pkg_check_modules(pkgs REQUIRED
 	utilX
 	xproto
 	x11
-	efl-assist
+	efl-extension
 	libxml-2.0
 )
 

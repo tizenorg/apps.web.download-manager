@@ -49,6 +49,9 @@ msgstr "Pritisnite Prenos, da poskusite znova."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Te datoteke ni mogoče najti. Pritisnite Prenos, da jo poskusite prenesti znova."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Datoteke ni mogoče odpreti"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Ni mogoče najti aplikacije za odpiranje te datoteke."
 

@@ -49,6 +49,9 @@ msgstr "Πατήστε «Λήψη» για να δοκιμάσετε ξανά."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Δεν είναι δυνατή η εύρεση αυτού του αρχείου. Πατήστε «Λήψη», για να επαναλάβετε τη λήψη."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Δεν είναι δυνατό το άνοιγμα αρχείου"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Δεν είναι δυνατή η εύρεση εφαρμογής για το άνοιγμα αυτού του αρχείου."
 

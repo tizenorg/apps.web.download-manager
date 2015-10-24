@@ -2,7 +2,7 @@
 	<manifest xmlns="http://tizen.org/ns/packages" package="org.tizen.download-manager" version="0.0.1" install-location="internal-only">
 	<author email="jungki.kwak@samsung.com" href="www.samsung.com">Jungki Kwak</author>
 	<description>Download UI Application</description>
-	<ui-application appid="org.tizen.download-manager" exec="/usr/apps/org.tizen.download-manager/bin/download-manager" nodisplay="true" multiple="false" type="capp" taskmanage="false" mainapp="true" component-type="svcapp">
+	<ui-application appid="org.tizen.download-manager" exec="/usr/apps/org.tizen.download-manager/bin/download-manager" nodisplay="true" multiple="false" type="capp" taskmanage="false" mainapp="true">
 	<icon>org.tizen.download-manager.png</icon>
 		<label>Download manager</label>
 		<label xml:lang="ar-ae">مدير التحميل</label>

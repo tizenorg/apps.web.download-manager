@@ -49,6 +49,9 @@ msgstr "다시 시도하려면 [다운로드]를 누르세요."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "파일을 찾을 수 없습니다. 다시 다운로드하려면 [다운로드]를 누르세요."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "파일을 열 수 없음"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "이 파일을 열 수 있는 애플리케이션을 찾을 수 없습니다."
 

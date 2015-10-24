@@ -380,10 +380,10 @@ notification_h DownloadNoti::createNoti(NOTIFICATION_TYPE::TYPE type)
 
 	if (NOTIFICATION_TYPE::NOTI_COMPLETED == type) {
 		statusText = DM_POP_TEXT_DOWNLOAD_COMPLETE;
-		statusTextId = DM_DOWNLOAD_COMPLETE_STRING_ID;
+		statusTextId = "IDS_DM_HEADER_DOWNLOAD_COMPLETE";
 	} else if (NOTIFICATION_TYPE::NOTI_FAILED == type) {
 		statusText = DM_POP_TEXT_DOWNLOAD_FAILED;
-		statusTextId = DM_DOWNLOAD_FAILED_STRING_ID;
+		statusTextId = "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB";
 	}
 
 #ifdef _TIZEN_2_3_UX
@@ -466,8 +466,11 @@ void DownloadNoti::addCompleteNoti()
 
 	err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON_FOR_INDICATOR,
 			DM_NOTI_COMPLETED_INDICATOR_ICON_PATH);
+
+	DM_LOGE("[yjkim] path : [%s]", DM_NOTI_COMPLETED_INDICATOR_ICON_PATH);
+
 	if (err != NOTIFICATION_ERROR_NONE) {
-		DM_LOGE("Fail to set icon [%d]", err);
+		DM_LOGE("[yjkim] Fail to set icon [%d]", err);
 		freeNotiData(notiHandle);
 		return;
 	}

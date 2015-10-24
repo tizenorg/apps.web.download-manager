@@ -49,6 +49,9 @@ msgstr "再度実行するには、[ダウンロード]をタップしてくだ�
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "ファイルが見つかりません。再度ダウンロードを実行するには、[ダウンロード]をタップしてください。"
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "ファイルの表示不可"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "このファイルを開くアプリケーションが見つかりません。"
 

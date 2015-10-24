@@ -579,6 +579,7 @@ bool DownloadUtil::registerContent(string filePath, string &thumbnailPath)
 	return true;
 }
 
+#if 0
 string DownloadUtil::getUserAgent()
 {
 	string userAgentStr = string();
@@ -592,6 +593,7 @@ string DownloadUtil::getUserAgent()
 	free(str);
 	return userAgentStr;
 }
+#endif
 
 #ifdef _ENABLE_OMA_UNSUPPROTED_CONTENT
 /* If the error is happened, the true is returned */

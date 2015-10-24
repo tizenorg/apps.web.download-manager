@@ -22,7 +22,7 @@
 #include <sstream>
 #include <queue>
 #include "utilX.h"
-#include "efl_assist.h"
+#include <efl_extension.h>
 
 #include "download-manager-view.h"
 #include "download-manager-history-db.h"
@@ -436,15 +436,15 @@ void DownloadView::createNaviBar()
 
 	elm_object_part_content_set(eoLayout, "elm.swallow.content", eoNaviBar);
 	elm_naviframe_prev_btn_auto_pushed_set(eoNaviBar, EINA_FALSE);
-	ea_object_event_callback_add(eoNaviBar, EA_CALLBACK_BACK,
-			ea_naviframe_back_cb, NULL);
+	eext_object_event_callback_add(eoNaviBar, EEXT_CALLBACK_BACK,
+			eext_naviframe_back_cb, NULL);
 	createBox();
 	eoNaviBarItem = elm_naviframe_item_push(eoNaviBar,
 		__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"),NULL, NULL, eoBox, NULL);
 	if (!eoNaviBarItem)
 		DM_LOGE("Null Check:eoNaviBarItem");
 #ifdef _TIZEN_2_3_UX
-	ea_object_event_callback_add(eoNaviBar, EA_CALLBACK_MORE, moreKeyCB, NULL);
+	eext_object_event_callback_add(eoNaviBar, EEXT_CALLBACK_MORE, moreKeyCB, NULL);
 #else
 	createDeleteBtn();
 #endif
@@ -512,7 +512,7 @@ void DownloadView::showDeletePopup()
 	elm_object_part_content_set(eoPopup, "button2", btn2);
 	evas_object_smart_callback_add(btn2, "clicked", deletePopupDeleteCB,
 			NULL);
-	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	eext_object_event_callback_add(eoPopup, EEXT_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 }
 
@@ -575,10 +575,10 @@ void DownloadView::createContextPopup()
 	elm_ctxpopup_auto_hide_disabled_set(moreMenu, EINA_TRUE);
 	evas_object_smart_callback_add(elm_object_top_widget_get(moreMenu),
 			"rotation,changed", rotateContextPopupCB, this);
-	ea_object_event_callback_add(moreMenu, EA_CALLBACK_BACK,
-			ea_ctxpopup_back_cb, NULL);
-	ea_object_event_callback_add(moreMenu, EA_CALLBACK_MORE,
-			ea_ctxpopup_back_cb, NULL);
+	eext_object_event_callback_add(moreMenu, EEXT_CALLBACK_BACK,
+			eext_ctxpopup_back_cb, NULL);
+	eext_object_event_callback_add(moreMenu, EEXT_CALLBACK_MORE,
+			eext_ctxpopup_back_cb, NULL);
 	Elm_Object_Item *item = elm_ctxpopup_item_append(moreMenu,
 			DM_OPT_TEXT_DELETE, NULL, deleteBtnCB, NULL);
 	if (m_viewItemCount < 1)
@@ -1604,7 +1604,7 @@ void DownloadView::showRetryPopup(ViewItem *viewItem, string *msg)
 	elm_object_part_content_set(eoPopup, "button2", btn2);
 	evas_object_smart_callback_add(btn2, "clicked", retryPopupRetryCB,
 			viewItem);
-	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	eext_object_event_callback_add(eoPopup, EEXT_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 }
 
@@ -1658,7 +1658,7 @@ void DownloadView::showMemoryFullPopup(string &msg)
 	elm_object_part_content_set(eoPopup, "button2", btn2);
 	evas_object_smart_callback_add(btn2, "clicked", memoryFullPopupMyFilesCB,
 			NULL);
-	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	eext_object_event_callback_add(eoPopup, EEXT_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 }
 
@@ -1690,7 +1690,7 @@ void DownloadView::showErrPopup(string *desc)
 	elm_object_part_content_set(eoPopup, "button1", btn1);
 	evas_object_smart_callback_add(btn1, "clicked", errPopupResponseCB,
 			NULL);
-	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	eext_object_event_callback_add(eoPopup, EEXT_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 }
 
@@ -1816,7 +1816,7 @@ void DownloadView::showOMAPopup(string msg, ViewItem *viewItem)
 	elm_object_part_content_set(eoPopup, "button2", btn2);
 	evas_object_smart_callback_add(btn2, "clicked", omaPopupResponseOKCB,
 		viewItem);
-	ea_object_event_callback_add(eoPopup, EA_CALLBACK_BACK, popupBackCB, NULL);
+	eext_object_event_callback_add(eoPopup, EEXT_CALLBACK_BACK, popupBackCB, NULL);
 	evas_object_show(eoPopup);
 	prevOmaViewItem = viewItem;
 }

@@ -49,6 +49,9 @@ msgstr "Uuesti proovimiseks toksake käsku Laadi alla."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Seda faili ei leita. Toksake käsku Laadi alla, et proovida seda uuesti alla laadida."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Faili ei saa avada"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Selle faili avamiseks ei leita rakendust."
 

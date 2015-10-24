@@ -49,6 +49,9 @@ msgstr "Թակեք «Ներբեռնել»՝ նորից փորձելու համա
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Անհնար է գտնել այս ֆայլը: Թակեք «Ներբեռնել»՝ ներբեռնումը նորից փորձելու համար:"
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Անհնար է բացել ֆայլը"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Անհնար է ծրագիր գտնել այս ֆայլը բացելու համար:"
 

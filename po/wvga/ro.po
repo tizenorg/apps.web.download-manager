@@ -49,6 +49,9 @@ msgstr "Atingeţi Descărcare pentru a încerca din nou."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Fişierul nu poate fi găsit. Atingeţi Descărcare pentru a încerca din nou să-l descărcaţi."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Fişierul nu poate fi deschis"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Nu s-a putut găsi o aplicaţie pentru a deschide acest fişier."
 

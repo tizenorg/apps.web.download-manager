@@ -8,7 +8,7 @@ License:	Flora-1.1
 URL:		N/A
 Source0:	%{name}-%{version}.tar.gz
 BuildRequires: pkgconfig(capi-web-url-download)
-BuildRequires: pkgconfig(capi-system-runtime-info)
+BuildRequires: pkgconfig(capi-system-system-settings)
 BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(capi-network-connection)
 BuildRequires: pkgconfig(capi-content-media-content)
@@ -27,7 +27,7 @@ BuildRequires: pkgconfig(xproto)
 BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(storage)
-BuildRequires: efl-assist-devel
+BuildRequires: pkgconfig(efl-extension)
 BuildRequires: cmake
 BuildRequires: gettext-devel
 BuildRequires: expat-devel

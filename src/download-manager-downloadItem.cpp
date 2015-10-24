@@ -770,6 +770,17 @@ bool DownloadItem::start(int id)
 		}
 	}
 
+	if (m_aptr_request->getNetworkBondingOption()) {
+		ret = download_set_network_bonding(m_download_id, true);
+		if (ret != DOWNLOAD_ERROR_NONE) {
+			DM_LOGE("Fail to set network bonding:[%s]", __convertErrToString(ret));
+			m_state = DL_ITEM::FAILED;
+			m_errorCode = ERROR::ENGINE_FAIL;
+			notify();
+			return false;
+		}
+	}
+
 	ret = download_start(m_download_id);
 	DM_LOGI("URL download id:[%d] ret[%d]", m_download_id, ret);
 	
@@ -1195,7 +1206,7 @@ void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 	struct curl_slist *header = NULL;
 	long httpCode = 0;
 	string proxyAddr = string();
-	string userAgent;
+	//string userAgent;
 	DownloadUtil &utilObj = DownloadUtil::getInstance();
 
 	if (!data) {
@@ -1206,7 +1217,7 @@ void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 	item->retryCount++;
 	DM_LOGI("try[%d]", item->retryCount);
 	proxyAddr = NetMgr::getInstance().getProxy();
-	userAgent = utilObj.getUserAgent();
+	//userAgent = utilObj.getUserAgent();
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl = curl_easy_init();
 	msg = item->getMessageForInstallNotification(item->getStatus());
@@ -1214,8 +1225,10 @@ void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 		curl_easy_setopt(curl, CURLOPT_URL, item->getInstallUri().c_str());
 		DM_SLOGD("install notify url[%s]",item->getInstallUri().c_str());
+#if 0
 		if (!userAgent.empty())
 			curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
+#endif
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, msg.c_str());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, msg.length() + 1);
 		if (!proxyAddr.empty())

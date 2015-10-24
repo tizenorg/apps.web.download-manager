@@ -49,6 +49,9 @@ msgstr "Докоснете „Изтегляне“, за да опитате о
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Този файл не може да се намери. Докоснете „Изтегляне“, за да опитате да го изтеглите отново."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Файлът не може да се отвори"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Не може да се намери приложение, което да отвори този файл."
 

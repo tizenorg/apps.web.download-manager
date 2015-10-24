@@ -942,3 +942,9 @@ bool Item::isCompletedDownload()
 	return false;
 }
 
+bool Item::getNetworkBonding(void) {
+	if (m_aptr_downloadItem.get()) {
+		return m_aptr_downloadItem->getNetworkBonding();
+	}
+	return false;
+}

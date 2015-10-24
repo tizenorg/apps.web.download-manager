@@ -49,6 +49,9 @@ msgstr "Kucni na Preuzmi da bi pokušao/la ponovo."
 msgid "IDS_DM_BODY_THIS_FILE_CANNOT_BE_FOUND_TAP_DOWNLOAD_TO_TRY_DOWNLOADING_IT_AGAIN"
 msgstr "Nije moguće pronaći ovaj fajl. Kucni na opciju Preuzmi za ponovni pokušaj njegovog preuzimanja."
 
+msgid "IDS_DM_HEADER_UNABLE_TO_OPEN_FILE"
+msgstr "Nije moguće otvoriti fajl"
+
 msgid "IDS_DM_BODY_UNABLE_TO_FIND_AN_APPLICATION_TO_OPEN_THIS_FILE"
 msgstr "Nije moguće naći aplikaciju da bi se otvorio ovaj fajl."
 

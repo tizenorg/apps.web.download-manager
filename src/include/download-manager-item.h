@@ -178,6 +178,7 @@ public:
 	inline void setFinishedTime(double t) { m_finishedTime = t; }
 	inline double getFinishedTime(void) { return m_finishedTime; }
 
+	bool getNetworkBonding(void);
 	bool isFinished(void); /* include finish download state with error */
 	bool isFinishedWithErr(void);
 	bool isPreparingDownload(void); /* Before downloading start */
