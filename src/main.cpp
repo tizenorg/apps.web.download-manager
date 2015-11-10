@@ -26,7 +26,7 @@
 #include <memory>
 
 #include "Ecore.h"
-#include "Ecore_X.h"
+//#include "Ecore_X.h"
 #include "app.h"
 #include "app_control.h"
 

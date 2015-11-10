@@ -56,11 +56,21 @@
 		<label xml:lang="tr-tr">İndirme Yöneticisi</label>
 		<label xml:lang="uk-ua">Диспетчер завантажень</label>
 		<label xml:lang="uz-uz">Yuklab olish menejeri</label>
-		<application-service>
-			<operation name="http://tizen.org/appcontrol/operation/download" />
-				<uri name="http" />
-				<uri name="https" />
-				<uri name="NULL" />
-		</application-service>
+		<app-control>
+         <operation name="http://tizen.org/appcontrol/operation/download" />
+         <uri name="http" />
+  		</app-control>
+  		<app-control>
+         <operation name="http://tizen.org/appcontrol/operation/download" />
+         <uri name="https" />
+  		</app-control>
+  		<app-control>
+         <operation name="http://tizen.org/appcontrol/operation/download" />
+  		</app-control>
 	</ui-application>
+	<privileges>
+       <privilege>http://tizen.org/privilege/appmanager.launch</privilege>
+       <privilege>http://tizen.org/privilege/download</privilege>
+       <privilege>http://tizen.org/privilege/notification</privilege>
+    </privileges>
 </manifest>

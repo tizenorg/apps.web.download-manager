@@ -21,7 +21,7 @@
  */
 #include <sstream>
 #include <queue>
-#include "utilX.h"
+//#include "utilX.h"
 #include <efl_extension.h>
 
 #include "download-manager-view.h"
@@ -238,7 +238,10 @@ void DownloadView::lockStateChangedCB(keynode_t *node, void *user_data)
 		DM_LOGE("NULL Check:node");
 		return;
 	}
+
+	/*
 	if (node->keyname)
+	//if (vconf_keynode_get_name(node))  // min7
 		DM_LOGV("keyname:%s", node->keyname);
 	DM_LOGI("value:%d", node->value.i);
 	if (node->value.i == VCONFKEY_IDLE_LOCK) {
@@ -246,6 +249,7 @@ void DownloadView::lockStateChangedCB(keynode_t *node, void *user_data)
 		view->setActivatedLockScreen(true);
 		DM_LOGV("Activated Lock Screen");
 	}
+	*/
 }
 
 void DownloadView::checkEditMode()

@@ -21,7 +21,7 @@ SET(TABLEDIR "${RESDIR}/tables")
 ENDIF(TIZEN_2_3_UX)
 SET(IMAGEDIR "${RESDIR}/images")
 SET(DATADIR "${PREFIX}/data")
-SET(DBDATADIR "/opt/usr/apps/${PKGNAME}/data/db")
+SET(DBDATADIR "/home/owner/apps_rw/${PKGNAME}/data")
 SET(LOCALEDIR "${RESDIR}/locale")
 SET(ICONDIR "/usr/share/icons/default/small/")
 SET(HISTORYDB ".download-history.db")
@@ -64,7 +64,6 @@ pkg_check_modules(pkgs REQUIRED
 	capi-base-utils-i18n
 	elementary
 	ecore
-	ecore-x
 	edje
 	xdgmime
 	libcurl
@@ -72,9 +71,7 @@ pkg_check_modules(pkgs REQUIRED
 	sqlite3
 	storage
 	vconf
-	utilX
 	xproto
-	x11
 	efl-extension
 	libxml-2.0
 )

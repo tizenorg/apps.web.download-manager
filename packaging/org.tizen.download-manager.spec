@@ -1,7 +1,7 @@
 %define _ux_define tizen2.3
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.2.42
+Version:	0.3.0
 Release:	1
 Group:		misc
 License:	Flora-1.1
@@ -22,9 +22,7 @@ BuildRequires: pkgconfig(notification)
 BuildRequires: pkgconfig(appsvc)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(vconf)
-BuildRequires: pkgconfig(utilX)
 BuildRequires: pkgconfig(xproto)
-BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(storage)
 BuildRequires: pkgconfig(efl-extension)
@@ -103,10 +101,13 @@ PKG_ID=%{name}
 mkdir -p %{buildroot}/usr/share/license
 
 %post
-mkdir -p /opt/usr/apps/org.tizen.download-manager/data/db
-chown -R 5000:5000 /opt/usr/apps/org.tizen.download-manager/data
-chmod -R 755 /opt/usr/apps/org.tizen.download-manager/data
-chsmack -a 'org.tizen.download-manager' /opt/usr/apps/org.tizen.download-manager/data/db
+#mkdir -p /opt/usr/apps/org.tizen.download-manager/data/db
+#chown -R 5000:5000 /opt/usr/apps/org.tizen.download-manager/data
+#chmod -R 755 /opt/usr/apps/org.tizen.download-manager/data
+#chsmack -a 'org.tizen.download-manager' /opt/usr/apps/org.tizen.download-manager/data/db
+
+#chsmack -a 'System::Shared' /opt/usr/apps/org.tizen.download-manager/data/db
+#chsmack -t /opt/usr/apps/org.tizen.download-manager/data/db
 
 %files
 %defattr(-,root,root,-)

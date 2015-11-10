@@ -154,10 +154,16 @@
 #define MYFILE_PKG_NAME "org.tizen.myfile"
 #endif
 
-#define DM_DEFAULT_PHONE_TEMP_DIR "/opt/usr/media/.temp_download"
-#define DM_DEFAULT_PHONE_INSTALL_DIR "/opt/usr/media/Downloads/"
-#define DM_DEFAULT_MMC_TEMP_DIR "/opt/storage/sdcard/.temp_download"
-#define DM_DEFAULT_MMC_INSTALL_DIR "/opt/storage/sdcard/Downloads/"
+//#define DM_DEFAULT_PHONE_TEMP_DIR "/opt/usr/media/.temp_download"
+//#define DM_DEFAULT_PHONE_INSTALL_DIR "/opt/usr/media/Downloads/"
+#define DM_DEFAULT_PHONE_TEMP_DIR "/home/owner/content/Downloads/.temp_download"
+#define DM_DEFAULT_PHONE_INSTALL_DIR "/home/owner/content/Downloads"
+
+//#define DM_DEFAULT_MMC_TEMP_DIR "/opt/storage/sdcard/.temp_download"
+//#define DM_DEFAULT_MMC_INSTALL_DIR "/opt/storage/sdcard/Downloads/"
+#define DM_DEFAULT_MMC_TEMP_DIR "/home/owner/content/Downloads/.temp_download"
+#define DM_DEFAULT_MMC_INSTALL_DIR "/home/owner/content/Downloads"
+
 #define DM_TEMP_DIR_NAME ".temp_download/"
 #define DM_INVALID_PATH_STRING ";\\\":*?<>|()"
 enum
