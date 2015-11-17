@@ -60,7 +60,8 @@ ViewItem::ViewItem(Item *item)
 	dldGenlistStyle.decorate_all_item_style = "edit_default";
 
 #ifdef _TIZEN_2_3_UX
-	dldHistoryGenlistStyle.item_style = "2line.top";
+	//dldHistoryGenlistStyle.item_style = "2line.top";
+	dldHistoryGenlistStyle.item_style = "type1";
 #else
 	dldHistoryGenlistStyle.item_style = "3text.1icon.1";
 #endif
@@ -70,7 +71,8 @@ ViewItem::ViewItem(Item *item)
 	dldHistoryGenlistStyle.func.del = deleteGenlistData;
 	dldHistoryGenlistStyle.decorate_all_item_style = "edit_default";
 
-	dldGroupTitleGenlistStyle.item_style = "groupindex";
+	dldGroupTitleGenlistStyle.item_style = "group_index";
+	//dldGroupTitleGenlistStyle.item_style = "groupindex";
 	dldGroupTitleGenlistStyle.func.text_get = getGenlistLabelCB;
 	dldGroupTitleGenlistStyle.func.content_get = NULL;
 	dldGroupTitleGenlistStyle.func.state_get = NULL;

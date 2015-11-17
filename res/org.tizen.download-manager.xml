@@ -72,5 +72,6 @@
        <privilege>http://tizen.org/privilege/appmanager.launch</privilege>
        <privilege>http://tizen.org/privilege/download</privilege>
        <privilege>http://tizen.org/privilege/notification</privilege>
+       <privilege>http://tizen.org/privilege/content.write</privilege>
     </privileges>
 </manifest>
