@@ -4,7 +4,6 @@ org.tizen.download-manager system::share rwxat- ------
 org.tizen.download-manager pulseaudio rwxat- ------
 e17 org.tizen.download-manager rwx--- ------
 org.tizen.download-manager device::app_logging -w---- ------
-org.tizen.download-manager sys-assert::core rwxat- ------
 stest-service org.tizen.download-manager r-x--- ------
 org.tizen.download-manager stest-service -w---- ------
 org.tizen.download-manager privacy-manager::db r----l ------

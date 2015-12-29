@@ -16,6 +16,7 @@ BuildRequires: pkgconfig(capi-content-mime-type)
 BuildRequires: pkgconfig(capi-base-utils-i18n)
 BuildRequires: pkgconfig(elementary)
 BuildRequires: pkgconfig(ecore)
+BuildRequires: pkgconfig(gles20)
 BuildRequires: pkgconfig(xdgmime)
 BuildRequires: pkgconfig(libcurl)
 BuildRequires: pkgconfig(notification)
@@ -32,7 +33,6 @@ BuildRequires: expat-devel
 BuildRequires: hash-signer
 Requires(post): coreutils
 Requires(post): sqlite
-Requires(post): sys-assert
 Requires(post): edje-tools
 
 %{echo:#winset style:%{?_ux_define}#}
