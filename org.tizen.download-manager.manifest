@@ -1,14 +1,5 @@
 <manifest>
-	<define>
-		<domain name="org.tizen.download-manager" />
-	</define>
-	<assign>
-		<filesystem path="/usr/share/applications/org.tizen.download-manager.desktop" label="_" exec_label="none" />
-		<filesystem path="/usr/share/icons/default/small/org.tizen.download-manager.png" label="_" exec_label="none" />
-		<filesystem path="/usr/apps/org.tizen.download-manager/author-signature.xml" label="_" />
-		<filesystem path="/usr/apps/org.tizen.download-manager/signature1.xml" label="_" />
-	</assign>
 	<request>
-		<domain name="org.tizen.download-manager" />
+		<domain name="_" />
 	</request>
 </manifest>
