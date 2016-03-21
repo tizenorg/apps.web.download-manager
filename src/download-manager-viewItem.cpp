@@ -60,7 +60,6 @@ ViewItem::ViewItem(Item *item)
 	dldGenlistStyle.decorate_all_item_style = "edit_default";
 
 #ifdef _TIZEN_2_3_UX
-	//dldHistoryGenlistStyle.item_style = "2line.top";
 	dldHistoryGenlistStyle.item_style = "type1";
 #else
 	dldHistoryGenlistStyle.item_style = "3text.1icon.1";
@@ -72,7 +71,6 @@ ViewItem::ViewItem(Item *item)
 	dldHistoryGenlistStyle.decorate_all_item_style = "edit_default";
 
 	dldGroupTitleGenlistStyle.item_style = "group_index";
-	//dldGroupTitleGenlistStyle.item_style = "groupindex";
 	dldGroupTitleGenlistStyle.func.text_get = getGenlistLabelCB;
 	dldGroupTitleGenlistStyle.func.content_get = NULL;
 	dldGroupTitleGenlistStyle.func.state_get = NULL;
@@ -210,7 +208,7 @@ void ViewItem::updateFromItem()
 		return;
 	} else if (state == ITEM::DOWNLOADING) {
 #ifdef _TIZEN_2_3_UX
-		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.icon");
+		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.swallow.icon");
 #else
 		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.swallow.progress");
 #endif
@@ -222,7 +220,7 @@ void ViewItem::updateFromItem()
 			elm_progressbar_value_set(progress, percentageProgress);
 		}
 #ifdef _TIZEN_2_3_UX
-		elm_genlist_item_fields_update(m_glItem,"elm.text.progress",
+		elm_genlist_item_fields_update(m_glItem,"elm.swallow.progress",
 			ELM_GENLIST_ITEM_FIELD_TEXT);
 #else
 		elm_genlist_item_fields_update(m_glItem,"elm.text.2",
@@ -278,11 +276,11 @@ char *ViewItem::getGenlistLabel(Evas_Object *obj, const char *part)
 {
 	DM_LOGD("part[%s]", part);
 #ifdef _TIZEN_2_3_UX
-		if (strcmp(part, "elm.text.main.left.top") == 0) {
+		if (strcmp(part, "elm.text") == 0) {
 			return strdup(getTitle());
-		} else if (strcmp(part, "elm.text.sub.left.bottom") == 0) {
+		} else if (strcmp(part, "elm.text.sub") == 0) {
 			return (char *)getMessage();
-		} else if (strcmp(part, "elm.text.sub.right.bottom") == 0) {
+		} else if (strcmp(part, "elm.text.sub.end") == 0) {
 			if (isFinished()) {
 				string outBuf;
 				DateUtil &inst = DateUtil::getInstance();
@@ -294,7 +292,7 @@ char *ViewItem::getGenlistLabel(Evas_Object *obj, const char *part)
 				return (char *)getGroupTitle();
 			else
 				return strdup(getTitle());
-		} else if (strcmp(part, "elm.text.progress") == 0) {
+		} else if (strcmp(part, "elm.swallow.progress") == 0) {
 			return (char *)getMessage();
 		}
 #else
@@ -334,7 +332,7 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 
 #ifdef _TIZEN_2_3_UX
 	DownloadView &view = DownloadView::getInstance();
-	if (strcmp(part,"elm.icon.1") == 0) {
+	if (strcmp(part,"elm.swallow.icon") == 0) {
 		Evas_Object *layout = elm_layout_add(obj);
 		elm_layout_theme_set(layout, "layout", "list/B/type.3", "default");
 		Evas_Object *icon = elm_icon_add(obj);
@@ -344,11 +342,11 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 		elm_layout_content_set(layout, "elm.swallow.content", icon);
 		return layout;
 	} else if (getState() < ITEM::FINISH_DOWNLOAD) {
-		if (strcmp(part, "elm.icon") == 0)
+		if (strcmp(part, "elm.swallow.icon") == 0)
 			return createProgressBar(obj);
-		else if (strcmp(part,"elm.icon.2") == 0)
+		else if (strcmp(part,"elm.swallow.end") == 0)
 			return createCancelBtn(obj);
-	} else if (view.isGenlistEditMode() && strcmp(part,"elm.icon.2") == 0) {
+	} else if (view.isGenlistEditMode() && strcmp(part,"elm.swallow.end") == 0) {
 		Evas_Object *layout = elm_layout_add(obj);
 		elm_layout_theme_set(layout, "layout", "list/C/type.2", "default");
 		Evas_Object *check = elm_check_add(obj);
@@ -466,7 +464,7 @@ void ViewItem::clickedGenlistItem()
 		Eina_Bool state;
 #ifdef _TIZEN_2_3_UX
 		Evas_Object *checkLayout;
-		checkLayout = elm_object_item_part_content_get(m_glItem, "elm.icon.2");
+		checkLayout = elm_object_item_part_content_get(m_glItem, "elm.swallow.end");
 		if (checkLayout)
 			checkBox = elm_object_part_content_get(checkLayout, "elm.swallow.content");
 #else
