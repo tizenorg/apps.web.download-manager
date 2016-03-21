@@ -41,6 +41,7 @@ public:
 	static void updateCB(void *);
 	static void clearOngoingNoti(void);
 	void deleteCompleteNoti(void);
+    static bool __app_control_extra_data_cb(app_control_h service, const char *key, void */*user_data*/);
 private:
 	void addOngoingNoti(void);
 	void updateTitleOngoingNoti();
