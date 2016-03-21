@@ -229,7 +229,7 @@ void DownloadView::hide()
 
 void DownloadView::lockStateChangedCB(keynode_t *node, void *user_data)
 {
-	DownloadView *view = NULL;
+    //DownloadView *view = NULL;
 	if (!user_data) {
 		DM_LOGE("NULL Check:user_data");
 		return;

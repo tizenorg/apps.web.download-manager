@@ -1207,7 +1207,7 @@ void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 	long httpCode = 0;
 	string proxyAddr = string();
 	//string userAgent;
-	DownloadUtil &utilObj = DownloadUtil::getInstance();
+    //DownloadUtil &utilObj = DownloadUtil::getInstance();
 
 	if (!data) {
 		DM_LOGE("[CRITICAL]NULL Check: oma item");
