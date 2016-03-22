@@ -944,7 +944,7 @@ void DownloadView::update(int diffDays)
 		item1 = item2;
 		while(item1) {
 #ifdef _TIZEN_2_3_UX
-			elm_genlist_item_fields_update(item1 , "elm.text.sub.right.bottom",
+			elm_genlist_item_fields_update(item1 , "elm.text.sub.end",
 					ELM_GENLIST_ITEM_FIELD_TEXT);
 #else
 			elm_genlist_item_fields_update(item1 , "elm.text.3",
@@ -970,7 +970,7 @@ void DownloadView::updateLang()
 		if (isGenlistEditMode()) {
 #ifdef _TIZEN_2_3_UX
 			if (eoSelectAllLayout)
-				elm_object_part_text_set(eoSelectAllLayout, "elm.text.main",
+				elm_object_part_text_set(eoSelectAllLayout, "elm.text",
 					DM_BODY_TEXT_SELECT_ALL);
 			showSelectedNotify(m_selectedItemsCount);
 #else
@@ -1404,7 +1404,7 @@ void DownloadView::handleChangedAllCheckedState()
 			if (viewItem->isFinished()) {
 				viewItem->setCheckedValue(m_allChecked);
 #ifdef _TIZEN_2_3_UX
-				elm_genlist_item_fields_update(it, "elm.icon.2",
+				elm_genlist_item_fields_update(it, "elm.swallow.icon.2",
 					ELM_GENLIST_ITEM_FIELD_CONTENT);
 #else
 				elm_genlist_item_fields_update(it, "elm.edit.icon.1",
@@ -1420,7 +1420,7 @@ void DownloadView::handleChangedAllCheckedState()
 #ifdef _TIZEN_2_3_UX
 		Evas_Object *doneButton = elm_object_part_content_get(eoNaviBar, "title_right_btn");
 		elm_object_disabled_set(doneButton, EINA_FALSE);
-		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.icon");
+		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.swallow.icon");
 		if (checkBox)
 			elm_check_state_set(checkBox, m_allChecked);
 #else
@@ -1433,7 +1433,7 @@ void DownloadView::handleChangedAllCheckedState()
 #ifdef _TIZEN_2_3_UX
 		Evas_Object *doneButton = elm_object_part_content_get(eoNaviBar, "title_right_btn");
 		elm_object_disabled_set(doneButton, EINA_TRUE);
-		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.icon");
+		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.swallow.icon");
 		if (checkBox)
 			elm_check_state_set(checkBox, m_allChecked);
 #else
@@ -1470,7 +1470,7 @@ void DownloadView::handleCheckedState()
 
 #ifdef _TIZEN_2_3_UX
 	if (eoSelectAllLayout) {
-		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.icon");
+		Evas_Object *checkBox = elm_object_part_content_get(eoSelectAllLayout, "elm.swallow.icon");
 		if (checkBox)
 			elm_check_state_set(checkBox, m_allChecked);
 	}

@@ -208,7 +208,7 @@ void ViewItem::updateFromItem()
 		return;
 	} else if (state == ITEM::DOWNLOADING) {
 #ifdef _TIZEN_2_3_UX
-		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.swallow.icon");
+		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.swallow.end");
 #else
 		Evas_Object *progress = elm_object_item_part_content_get(m_glItem, "elm.swallow.progress");
 #endif
@@ -220,7 +220,7 @@ void ViewItem::updateFromItem()
 			elm_progressbar_value_set(progress, percentageProgress);
 		}
 #ifdef _TIZEN_2_3_UX
-		elm_genlist_item_fields_update(m_glItem,"elm.swallow.progress",
+		elm_genlist_item_fields_update(m_glItem,"elm.swallow.end",
 			ELM_GENLIST_ITEM_FIELD_TEXT);
 #else
 		elm_genlist_item_fields_update(m_glItem,"elm.text.2",
@@ -276,9 +276,7 @@ char *ViewItem::getGenlistLabel(Evas_Object *obj, const char *part)
 {
 	DM_LOGD("part[%s]", part);
 #ifdef _TIZEN_2_3_UX
-		if (strcmp(part, "elm.text") == 0) {
-			return strdup(getTitle());
-		} else if (strcmp(part, "elm.text.sub") == 0) {
+		if (strcmp(part, "elm.text.sub") == 0) {
 			return (char *)getMessage();
 		} else if (strcmp(part, "elm.text.sub.end") == 0) {
 			if (isFinished()) {
@@ -287,12 +285,12 @@ char *ViewItem::getGenlistLabel(Evas_Object *obj, const char *part)
 				inst.getDateStr(getFinishedTime(), outBuf);
 				return strdup(outBuf.c_str());
 			}
-		} else if (strcmp(part, "elm.text.main") == 0) {
+		} else if (strcmp(part, "elm.text") == 0) {
 			if (m_isGroupTitle)
 				return (char *)getGroupTitle();
 			else
 				return strdup(getTitle());
-		} else if (strcmp(part, "elm.swallow.progress") == 0) {
+		} else if (strcmp(part, "elm.swallow.end") == 0) {
 			return (char *)getMessage();
 		}
 #else
@@ -332,21 +330,21 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 
 #ifdef _TIZEN_2_3_UX
 	DownloadView &view = DownloadView::getInstance();
-	if (strcmp(part,"elm.swallow.icon") == 0) {
+	if (strcmp(part,"elm.swallow.icon.1") == 0) {
 		Evas_Object *layout = elm_layout_add(obj);
 		elm_layout_theme_set(layout, "layout", "list/B/type.3", "default");
 		Evas_Object *icon = elm_icon_add(obj);
 		elm_image_file_set(icon, getIconPath(), NULL);
 		evas_object_size_hint_align_set(icon, EVAS_HINT_FILL, EVAS_HINT_FILL);
 		evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-		elm_layout_content_set(layout, "elm.swallow.content", icon);
+		elm_layout_content_set(layout, "elm.swallow.icon.1", icon);
 		return layout;
 	} else if (getState() < ITEM::FINISH_DOWNLOAD) {
 		if (strcmp(part, "elm.swallow.icon") == 0)
 			return createProgressBar(obj);
-		else if (strcmp(part,"elm.swallow.end") == 0)
+		else if (strcmp(part,"elm.swallow.icon.2") == 0)
 			return createCancelBtn(obj);
-	} else if (view.isGenlistEditMode() && strcmp(part,"elm.swallow.end") == 0) {
+	} else if (view.isGenlistEditMode() && strcmp(part,"elm.swallow.icon.2") == 0) {
 		Evas_Object *layout = elm_layout_add(obj);
 		elm_layout_theme_set(layout, "layout", "list/C/type.2", "default");
 		Evas_Object *check = elm_check_add(obj);
@@ -464,9 +462,9 @@ void ViewItem::clickedGenlistItem()
 		Eina_Bool state;
 #ifdef _TIZEN_2_3_UX
 		Evas_Object *checkLayout;
-		checkLayout = elm_object_item_part_content_get(m_glItem, "elm.swallow.end");
+		checkLayout = elm_object_item_part_content_get(m_glItem, "elm.swallow.icon.2");
 		if (checkLayout)
-			checkBox = elm_object_part_content_get(checkLayout, "elm.swallow.content");
+			checkBox = elm_object_part_content_get(checkLayout, "elm.swallow.end");
 #else
 		checkBox = elm_object_item_part_content_get(m_glItem, "elm.edit.icon.1");
 #endif
@@ -725,7 +723,7 @@ Evas_Object *ViewItem::createCancelBtn(Evas_Object *parent)
 	evas_object_size_hint_align_set(icon, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_object_part_content_set(button, "elm.swallow.icon", icon);
-	elm_object_part_content_set(layout, "elm.swallow.content", button);
+	elm_object_part_content_set(layout, "elm.swallow.end", button);
 	evas_object_propagate_events_set(button, EINA_FALSE);
 	evas_object_smart_callback_add(button,"clicked", cancelBtnClickedCB, this);
 	return layout;
