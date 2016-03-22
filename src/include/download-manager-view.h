@@ -195,7 +195,7 @@ private:
 	bool m_silentMode;
 	bool m_activatedLockScreen;
 	groupTitleType m_groupTitle[3];
-	unsigned long long m_viewLastRefreshTime;
+	long long m_viewLastRefreshTime;
 };
 
 #endif /* DOWNLOAD_MANAGER_VIEW_H */

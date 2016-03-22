@@ -82,7 +82,9 @@ struct MimeTableType MimeTable[]={
 
 void FileUtility::cleanTempDir()
 {
-	struct dirent *dirInfo = NULL;
+    struct dirent entry;
+    struct dirent *dirInfo = NULL;
+
 	DIR *dir;
 	string filePath = string();
 	string defTempPath = FileUtility::getDefaultPath(true);
@@ -93,7 +95,7 @@ void FileUtility::cleanTempDir()
 			DM_LOGE("Fail to call opendir");
 			return;
 		} else {
-			while(NULL != (dirInfo = readdir(dir))) {
+		    while(readdir_r(dir, &entry, &dirInfo) == 0 && dirInfo != NULL) {
 				DM_SLOGD("%s",dirInfo->d_name);
 				if (0 == strncmp(dirInfo->d_name,".",strlen(".")) ||
 						0 == strncmp(dirInfo->d_name,"..",strlen("..")))
@@ -104,7 +106,7 @@ void FileUtility::cleanTempDir()
 				/* The sub-directory should not be created under temporary directory */
 				if (isExistedFile(filePath, false)) {
 					if (remove(filePath.c_str())<0)
-						DM_LOGE("Fail to Remove[%s]",strerror(errno));
+						DM_LOGE("Fail to Remove");
 				} else {
 					DM_LOGE("Cannot enter here type[%d]", dirInfo->d_type);
 				}
@@ -147,7 +149,7 @@ bool FileUtility::renameFile(string from, string to)
 	const char *fromStr = from.c_str();
 	const char *toStr = to.c_str();
 	if (rename(fromStr, toStr) != 0 ) {
-		DM_LOGE("rename failed:err[%s]", strerror(errno));
+		DM_LOGE("rename failed:err");
 		if (errno == EXDEV) {
 			DM_LOGE("File system is diffrent. Try to copy a file");
 			if (copyFile(from, to)) {
@@ -170,7 +172,7 @@ bool FileUtility::deleteFile(string filePath)
 		return false;
 	if (isExistedFile(filePath, false)) {
 		if (unlink(filePath.c_str()) < 0) {
-			DM_LOGE("Fail to Remove file err[%s]", strerror(errno));
+			DM_LOGE("Fail to Remove file err");
 			return false;
 		}
 	} else {
@@ -238,7 +240,7 @@ bool FileUtility::copyFile(string from, string to)
 		if (readNum > 0) {
 			writeNum = fwrite(buff, sizeof(char), readNum, fd);
 			if (writeNum <= 0) {
-				DM_LOGE("written:err[%s]",strerror(errno));
+				DM_LOGE("written:err");
 				break;
 			}
 		} else {
@@ -349,7 +351,7 @@ bool FileUtility::checkTempDir(string userInstallDir)
 	DM_SLOGD("temp dir:[%s]", defaultDir.c_str());
 	if (!isExistedFile(defaultDir, true)) {
 		if (mkdir(defaultDir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO)) {
-			DM_LOGE("Fail to create directory [%s]", strerror(errno));
+			DM_LOGE("Fail to create directory");
 			return false;
 		} else {
 			DM_SLOGI("[%s] is created!", defaultDir.c_str());
@@ -379,7 +381,7 @@ unsigned long long FileUtility::getFileSize(string filePath)
 
 	ret = stat(filePath.c_str(), &st);
 	if(ret != 0) {
-		DM_LOGE("stat error:%s[%d]", strerror(errno), errno);
+		DM_LOGE("stat error:%d", errno);
 		return 0;
 	}
 	return (unsigned long long)st.st_size;

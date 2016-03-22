@@ -767,10 +767,10 @@ string Item::getFileName()
 void Item::createHistoryId()
 {
 	int count = 0;
-	unsigned tempId = time(NULL);
+	unsigned int tempId = time(NULL);
+
 	while (isExistedHistoryId(tempId)) {
-		srand((unsigned)(time(NULL)));
-		tempId = rand();
+		tempId = rand_r(&tempId);
 		count++;
 		if (count > 100) {
 			DM_LOGE("Fail to create unique ID");
