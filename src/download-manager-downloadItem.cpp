@@ -401,8 +401,7 @@ void CbData::updateCompletedItem()
 			/* for extracting title */
 			downloadItem->setReceivedFileSize(0);
 			if (unlink(registeredFilePath.c_str()) < 0)
-				DM_LOGE("Fail to unlink the dd file:err[%s]",
-						strerror(errno));
+				DM_LOGE("Fail to unlink the dd file:err");
 			string emptyStr = string();
 			downloadItem->setRegisteredFilePath(emptyStr);
 			op_free_dd_info(dd_info);
@@ -996,8 +995,7 @@ OmaItem::OmaItem(dd_oma1_t *dd_info)
 			name = string(dd_info->name);
 		if (dd_info->major_version>0 || dd_info->minor_version) {
 			char buf[256] = {0,};
-			sprintf(buf, "%d.%d", dd_info->major_version, dd_info->minor_version);
-			buf[255] = '\0';
+			snprintf(buf, sizeof(buf), "%d.%d", dd_info->major_version, dd_info->minor_version);
 			version = string(buf);
 		}
 		if (strlen(dd_info->object_uri) > 0)
@@ -1233,7 +1231,7 @@ void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 	}
 	res = curl_easy_perform(curl);
 	if (res != CURLE_OK) {
-		DM_LOGE("Fail to send install notification[%s]", curl_easy_strerror(res));
+		DM_LOGE("Fail to send install notification");
 		if (!ecore_thread_reschedule(th))
 			DM_LOGE("Fail to ecore_thread_reschedule");
 	} else {

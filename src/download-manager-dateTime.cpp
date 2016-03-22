@@ -62,21 +62,35 @@ int DateUtil::getDiffDays(time_t nowTime,time_t refTime)
 	int nowYday = 0;
 	int refYday = 0;
 	int refYear = 0;
-	struct tm *nowDate = localtime(&nowTime);
-	nowYday = nowDate->tm_yday;
-	nowYear = nowDate->tm_year;
-	struct tm *finishedDate = localtime(&refTime);
-	refYday = finishedDate->tm_yday;
-	refYear = finishedDate->tm_year;
+
+	struct tm nowDate;
+
+	if(localtime_r(&nowTime,&nowDate)==NULL){
+	    DM_LOGE("Error localtime_r");
+	    return -1;
+	}
+
+	nowYday = nowDate.tm_yday;
+	nowYear = nowDate.tm_year;
+
+	struct tm finishedDate;
+
+    if(localtime_r(&refTime,&finishedDate)==NULL){
+        DM_LOGE("Error localtime_r");
+        return -1;
+    }
+
+	refYday = finishedDate.tm_yday;
+	refYear = finishedDate.tm_year;
 	diffDays = nowYday - refYday;
 	DM_LOGV("refDate[%d/%d/%d]refTime[%ld]yday[%d]",
-		(finishedDate->tm_year + 1900), (finishedDate->tm_mon + 1),
-		finishedDate->tm_mday, refTime, refYday);
+		(finishedDate.tm_year + 1900), (finishedDate.tm_mon + 1),
+		finishedDate.tm_mday, refTime, refYday);
 	DM_LOGV("nowDate[%d/%d/%d]",
-			(nowDate->tm_year + 1900), (nowDate->tm_mon + 1),
-			nowDate->tm_mday);
+			(nowDate.tm_year + 1900), (nowDate.tm_mon + 1),
+			nowDate.tm_mday);
 	if ((nowYear-refYear)>0 && diffDays < 0) {
-		int year = nowDate->tm_year;
+		int year = nowDate.tm_year;
 		diffDays = diffDays + 365;
 		/* leap year */
 		if ((year%4 == 0 && year%100 != 0) || year%400 == 0)
