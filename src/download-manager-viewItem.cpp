@@ -331,30 +331,24 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 #ifdef _TIZEN_2_3_UX
 	DownloadView &view = DownloadView::getInstance();
 	if (strcmp(part,"elm.swallow.icon.1") == 0) {
-		Evas_Object *layout = elm_layout_add(obj);
-		elm_layout_theme_set(layout, "layout", "list/B/type.3", "default");
 		Evas_Object *icon = elm_icon_add(obj);
 		elm_image_file_set(icon, getIconPath(), NULL);
 		evas_object_size_hint_align_set(icon, EVAS_HINT_FILL, EVAS_HINT_FILL);
-		evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-		elm_layout_content_set(layout, "elm.swallow.icon.1", icon);
-		return layout;
+        evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+        return icon;
 	} else if (getState() < ITEM::FINISH_DOWNLOAD) {
 		if (strcmp(part, "elm.swallow.icon") == 0)
 			return createProgressBar(obj);
 		else if (strcmp(part,"elm.swallow.icon.2") == 0)
 			return createCancelBtn(obj);
 	} else if (view.isGenlistEditMode() && strcmp(part,"elm.swallow.icon.2") == 0) {
-		Evas_Object *layout = elm_layout_add(obj);
-		elm_layout_theme_set(layout, "layout", "list/C/type.2", "default");
 		Evas_Object *check = elm_check_add(obj);
 		elm_check_state_pointer_set(check, &m_checked);
 		evas_object_repeat_events_set(check, EINA_FALSE);
 		evas_object_propagate_events_set(check, EINA_FALSE);
 		evas_object_smart_callback_add(check, "changed", checkBoxChangedCB, this);
-		elm_layout_content_set(layout, "elm.swallow.content", check);
 		m_checkedBtn = check;
-		return layout;
+        return check;
 	}
 	return NULL;
 #else
@@ -461,10 +455,7 @@ void ViewItem::clickedGenlistItem()
 		Evas_Object *checkBox = NULL;
 		Eina_Bool state;
 #ifdef _TIZEN_2_3_UX
-		Evas_Object *checkLayout;
-		checkLayout = elm_object_item_part_content_get(m_glItem, "elm.swallow.icon.2");
-		if (checkLayout)
-			checkBox = elm_object_part_content_get(checkLayout, "elm.swallow.end");
+        checkBox = elm_object_item_part_content_get(m_glItem, "elm.swallow.icon.2");
 #else
 		checkBox = elm_object_item_part_content_get(m_glItem, "elm.edit.icon.1");
 #endif
@@ -476,11 +467,7 @@ void ViewItem::clickedGenlistItem()
 		view.handleCheckedState();
 	} else if (getState() == ITEM::FINISH_DOWNLOAD) {
 		if (m_item->isExistedFile()) {
-			bool ret = m_item->play();
-			if (ret) {
-				m_item->deleteFromDB();
-				destroy();
-			} else {
+            if (!m_item->play()) {
 				string msg[2];
 				msg[0] = __("IDS_DM_HEADER_UNABLE_TO_OPEN_FILE");
 #ifdef _TIZEN_2_3_UX
