@@ -178,6 +178,8 @@ private:
 	bool m_isGroupTitle;
 	bool m_insertAtFirst;
 	VIEWITEM_GROUP::GROUP m_group;
+
+    static const unsigned int GENLIST_ICON_SIZE = 46;
 };
 
 #endif /* DOWNLOAD_MANAGER_VIEW_ITEM_H */
