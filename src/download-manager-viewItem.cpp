@@ -330,12 +330,13 @@ Evas_Object *ViewItem::getGenlistIcon(Evas_Object *obj, const char *part)
 
 #ifdef _TIZEN_2_3_UX
 	DownloadView &view = DownloadView::getInstance();
-	if (strcmp(part,"elm.swallow.icon.1") == 0) {
-		Evas_Object *icon = elm_icon_add(obj);
-		elm_image_file_set(icon, getIconPath(), NULL);
-		evas_object_size_hint_align_set(icon, EVAS_HINT_FILL, EVAS_HINT_FILL);
-		evas_object_size_hint_weight_set(icon, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);;
-        return icon;
+    if (strcmp(part,"elm.swallow.icon") == 0) {
+        Evas_Object *image = elm_image_add(obj);
+        elm_image_file_set(image, getIconPath(), NULL);
+        evas_object_size_hint_min_set(image, ELM_SCALE_SIZE(GENLIST_ICON_SIZE),
+                                      ELM_SCALE_SIZE(GENLIST_ICON_SIZE));
+        evas_object_show(image);
+        return image;
 	} else if (getState() < ITEM::FINISH_DOWNLOAD) {
 		if (strcmp(part, "elm.swallow.icon") == 0)
 			return createProgressBar(obj);
