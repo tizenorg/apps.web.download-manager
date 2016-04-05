@@ -368,10 +368,10 @@ notification_h DownloadNoti::createNoti(NOTIFICATION_TYPE::TYPE type)
 
 	if (NOTIFICATION_TYPE::NOTI_COMPLETED == type) {
 		statusText = DM_POP_TEXT_DOWNLOAD_COMPLETE;
-		statusTextId = "IDS_DM_HEADER_DOWNLOAD_COMPLETE";
+		statusTextId = __("IDS_DM_HEADER_DOWNLOAD_COMPLETE");
 	} else if (NOTIFICATION_TYPE::NOTI_FAILED == type) {
 		statusText = DM_POP_TEXT_DOWNLOAD_FAILED;
-		statusTextId = "IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB";
+		statusTextId = __("IDS_DM_BODY_DOWNLOAD_FAILED_M_STATUS_ABB");
 	}
 
 #ifdef _TIZEN_2_3_UX
