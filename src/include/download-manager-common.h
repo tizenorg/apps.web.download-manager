@@ -72,25 +72,27 @@
 #define DM_POP_TEXT_FAILED S_("IDS_COM_POP_FAILED")
 #endif
 
+#define DOWNLOAD_PROVIDER_IMAGEDIR "/usr/share/download-provider/images"
+
 // Downlaod Manager resources
 #ifdef _TIZEN_2_3_UX
 #define DM_COLOR_TABLE_PATH TABLEDIR"/org.tizen.download-manager_ChangeableColorInfo.xml"
 #define DM_FONT_TABLE_PATH TABLEDIR"/org.tizen.download-manager_ChangeableFontInfo.xml"
 
-#define DM_DRM_ICON_PATH IMAGEDIR"/download_manager_icon_drm.png"
-#define DM_UNKNOWN_ICON_PATH IMAGEDIR"/download_manager_icon_unknown.png"
-#define DM_EXCEL_ICON_PATH IMAGEDIR"/download_manager_icon_xls.png"
-#define DM_HTML_ICON_PATH IMAGEDIR"/download_manager_icon_html.png"
-#define DM_PDF_ICON_PATH IMAGEDIR"/download_manager_icon_pdf.png"
-#define DM_PPT_ICON_PATH IMAGEDIR"/download_manager_icon_ppt.png"
-#define DM_TEXT_ICON_PATH IMAGEDIR"/download_manager_icon_text.png"
-#define DM_WORD_ICON_PATH IMAGEDIR"/download_manager_icon_word.png"
-#define DM_MUSIC_ICON_PATH IMAGEDIR"/download_manager_icon_music.png"
-#define DM_VIDEO_ICON_PATH IMAGEDIR"/download_manager_icon_movie.png"
-#define DM_IMAGE_ICON_PATH IMAGEDIR"/download_manager_icon_img.png"
-#define DM_FLASH_ICON_PATH IMAGEDIR"/download_manager_icon_swf.png"
-#define DM_TPK_ICON_PATH IMAGEDIR"/download_manager_icon_tpk.png"
-#define DM_VCAL_ICON_PATH IMAGEDIR"/download_manager_icon_date.png"
+#define DM_DRM_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_drm.png"
+#define DM_UNKNOWN_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_unknown.png"
+#define DM_EXCEL_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_xls.png"
+#define DM_HTML_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_html.png"
+#define DM_PDF_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_pdf.png"
+#define DM_PPT_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_ppt.png"
+#define DM_TEXT_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_text.png"
+#define DM_WORD_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_word.png"
+#define DM_MUSIC_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_music.png"
+#define DM_VIDEO_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_movie.png"
+#define DM_IMAGE_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_img.png"
+#define DM_FLASH_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_swf.png"
+#define DM_TPK_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_tpk.png"
+#define DM_VCAL_ICON_PATH DOWNLOAD_PROVIDER_IMAGEDIR"/download_manager_icon_date.png"
 #define DM_FAILED_ICON_PATH IMAGEDIR"/download_manager_icon_broken.png"
 #define DM_CANCEL_BUTTON_ICON_PATH IMAGEDIR"/download_manager_list_icon_cancel.png"
 #define DM_CANCEL_BUTTON_BG_PATH IMAGEDIR"/download_manager_list_button_bg.png"
