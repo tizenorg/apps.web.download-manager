@@ -3,8 +3,8 @@ Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
 Version:	0.3.2
 Release:	1
-Group:		misc
 License:	Flora-1.1
+Group:		misc
 URL:		N/A
 Source0:	%{name}-%{version}.tar.gz
 BuildRequires: pkgconfig(capi-web-url-download)
