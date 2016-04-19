@@ -51,7 +51,7 @@ private:
 	void addCompleteNoti();
 	void addFailedNoti();
 	void freeNotiData(notification_h notiHandle);
-	int m_notiId;
+	void deleteNotiData(notification_h notiHandle);
 	notification_h m_notiHandle;
 	Item *m_item;
 	auto_ptr<Observer> m_aptr_observer;

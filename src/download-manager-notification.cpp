@@ -27,8 +27,7 @@
 #include "download-manager-notification.h"
 
 DownloadNoti::DownloadNoti(Item *item)
-	: m_notiId(0)
-	, m_notiHandle(NULL)
+	: m_notiHandle(NULL)
 	, m_item(item)
 {
 	DM_LOGD("");
@@ -62,7 +61,7 @@ void DownloadNoti::updateFromItem()
 	case ITEM::REQUESTING:
 	case ITEM::QUEUED:
 		DM_LOGD("REQUESTING or QUEUED");
-		if (m_notiId <= 0)
+		if (!m_notiHandle)
 			addOngoingNoti();
 		break;
 	case ITEM::PREPARE_TO_RETRY:
@@ -85,8 +84,8 @@ void DownloadNoti::updateFromItem()
 	case ITEM::CANCEL:
 		DM_LOGD("CANCEL");
 		if (m_notiHandle) {
+			deleteNotiData(m_notiHandle);
 			freeNotiData(m_notiHandle);
-			m_notiHandle = NULL;
 		}
 		addFailedNoti();
 		break;
@@ -96,16 +95,16 @@ void DownloadNoti::updateFromItem()
 	case ITEM::FAIL_TO_DOWNLOAD:
 		DM_LOGD("FAIL_TO_DOWNLOAD");
 		if (m_notiHandle) {
+			deleteNotiData(m_notiHandle);
 			freeNotiData(m_notiHandle);
-			m_notiHandle = NULL;
 		}
 		addFailedNoti();
 		break;
 	case ITEM::FINISH_DOWNLOAD:
 		DM_LOGD("FINISH_DOWNLOAD");
 		if (m_notiHandle) {
+			deleteNotiData(m_notiHandle);
 			freeNotiData(m_notiHandle);
-			m_notiHandle = NULL;
 		}
 		addCompleteNoti();
 		break;
@@ -133,11 +132,22 @@ void DownloadNoti::freeNotiData(notification_h notiHandle)
 	}
 }
 
+void DownloadNoti::deleteNotiData(notification_h notiHandle)
+{
+	DM_LOGV("");
+	int err = NOTIFICATION_ERROR_NONE;
+
+	if (notiHandle) {
+		err = notification_delete(notiHandle);
+		if (err != NOTIFICATION_ERROR_NONE)
+			DM_LOGE("Fail to delete noti data [%d]",err);
+	}
+}
+
 void DownloadNoti::addOngoingNoti()
 {
 	notification_h notiHandle = NULL;
 	int err = NOTIFICATION_ERROR_NONE;
-	int privId = 0;
 	app_control_h handle;
 
 	if (!m_item) {
@@ -148,11 +158,11 @@ void DownloadNoti::addOngoingNoti()
 	DM_SLOGD("title[%s]", m_item->getTitle().c_str());
 
 	notiHandle = notification_create(NOTIFICATION_TYPE_ONGOING);
-
 	if (!notiHandle) {
 		DM_LOGE("Fail to create notification handle");
 		return;
 	}
+
 	string tmpStr;
 	if (m_item->getTitle().empty()) {
 		tmpStr = string(DM_BODY_TEXT_NO_NAME);
@@ -243,10 +253,7 @@ void DownloadNoti::addOngoingNoti()
 		return;
 	}
 
-	m_notiId = privId;
 	m_notiHandle = notiHandle;
-	DM_LOGI("m_notiId [%d]", m_notiId);
-
 	return;
 }
 
@@ -278,6 +285,7 @@ void DownloadNoti::updateTitleOngoingNoti()
 void DownloadNoti::updateOngoingNoti(void)
 {
 	int err = NOTIFICATION_ERROR_NONE;
+
 	if (m_item->getFileSize() > 0) {
 		double progress = (double)m_item->getReceivedFileSize() / (double)m_item->getFileSize();
         err = notification_set_progress(m_notiHandle, progress);
@@ -339,7 +347,6 @@ notification_h DownloadNoti::createNoti(NOTIFICATION_TYPE::TYPE type)
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to delete ongoing noti [%d]", err);
 	}
-	m_notiId = 0;
 
 	notiHandle = notification_create(NOTIFICATION_TYPE_NOTI);
 	if (!notiHandle) {
@@ -420,7 +427,6 @@ void DownloadNoti::addCompleteNoti()
 {
 	notification_h notiHandle = NULL;
 	int err = NOTIFICATION_ERROR_NONE;
-	int privId = 0;
 	app_control_h handle;
 
 	if (!m_item) {
@@ -514,9 +520,6 @@ void DownloadNoti::addCompleteNoti()
 		return;
 	}
 
-	DM_LOGI("priv id [%d]", privId);
-	m_notiId = privId;
-
 	freeNotiData(notiHandle);
 }
 
@@ -524,7 +527,6 @@ void DownloadNoti::addFailedNoti()
 {
 	notification_h notiHandle = NULL;
 	int err = NOTIFICATION_ERROR_NONE;
-	int privId = 0;
 	app_control_h handle;
 
 	if (!m_item) {
@@ -605,9 +607,6 @@ void DownloadNoti::addFailedNoti()
 		return;
 	}
 
-	DM_LOGI("priv id [%d]", privId);
-	m_notiId = privId;
-
 	freeNotiData(notiHandle);
 }
 
@@ -622,8 +621,7 @@ void DownloadNoti::deleteCompleteNoti()
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to delete [%d]", err);
 	}
-	DM_LOGI("delete historyID[%d] m_id[%d]", m_item->getHistoryId(), m_notiId);
-    m_notiId = 0;
+	DM_LOGI("delete historyID[%d]", m_item->getHistoryId());
 }
 
 bool DownloadNoti::__app_control_extra_data_cb(app_control_h service, const char *key, void *)
