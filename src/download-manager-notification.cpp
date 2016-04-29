@@ -437,7 +437,7 @@ void DownloadNoti::addCompleteNoti()
 		DM_LOGD("Failed to create noti");
 		return;
 	}
-
+#ifdef OLD
 	if (!m_item->getThumbnailPath().empty()) {
 		err = notification_set_image(notiHandle,
 				NOTIFICATION_IMAGE_TYPE_ICON,
@@ -456,6 +456,14 @@ void DownloadNoti::addCompleteNoti()
 			return;
 		}
 	}
+#endif
+
+    err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON,DM_NOTI_COMPLETED_QUICKPANNEL_ICON_PATH);
+    if (err != NOTIFICATION_ERROR_NONE) {
+                DM_LOGE("Fail to set icon [%d]", err);
+                freeNotiData(notiHandle);
+                return;
+    }
 
 	err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON_FOR_INDICATOR,
 			DM_NOTI_COMPLETED_INDICATOR_ICON_PATH);
