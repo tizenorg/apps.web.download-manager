@@ -130,6 +130,8 @@
 #define DM_NOTI_COMPLETED_INDICATOR_ICON_PATH IMAGEDIR"/B03_processing_download_completed.png"
 #endif
 
+#define DM_NOTI_COMPLETED_QUICKPANNEL_ICON_PATH "/usr/apps/org.tizen.quickpanel/shared/res/noti_icons/Common/noti_download_complete.png"
+
 // Other defines
 #define MAX_FILE_PATH_LEN 256
 #define MAX_BUF_LEN 256
