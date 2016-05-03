@@ -1229,6 +1229,10 @@ void OmaItem::sendInstallNotifyCB(void *data, Ecore_Thread *th)
 		/* debug */
 		curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, myTrace);
 	}
+	else{
+	    DM_LOGE("[CRITICAL]NULL Check: curl");
+	    return;
+	}
 	res = curl_easy_perform(curl);
 	if (res != CURLE_OK) {
 		DM_LOGE("Fail to send install notification");
