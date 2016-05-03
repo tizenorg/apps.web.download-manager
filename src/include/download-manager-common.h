@@ -131,6 +131,7 @@
 #endif
 
 #define DM_NOTI_COMPLETED_QUICKPANNEL_ICON_PATH "/usr/apps/org.tizen.quickpanel/shared/res/noti_icons/Common/noti_download_complete.png"
+#define DM_NOTI_FAILED_QUICKPANNEL_ICON_PATH "/usr/apps/org.tizen.quickpanel/shared/res/noti_icons/Common/noti_download_failed.png"
 
 // Other defines
 #define MAX_FILE_PATH_LEN 256

@@ -547,7 +547,7 @@ void DownloadNoti::addFailedNoti()
 	}
 
 	err = notification_set_image(notiHandle,
-			NOTIFICATION_IMAGE_TYPE_ICON, DM_NOTI_FAILED_ICON_PATH);
+			NOTIFICATION_IMAGE_TYPE_ICON, DM_NOTI_FAILED_QUICKPANNEL_ICON_PATH);
 	if (err != NOTIFICATION_ERROR_NONE) {
 		DM_LOGE("Fail to set icon [%d]", err);
 		freeNotiData(notiHandle);
