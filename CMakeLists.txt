@@ -22,7 +22,7 @@ ENDIF(TIZEN_2_3_UX)
 SET(IMAGEDIR "${RESDIR}/images")
 SET(DATADIR "${PREFIX}/data")
 SET(DBDATADIR "/home/owner/apps_rw/${PKGNAME}/data")
-SET(LOCALEDIR "${RESDIR}/locale")
+SET(LOCALEDIR "${PREFIX}/shared/res/locale")
 SET(ICONDIR "/usr/share/icons/default/small/")
 SET(HISTORYDB ".download-history.db")
 
