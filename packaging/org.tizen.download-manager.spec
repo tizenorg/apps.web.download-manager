@@ -51,7 +51,7 @@ Application for support of the content download
 %define _edjedir %{_res_path}/edje
 %define _tabledir %{_res_path}/tables
 %endif
-%define _localedir %{_res_path}/locale
+%define _localedir %{_default_path}/shared/res/locale
 %define _pkgxmldir /usr/share/packages
 %define _icondir /usr/share/icons/default/small
 %define _licensedir /usr/share/license
