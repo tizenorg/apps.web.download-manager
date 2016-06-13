@@ -1,7 +1,7 @@
 %define _ux_define tizen2.3
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.3.4
+Version:	0.3.5
 Release:	1
 License:	Flora-1.1
 Group:		misc
@@ -55,7 +55,6 @@ Application for support of the content download
 %define _pkgxmldir /usr/share/packages
 %define _icondir /usr/share/icons/default/small
 %define _licensedir /usr/share/license
-%define _smackdir /etc/smack/accesses.d
 %define support_oma_drm OFF
 
 %define cmake \
@@ -79,8 +78,8 @@ Application for support of the content download
 		%endif \
 		-DPKG_NAME=%{name} \\\
 		-DPKG_VERSION=%{version} \\\
-		-DPKG_RELEASE=%{release} \\\
-		-DSMACK_DIR=%{_smackdir}
+		-DPKG_RELEASE=%{release}
+
 
 %build
 export CFLAGS="$CFLAGS -DTIZEN_DEBUG_ENABLE"
@@ -114,7 +113,7 @@ mkdir -p %{buildroot}/usr/share/license
 %manifest %{name}.manifest
 %{_bin_path}/*
 %{_imagedir}/*
-%if "%{?_ux_define}" == "tizen2.3" 
+%if "%{?_ux_define}" == "tizen2.3"
 %{_edjedir}/*
 %{_tabledir}/*
 %endif
@@ -124,5 +123,4 @@ mkdir -p %{buildroot}/usr/share/license
 %{_pkgxmldir}/%{name}.xml
 %{_icondir}/%{name}.png
 %{_licensedir}/%{name}
-%{_smackdir}/%{name}.efl
 
