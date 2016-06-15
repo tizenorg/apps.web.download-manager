@@ -73,5 +73,6 @@
        <privilege>http://tizen.org/privilege/download</privilege>
        <privilege>http://tizen.org/privilege/notification</privilege>
        <privilege>http://tizen.org/privilege/content.write</privilege>
+       <privilege>http://tizen.org/privilege/mediastorage</privilege>
     </privileges>
 </manifest>
