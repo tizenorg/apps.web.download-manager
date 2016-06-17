@@ -189,8 +189,14 @@ public:
 	string getUserMessage(void);
 	inline void sendInstallNotification(int status)
 	{
-		if (m_oma_item.get() && !m_oma_item->getInstallUri().empty())
-			m_oma_item->sendInstallNotification(status);
+        if (m_oma_item.get()){
+            if(!m_oma_item->getInstallUri().empty()){
+                m_oma_item->sendInstallNotification(status);
+            }
+        }
+        else{
+            return;
+        }
 	}
 	inline bool isExistedInstallNotifyUri()
 	{
