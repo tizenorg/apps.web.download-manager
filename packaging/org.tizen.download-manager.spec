@@ -1,7 +1,7 @@
 %define _ux_define tizen2.3
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.3.5
+Version:	0.3.6
 Release:	1
 License:	Flora-1.1
 Group:		misc
@@ -23,7 +23,6 @@ BuildRequires: pkgconfig(notification)
 BuildRequires: pkgconfig(appsvc)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(vconf)
-BuildRequires: pkgconfig(xproto)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(storage)
 BuildRequires: pkgconfig(efl-extension)

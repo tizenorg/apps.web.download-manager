@@ -71,7 +71,6 @@ pkg_check_modules(pkgs REQUIRED
 	sqlite3
 	storage
 	vconf
-	xproto
 	efl-extension
 	libxml-2.0
 )
