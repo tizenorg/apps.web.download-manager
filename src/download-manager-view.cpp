@@ -330,9 +330,10 @@ void DownloadView::setIndicator(Evas_Object *window)
 
 Evas_Object *DownloadView::createWindow(const char *windowName)
 {
+    bindtextdomain(PROJ_NAME, LOCALEDIR);
 	eoWindow = elm_win_add(NULL, windowName, ELM_WIN_BASIC);
 	if (eoWindow) {
-		elm_win_title_set(eoWindow, __("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
+		elm_win_title_set(eoWindow, DM_HEADER_DOWNLOAD_MANAGER);
 		elm_win_conformant_set(eoWindow, 1);
 		evas_object_smart_callback_add(eoWindow, "delete,request",
 				destroy_window_cb,	static_cast<void*>(this));
@@ -431,7 +432,7 @@ void DownloadView::createNaviBar()
 			eext_naviframe_back_cb, NULL);
 	createBox();
 	eoNaviBarItem = elm_naviframe_item_push(eoNaviBar,
-		__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"),NULL, NULL, eoBox, NULL);
+	        DM_HEADER_DOWNLOAD_MANAGER ,NULL, NULL, eoBox, NULL);
 	if (!eoNaviBarItem)
 		DM_LOGE("Null Check:eoNaviBarItem");
 #ifdef _TIZEN_2_3_UX
@@ -985,7 +986,7 @@ void DownloadView::updateLang()
 			elm_object_text_set(buttonObj, DM_OPT_TEXT_DELETE);
 #endif
 			elm_object_item_text_set(eoNaviBarItem,
-					__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
+			        DM_HEADER_DOWNLOAD_MANAGER);
 		}
 	}
 	if (eoEmptyNoContent) {
@@ -1357,7 +1358,7 @@ void DownloadView::hideGenlistEditMode()
 
 	removePopup();
 	elm_object_item_text_set(eoNaviBarItem,
-			__("IDS_DM_HEADER_DOWNLOAD_MANAGER_ABB"));
+	        DM_HEADER_DOWNLOAD_MANAGER);
 #ifdef _TIZEN_2_3_UX
 	m_isEditMode = false;
 	deleteSelectAllLayout();

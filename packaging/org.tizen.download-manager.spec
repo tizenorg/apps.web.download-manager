@@ -1,7 +1,7 @@
 %define _ux_define tizen2.3
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.3.6
+Version:	0.3.7
 Release:	1
 License:	Flora-1.1
 Group:		misc
@@ -44,13 +44,13 @@ Application for support of the content download
 
 %define _default_path /usr/apps/%{name}
 %define _bin_path %{_default_path}/bin
-%define _res_path %{_default_path}/res
+%define _res_path %{_default_path}/shared/res
 %define _imagedir %{_res_path}/images
 %if "%{?_ux_define}" == "tizen2.3"
 %define _edjedir %{_res_path}/edje
 %define _tabledir %{_res_path}/tables
 %endif
-%define _localedir %{_default_path}/shared/res/locale
+%define _localedir %{_res_path}/locale
 %define _pkgxmldir /usr/share/packages
 %define _icondir /usr/share/icons/default/small
 %define _licensedir /usr/share/license
