@@ -296,6 +296,7 @@ void DownloadNoti::updateOngoingNoti(void)
 		if (err != NOTIFICATION_ERROR_NONE)
             DM_LOGE("Fail to update noti size[%d]", err);
 	}
+	notification_update(m_notiHandle);
 }
 
 string DownloadNoti::convertSizeStr(unsigned long long size)
