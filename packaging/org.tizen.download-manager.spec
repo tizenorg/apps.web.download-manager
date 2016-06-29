@@ -1,7 +1,7 @@
 %define _ux_define tizen2.3
 Name:	org.tizen.download-manager
 Summary:	Application for support of the content download
-Version:	0.3.7
+Version:	0.3.8
 Release:	1
 License:	Flora-1.1
 Group:		misc

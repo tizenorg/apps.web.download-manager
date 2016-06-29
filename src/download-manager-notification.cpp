@@ -178,6 +178,20 @@ void DownloadNoti::addOngoingNoti()
 		return;
 	}
 
+	if(!strcmp(tmpStr.c_str(), DM_BODY_TEXT_NO_NAME))
+	{
+	 	const char *url = NULL;
+		url=m_item->getUrl().c_str();
+		err = notification_set_text(notiHandle, NOTIFICATION_TEXT_TYPE_CONTENT, url, NULL, NOTIFICATION_VARIABLE_TYPE_NONE);
+		if (err != NOTIFICATION_ERROR_NONE)
+		{
+			DM_LOGE("Fail to set content [%d]", err);
+			freeNotiData(m_notiHandle);
+			m_notiHandle = NULL;
+			return;
+		}
+	}
+
 	err = notification_set_image(notiHandle, NOTIFICATION_IMAGE_TYPE_ICON,
 			DM_NOTI_ONGOING_ICON_PATH);
 	if (err != NOTIFICATION_ERROR_NONE) {
